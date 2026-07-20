@@ -1,79 +1,105 @@
 import React from 'react';
-import { FaWhatsapp, FaInstagram } from 'react-icons/fa';
+import { Link } from 'wouter';
+import { MapPin, Phone, Clock, Instagram } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 
-export const Footer = () => {
+export function Footer() {
   return (
-    <footer className="bg-[#050505] border-t border-border pt-16 pb-8">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-8 mb-12">
-          <div className="col-span-1 lg:col-span-2">
-            <a href="#" className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 bg-primary flex items-center justify-center rounded-sm transform -skew-x-12">
-                <span className="font-display font-bold text-white text-xl transform skew-x-12">I</span>
+    <footer className="bg-[#050505] border-t border-white/5 pt-16 pb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-12">
+          
+          {/* Brand Info */}
+          <div className="space-y-6">
+            <Link href="/" className="flex items-center gap-2 group inline-flex">
+              <div className="flex items-center justify-center w-8 h-8 bg-primary text-primary-foreground font-display font-bold text-lg skew-x-[-10deg]">
+                I/
               </div>
-              <span className="font-display font-bold text-2xl tracking-wider text-white">
-                INFINITY <span className="text-primary">FITNESS</span>
+              <span className="font-display font-bold text-lg tracking-wider text-white">
+                INFINITY FITNESS
               </span>
-            </a>
-            <p className="text-muted-foreground mb-6 max-w-md">
-              A real neighbourhood gym for real people. Serious equipment, affordable prices, and a welcoming community right here in Kaithal. Transform your body, transform your life.
+            </Link>
+            <p className="text-muted-foreground leading-relaxed">
+              Real equipment, real results, real people. Built for the community of Kaithal to grind it out and transform their lives.
             </p>
-            <div className="flex items-center gap-4">
-              <a 
-                href="https://wa.me/917206333820" 
-                target="_blank" 
-                rel="noreferrer"
-                className="w-10 h-10 rounded-full bg-border flex items-center justify-center text-white hover:bg-primary transition-colors"
-                aria-label="WhatsApp"
-              >
+            <div className="flex gap-4">
+              <a href="https://wa.me/917206333820" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[#25D366] hover:text-white transition-colors">
                 <FaWhatsapp size={20} />
               </a>
-              <a 
-                href="https://instagram.com/infinityfitnessgyms" 
-                target="_blank" 
-                rel="noreferrer"
-                className="w-10 h-10 rounded-full bg-border flex items-center justify-center text-white hover:bg-primary transition-colors"
-                aria-label="Instagram"
-              >
-                <FaInstagram size={20} />
+              <a href="https://instagram.com/infinityfitnessgyms" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-pink-500 hover:to-purple-500 hover:text-white transition-all">
+                <Instagram size={20} />
               </a>
             </div>
           </div>
-          
+
+          {/* Quick Links */}
           <div>
-            <h4 className="font-display text-xl mb-6 uppercase tracking-wide">Quick Links</h4>
-            <ul className="space-y-3 text-muted-foreground">
-              <li><a href="#about" className="hover:text-primary transition-colors">About Us</a></li>
-              <li><a href="#services" className="hover:text-primary transition-colors">Programs</a></li>
-              <li><a href="#plans" className="hover:text-primary transition-colors">Memberships</a></li>
-              <li><a href="#gallery" className="hover:text-primary transition-colors">Gallery</a></li>
+            <h4 className="font-display font-bold text-xl uppercase tracking-wider mb-6 text-white">Quick Links</h4>
+            <ul className="space-y-3">
+              {[
+                { name: 'Home', href: '/' },
+                { name: 'About Us', href: '/about' },
+                { name: 'Services', href: '/services' },
+                { name: 'Membership', href: '/membership' },
+                { name: 'Gallery', href: '/gallery' },
+                { name: 'Contact', href: '/contact' },
+              ].map((link) => (
+                <li key={link.name}>
+                  <Link href={link.href} className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
+                    <span className="text-primary/50 text-xs">▶</span> {link.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
-          
+
+          {/* Contact Info */}
           <div>
-            <h4 className="font-display text-xl mb-6 uppercase tracking-wide">Contact Info</h4>
-            <ul className="space-y-4 text-muted-foreground">
-              <li className="flex flex-col gap-1">
-                <span className="text-white font-medium uppercase font-display tracking-wider text-sm">Location</span>
-                <span>Kaithal - Dhand Rd, Opp. Maharaja Palace, <br />Rishi Nagar, Kaithal, Haryana 136027</span>
+            <h4 className="font-display font-bold text-xl uppercase tracking-wider mb-6 text-white">Contact Us</h4>
+            <ul className="space-y-4">
+              <li className="flex gap-3">
+                <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                <span className="text-muted-foreground">Kaithal - Dhand Rd, Opp. Maharaja Palace, Rishi Nagar, Kaithal, Haryana 136027</span>
               </li>
-              <li className="flex flex-col gap-1">
-                <span className="text-white font-medium uppercase font-display tracking-wider text-sm">Phone</span>
-                <a href="tel:07206333820" className="hover:text-primary transition-colors">072063 33820</a>
+              <li className="flex gap-3">
+                <Phone className="w-5 h-5 text-primary shrink-0" />
+                <a href="tel:07206333820" className="text-muted-foreground hover:text-primary transition-colors">072063 33820</a>
               </li>
-              <li className="flex flex-col gap-1">
-                <span className="text-white font-medium uppercase font-display tracking-wider text-sm">Hours</span>
-                <span>Open daily, Closes 11 PM</span>
+            </ul>
+          </div>
+
+          {/* Opening Hours */}
+          <div>
+            <h4 className="font-display font-bold text-xl uppercase tracking-wider mb-6 text-white">Opening Hours</h4>
+            <ul className="space-y-3">
+              <li className="flex justify-between border-b border-white/5 pb-2">
+                <span className="text-muted-foreground">Monday - Saturday</span>
+                <span className="text-white font-medium">Open - 11:00 PM</span>
+              </li>
+              <li className="flex justify-between border-b border-white/5 pb-2">
+                <span className="text-muted-foreground">Sunday</span>
+                <span className="text-white font-medium">Open - 11:00 PM</span>
+              </li>
+              <li className="flex justify-between pt-2">
+                <span className="text-primary font-medium flex items-center gap-2">
+                  <Clock className="w-4 h-4" /> Busiest Hours
+                </span>
+                <span className="text-primary font-medium">6:00 PM - 9:00 PM</span>
               </li>
             </ul>
           </div>
         </div>
-        
-        <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Infinity Fitness Gym. All rights reserved.</p>
-          <p>Designed for Champions.</p>
+
+        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-muted-foreground text-sm">
+            &copy; {new Date().getFullYear()} Infinity Fitness Gym. All rights reserved.
+          </p>
+          <div className="text-muted-foreground text-sm flex gap-4">
+            <span className="hover:text-white cursor-pointer transition-colors">Privacy Policy</span>
+            <span className="hover:text-white cursor-pointer transition-colors">Terms of Service</span>
+          </div>
         </div>
       </div>
     </footer>
   );
-};
+}

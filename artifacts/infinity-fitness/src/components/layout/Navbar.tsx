@@ -1,105 +1,126 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'wouter';
+import { Menu, X, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+const navLinks = [
+  { name: 'Home', href: '/' },
+  { name: 'About', href: '/about' },
+  { name: 'Services', href: '/services' },
+  { name: 'Membership', href: '/membership' },
+  { name: 'Gallery', href: '/gallery' },
+  { name: 'Testimonials', href: '/testimonials' },
+  { name: 'Contact', href: '/contact' },
+];
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+export function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [location] = useLocation();
 
-  const navLinks = [
-    { name: 'About', href: '#about' },
-    { name: 'Services', href: '#services' },
-    { name: 'Plans', href: '#plans' },
-    { name: 'Gallery', href: '#gallery' },
-    { name: 'Reviews', href: '#reviews' },
-    { name: 'Location', href: '#location' },
-    { name: 'Contact', href: '#contact' },
-  ];
+  const toggleMenu = () => setIsOpen(!isOpen);
+  const closeMenu = () => setIsOpen(false);
 
   return (
-    <header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-background/95 backdrop-blur-md border-b border-border py-3 shadow-lg' : 'bg-transparent py-5'
-      }`}
-    >
-      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-        <a href="#" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 md:w-10 md:h-10 bg-primary flex items-center justify-center rounded-sm transform -skew-x-12 group-hover:scale-105 transition-transform">
-            <span className="font-display font-bold text-white text-xl md:text-2xl transform skew-x-12">I</span>
-          </div>
-          <span className="font-display font-bold text-xl md:text-2xl tracking-wider text-white">
-            INFINITY <span className="text-primary">FITNESS</span>
-          </span>
-        </a>
+    <>
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="flex items-center justify-center w-10 h-10 bg-primary text-primary-foreground font-display font-bold text-xl skew-x-[-10deg] group-hover:scale-105 transition-transform box-glow">
+                I/
+              </div>
+              <span className="font-display font-bold text-xl tracking-wider text-white group-hover:text-primary transition-colors">
+                INFINITY FITNESS
+              </span>
+            </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors tracking-wide uppercase font-display"
-            >
-              {link.name}
-            </a>
-          ))}
-          <a
-            href="tel:07206333820"
-            className="bg-primary text-white px-6 py-2 rounded-sm font-display font-bold uppercase tracking-wide hover:bg-primary/90 transition-colors shadow-[0_0_15px_rgba(255,107,0,0.4)] hover:shadow-[0_0_25px_rgba(255,107,0,0.6)]"
-          >
-            Call Now
-          </a>
-        </nav>
-
-        {/* Mobile Toggle */}
-        <button
-          className="lg:hidden text-white p-2"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
-      </div>
-
-      {/* Mobile Nav */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden absolute top-full left-0 w-full bg-background border-b border-border shadow-xl overflow-hidden"
-          >
-            <div className="flex flex-col px-4 py-6 gap-4">
+            {/* Desktop Nav */}
+            <div className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.name}
                   href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-lg font-display uppercase tracking-wide text-muted-foreground hover:text-primary py-2 border-b border-border/50"
+                  className={`text-sm font-semibold uppercase tracking-wider transition-colors hover:text-primary ${
+                    location === link.href ? 'text-primary' : 'text-muted-foreground'
+                  }`}
                 >
                   {link.name}
-                </a>
+                </Link>
               ))}
               <a
                 href="tel:07206333820"
-                onClick={() => setMobileMenuOpen(false)}
-                className="mt-4 bg-primary text-white px-6 py-3 rounded-sm font-display font-bold uppercase tracking-wide text-center"
+                className="hidden lg:flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 font-display font-bold uppercase tracking-wider skew-x-[-10deg] hover:bg-primary/90 transition-colors box-glow-hover"
               >
-                Call Now: 072063 33820
+                <div className="skew-x-[10deg] flex items-center gap-2">
+                  <Phone className="w-4 h-4" />
+                  <span>Call Now</span>
+                </div>
               </a>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden">
+              <button
+                onClick={toggleMenu}
+                className="text-white p-2 hover:text-primary transition-colors focus:outline-none"
+                aria-label="Toggle menu"
+              >
+                {isOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Nav Drawer */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ type: 'tween', duration: 0.3 }}
+            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-xl md:hidden pt-20 flex flex-col"
+          >
+            <div className="flex-1 overflow-y-auto px-6 py-8 flex flex-col gap-6">
+              {navLinks.map((link, i) => (
+                <motion.div
+                  key={link.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                >
+                  <Link
+                    href={link.href}
+                    onClick={closeMenu}
+                    className={`block font-display text-4xl font-bold uppercase tracking-wide ${
+                      location === link.href ? 'text-primary' : 'text-white'
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                </motion.div>
+              ))}
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: navLinks.length * 0.1 }}
+                className="mt-8"
+              >
+                <a
+                  href="tel:07206333820"
+                  className="flex items-center justify-center gap-2 bg-primary text-primary-foreground py-4 w-full font-display font-bold text-xl uppercase tracking-wider box-glow"
+                >
+                  <Phone className="w-5 h-5" />
+                  Call 072063 33820
+                </a>
+              </motion.div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
-};
+}
