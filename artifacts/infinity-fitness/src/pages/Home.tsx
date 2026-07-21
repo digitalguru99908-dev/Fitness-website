@@ -13,7 +13,7 @@ export function Home() {
           <img 
             src={homeHero} 
             alt="Infinity Fitness Gym interior with loaded barbell" 
-            className="w-full h-full object-cover opacity-40"
+            className="w-full h-full object-cover object-[center_25%] opacity-40"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent"></div>
           <div className="absolute inset-0 bg-black/40"></div>
