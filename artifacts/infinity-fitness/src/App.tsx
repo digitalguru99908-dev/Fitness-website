@@ -9,7 +9,7 @@ import { About } from '@/pages/About';
 import { Services } from '@/pages/Services';
 import { Membership } from '@/pages/Membership';
 import { Gallery } from '@/pages/Gallery';
-import { Testimonials } from '@/pages/Testimonials';
+import { Owner } from '@/pages/Owner';
 import { Contact } from '@/pages/Contact';
 
 function App() {
@@ -25,7 +25,7 @@ function App() {
             <Route path="/services" component={Services} />
             <Route path="/membership" component={Membership} />
             <Route path="/gallery" component={Gallery} />
-            <Route path="/testimonials" component={Testimonials} />
+            <Route path="/owner" component={Owner} />
             <Route path="/contact" component={Contact} />
             <Route>
               <div className="flex-1 flex flex-col items-center justify-center pt-20">
