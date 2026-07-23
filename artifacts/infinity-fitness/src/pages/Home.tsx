@@ -213,45 +213,51 @@ export function Home() {
         </div>
       </section>
 
-      {/* Testimonials Preview */}
-      <section className="py-24 bg-[#050505] border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row gap-12 items-center mb-16">
-            <div className="md:w-1/3 text-center md:text-left">
-              <div className="flex items-center justify-center md:justify-start gap-2 text-primary mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-6 h-6 fill-primary text-primary" />
-                ))}
+      {/* Testimonials — Auto-looping carousel */}
+      <section className="py-24 bg-[#050505] border-t border-white/5 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 text-center">
+          <div className="flex items-center justify-center gap-2 text-primary mb-4">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="w-6 h-6 fill-primary text-primary" />
+            ))}
+          </div>
+          <h2 className="text-5xl font-display font-bold mb-2">4.2 / 5.0</h2>
+          <p className="text-muted-foreground">Based on 40+ Google Reviews</p>
+        </div>
+
+        {/* Marquee track */}
+        <div
+          className="group overflow-hidden cursor-default select-none"
+          title="Hover to pause"
+        >
+          <div className="animate-marquee flex gap-6 w-max pause-marquee-target">
+            {[
+              { name: "Rahul Sharma",   stars: 5, text: "Best gym in Kaithal. The trainers really care about your progress and the equipment is top notch." },
+              { name: "Priya Singh",    stars: 5, text: "Lost 8 kg in 3 months here. The weight loss program is excellent and the environment is very supportive." },
+              { name: "Amit Kumar",     stars: 5, text: "The atmosphere here is unmatched. Everyone motivates each other and the trainers are always available to guide you." },
+              { name: "Neha Yadav",     stars: 5, text: "Affordable prices with world-class facilities. I joined 6 months ago and already see a huge difference in my strength." },
+              { name: "Suresh Verma",   stars: 4, text: "Modern equipment and clean facilities. The owner himself trains alongside members which is very inspiring." },
+              { name: "Pooja Devi",     stars: 5, text: "Finally a gym that feels like family. No judgment, just pure dedication and results. Highly recommend to everyone!" },
+              /* ── duplicate for seamless loop ── */
+              { name: "Rahul Sharma",   stars: 5, text: "Best gym in Kaithal. The trainers really care about your progress and the equipment is top notch." },
+              { name: "Priya Singh",    stars: 5, text: "Lost 8 kg in 3 months here. The weight loss program is excellent and the environment is very supportive." },
+              { name: "Amit Kumar",     stars: 5, text: "The atmosphere here is unmatched. Everyone motivates each other and the trainers are always available to guide you." },
+              { name: "Neha Yadav",     stars: 5, text: "Affordable prices with world-class facilities. I joined 6 months ago and already see a huge difference in my strength." },
+              { name: "Suresh Verma",   stars: 4, text: "Modern equipment and clean facilities. The owner himself trains alongside members which is very inspiring." },
+              { name: "Pooja Devi",     stars: 5, text: "Finally a gym that feels like family. No judgment, just pure dedication and results. Highly recommend to everyone!" },
+            ].map((review, i) => (
+              <div
+                key={i}
+                className="w-[300px] sm:w-[340px] shrink-0 bg-card border border-white/5 p-6 relative group-hover:[animation-play-state:paused]"
+              >
+                <div className="text-primary text-4xl font-display opacity-20 absolute top-4 right-4">"</div>
+                <div className="flex text-primary mb-3">
+                  {[...Array(review.stars)].map((_, j) => <Star key={j} className="w-4 h-4 fill-primary" />)}
+                </div>
+                <p className="text-gray-300 italic mb-4 relative z-10 text-sm leading-relaxed">"{review.text}"</p>
+                <div className="font-bold uppercase tracking-wider text-sm text-white">{review.name}</div>
               </div>
-              <h2 className="text-5xl font-display font-bold mb-2">4.2 / 5.0</h2>
-              <p className="text-muted-foreground mb-6">Based on 40+ Google Reviews</p>
-              <Link href="/testimonials" className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-wider hover:text-primary transition-colors group">
-                Read All Reviews <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
-              </Link>
-            </div>
-            
-            <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
-              {[
-                { name: "Rahul Sharma", text: "Best gym in Kaithal. The trainers really care about your progress and the equipment is top notch." },
-                { name: "Priya Singh", text: "Lost 8 kg in 3 months here. The weight loss program is excellent and the environment is very supportive." }
-              ].map((review, i) => (
-                <motion.div 
-                  key={i}
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.2 }}
-                  className="bg-card p-6 border border-white/5 relative"
-                >
-                  <div className="text-primary text-4xl font-display opacity-20 absolute top-4 right-4">"</div>
-                  <div className="flex text-primary mb-3">
-                    {[...Array(5)].map((_, j) => <Star key={j} className="w-4 h-4 fill-primary" />)}
-                  </div>
-                  <p className="text-gray-300 italic mb-4 relative z-10">"{review.text}"</p>
-                  <div className="font-bold uppercase tracking-wider text-sm">{review.name}</div>
-                </motion.div>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
       </section>

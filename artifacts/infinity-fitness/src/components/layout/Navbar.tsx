@@ -9,7 +9,6 @@ const navLinks = [
   { name: 'Services', href: '/services' },
   { name: 'Membership', href: '/membership' },
   { name: 'Gallery', href: '/gallery' },
-  { name: 'Owner', href: '/owner' },
   { name: 'Contact', href: '/contact' },
 ];
 
