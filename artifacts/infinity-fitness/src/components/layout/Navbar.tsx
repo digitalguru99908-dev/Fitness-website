@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Menu, X, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import gymLogo from '@assets/7_1785143551141.webp';
 
 const navLinks = [
   { name: 'Home', href: '/' },
@@ -25,10 +26,12 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="flex items-center justify-center w-10 h-10 bg-primary text-primary-foreground font-display font-bold text-xl skew-x-[-10deg] group-hover:scale-105 transition-transform box-glow">
-                I/
-              </div>
+            <Link href="/" className="flex items-center gap-3 group">
+              <img
+                src={gymLogo}
+                alt="Infinity Fitness Gym Logo"
+                className="h-12 w-auto object-contain group-hover:scale-105 transition-transform drop-shadow-[0_0_8px_rgba(74,197,85,0.4)]"
+              />
               <span className="font-display font-bold text-xl tracking-wider text-white group-hover:text-primary transition-colors">
                 INFINITY FITNESS
               </span>
