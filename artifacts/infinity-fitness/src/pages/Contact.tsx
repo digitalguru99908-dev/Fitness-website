@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Clock, Instagram, Send, CheckCircle2 } from 'lucide-react';
+import { MapPin, Phone, Clock, Instagram, Mail, Send, CheckCircle2 } from 'lucide-react';
 import contactHero from '@assets/generated_images/contact-hero.jpg';
 
 export function Contact() {
@@ -82,6 +82,16 @@ export function Contact() {
                           Chat on WhatsApp
                         </a>
                       </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-white/5 flex items-center justify-center shrink-0">
+                      <Mail className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-display font-bold uppercase tracking-wide text-white mb-1">Email</h3>
+                      <a href="mailto:digitalguru99908@gmail.com" className="text-muted-foreground hover:text-primary transition-colors text-lg break-all">digitalguru99908@gmail.com</a>
                     </div>
                   </div>
 

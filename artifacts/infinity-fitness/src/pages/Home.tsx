@@ -1,20 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'wouter';
 import { motion } from 'framer-motion';
 import { ArrowRight, Phone, Dumbbell, HeartPulse, TrendingUp, Flame, Leaf, Zap, Star } from 'lucide-react';
-import homeHero from '@assets/generated_images/home-hero.jpg';
+import slide1 from '@assets/image_1785133577611.png';
+import slide2 from '@assets/image_1785133588675.png';
+import slide3 from '@assets/image_1785133601743.png';
+import slide4 from '@assets/image_1785133617558.png';
+import slide5 from '@assets/image_1785133629842.png';
+import slide6 from '@assets/image_1785133649795.png';
+
+const heroSlides = [slide1, slide2, slide3, slide4, slide5, slide6];
 
 export function Home() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide(prev => (prev + 1) % heroSlides.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
       <section className="relative min-h-[100svh] flex items-center justify-center pt-20 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
-            src={homeHero} 
-            alt="Infinity Fitness Gym interior with loaded barbell" 
-            className="w-full h-full object-cover object-[center_25%] opacity-40"
-          />
+          {heroSlides.map((src, i) => (
+            <img
+              key={i}
+              src={src}
+              alt={`Infinity Fitness Gym slide ${i + 1}`}
+              className="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000"
+              style={{ opacity: i === currentSlide ? 0.45 : 0 }}
+            />
+          ))}
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent"></div>
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
