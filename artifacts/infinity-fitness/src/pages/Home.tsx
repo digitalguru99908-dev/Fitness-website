@@ -8,8 +8,13 @@ import slide3 from '@assets/image_1785133601743.png';
 import slide4 from '@assets/image_1785133617558.png';
 import slide5 from '@assets/image_1785133629842.png';
 import slide6 from '@assets/image_1785133649795.png';
+import slide7 from '@assets/image_1785133817672.png';
+import slide8 from '@assets/image_1785133860375.png';
+import slide9 from '@assets/image_1785133872521.png';
+import slide10 from '@assets/image_1785133887613.png';
+import slide11 from '@assets/image_1785133908194.png';
 
-const heroSlides = [slide1, slide2, slide3, slide4, slide5, slide6];
+const heroSlides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8, slide9, slide10, slide11];
 
 export function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
