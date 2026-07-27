@@ -66,7 +66,7 @@ export const Plans = () => {
               <div 
                 className={`relative rounded-sm border p-8 h-full flex flex-col bg-card transition-all duration-300
                   ${plan.popular 
-                    ? 'border-primary shadow-[0_0_30px_rgba(255,107,0,0.15)] md:-mt-8 md:mb-8' 
+                    ? 'border-primary shadow-[0_0_30px_rgba(139,92,246,0.2)] md:-mt-8 md:mb-8' 
                     : 'border-border hover:border-border/80'
                   }`}
               >

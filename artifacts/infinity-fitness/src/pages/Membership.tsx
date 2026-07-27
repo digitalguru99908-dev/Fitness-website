@@ -90,7 +90,7 @@ export function Membership() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-card border-2 border-primary p-10 flex flex-col h-[105%] relative shadow-[0_0_50px_rgba(255,107,0,0.2)] rounded-sm z-10"
+              className="bg-card border-2 border-primary p-10 flex flex-col h-[105%] relative shadow-[0_0_50px_rgba(139,92,246,0.25)] rounded-sm z-10"
             >
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary text-white text-sm font-bold uppercase tracking-widest py-1.5 px-6 whitespace-nowrap shadow-lg">
                 Best Value · Most Popular

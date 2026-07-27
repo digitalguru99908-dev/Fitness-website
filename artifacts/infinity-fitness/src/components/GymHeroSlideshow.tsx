@@ -27,10 +27,10 @@ export function GymHeroSlideshow() {
           src={src}
           alt={`Infinity Fitness Gym ${i + 1}`}
           className="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000"
-          style={{ opacity: i === current ? 0.92 : 0 }}
+          style={{ opacity: i === current ? 1 : 0 }}
         />
       ))}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent"></div>
     </div>
   );
 }
