@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Clock, Instagram, Mail, Send, CheckCircle2 } from 'lucide-react';
-import contactHero from '@assets/generated_images/contact-hero.jpg';
+import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
 
 export function Contact() {
   const [formStatus, setFormStatus] = useState<'idle' | 'submitted'>('idle');
@@ -16,15 +16,7 @@ export function Contact() {
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative h-[50svh] min-h-[400px] flex items-center justify-center pt-20 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src={contactHero} 
-            alt="Gym building exterior at night" 
-            className="w-full h-full object-cover opacity-40"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
-          <div className="absolute inset-0 bg-black/50"></div>
-        </div>
+        <GymHeroSlideshow />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div

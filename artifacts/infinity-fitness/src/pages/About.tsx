@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ShieldCheck, Dumbbell, Sparkles, Users, Phone, Instagram, Award, Heart } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
-import aboutHero from '@assets/generated_images/about-hero.jpg';
+import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
 import about1 from '@assets/generated_images/about-1.jpg';
 import about2 from '@assets/generated_images/about-2.jpg';
 import about3 from '@assets/generated_images/about-3.jpg';
@@ -48,15 +48,7 @@ export function About() {
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative h-[60svh] min-h-[400px] flex items-center justify-center pt-20 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src={aboutHero} 
-            alt="Wide gym interior" 
-            className="w-full h-full object-cover opacity-50"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
-          <div className="absolute inset-0 bg-black/40"></div>
-        </div>
+        <GymHeroSlideshow />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div

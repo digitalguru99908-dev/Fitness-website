@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
 import img1 from '@assets/1_1785140838620.webp';
 import img2 from '@assets/2_1785140851182.webp';
 import img3 from '@assets/3_1785140851181.webp';

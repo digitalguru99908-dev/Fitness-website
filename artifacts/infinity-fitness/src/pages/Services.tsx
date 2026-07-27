@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Dumbbell, HeartPulse, TrendingUp, Flame, Leaf, Zap, CheckCircle2 } from 'lucide-react';
-import servicesHero from '@assets/generated_images/services-hero.jpg';
+import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
 
 const programs = [
   {
@@ -53,15 +53,7 @@ export function Services() {
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative h-[60svh] min-h-[400px] flex items-center justify-center pt-20 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src={servicesHero} 
-            alt="Heavy dumbbell rack" 
-            className="w-full h-full object-cover opacity-50"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
-          <div className="absolute inset-0 bg-black/60"></div>
-        </div>
+        <GymHeroSlideshow />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div

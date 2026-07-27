@@ -76,10 +76,10 @@
   --popover-foreground: 0 0% 95%;
   --popover-border: 0 0% 15%;
 
-  /* Neon Orange */
-  --primary: 24 100% 50%;
+  /* Infinity Fitness Green */
+  --primary: 128 58% 42%;
   --primary-foreground: 0 0% 100%;
-  --primary-border: 24 100% 40%;
+  --primary-border: 128 58% 32%;
 
   --secondary: 0 0% 12%;
   --secondary-foreground: 0 0% 90%;
@@ -89,9 +89,9 @@
   --muted-foreground: 0 0% 65%;
   --muted-border: 0 0% 18%;
 
-  --accent: 24 100% 15%;
-  --accent-foreground: 24 100% 50%;
-  --accent-border: 24 100% 20%;
+  --accent: 128 58% 12%;
+  --accent-foreground: 128 58% 42%;
+  --accent-border: 128 58% 18%;
 
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
@@ -99,7 +99,7 @@
 
   --border: 0 0% 15%;
   --input: 0 0% 12%;
-  --ring: 24 100% 50%;
+  --ring: 128 58% 42%;
 
   --radius: 0.25rem;
 
