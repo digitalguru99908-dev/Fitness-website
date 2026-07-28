@@ -4,12 +4,39 @@ import { MapPin, Phone, Clock, Instagram, Mail, Send, CheckCircle2 } from 'lucid
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
 
 export function Contact() {
-  const [formStatus, setFormStatus] = useState<'idle' | 'submitted'>('idle');
+  const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'submitted' | 'error'>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setFormStatus('submitted');
-    // In a real app, send data here
+    setFormStatus('sending');
+    setErrorMsg('');
+
+    const form = e.currentTarget;
+    const data = {
+      name: (form.elements.namedItem('name') as HTMLInputElement).value,
+      phone: (form.elements.namedItem('phone') as HTMLInputElement).value,
+      plan: (form.elements.namedItem('plan') as HTMLSelectElement).value,
+      message: (form.elements.namedItem('message') as HTMLTextAreaElement).value,
+    };
+
+    try {
+      const res = await fetch(`${import.meta.env.BASE_URL}api/inquiry`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({}));
+        throw new Error((json as { error?: string }).error || 'Something went wrong.');
+      }
+
+      setFormStatus('submitted');
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : 'Failed to send. Please try again.');
+      setFormStatus('error');
+    }
   };
 
   return (
@@ -203,12 +230,23 @@ export function Contact() {
                     ></textarea>
                   </div>
                   
+                  {formStatus === 'error' && (
+                    <p className="text-red-400 text-sm font-medium border border-red-400/30 bg-red-400/10 px-4 py-3 rounded-sm">
+                      ⚠ {errorMsg}
+                    </p>
+                  )}
+
                   <button 
                     type="submit"
-                    className="w-full flex items-center justify-center gap-2 bg-primary text-white font-display font-bold text-lg uppercase py-4 skew-x-[-10deg] hover:bg-primary/90 transition-colors box-glow hover:scale-105 active:scale-95 group mt-4"
+                    disabled={formStatus === 'sending'}
+                    className="w-full flex items-center justify-center gap-2 bg-primary text-white font-display font-bold text-lg uppercase py-4 skew-x-[-10deg] hover:bg-primary/90 transition-colors box-glow hover:scale-105 active:scale-95 group mt-4 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
                     <span className="skew-x-[10deg] flex items-center gap-2">
-                      Send Inquiry <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                      {formStatus === 'sending' ? (
+                        <>Sending…</>
+                      ) : (
+                        <>Send Inquiry <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" /></>
+                      )}
                     </span>
                   </button>
                 </form>
