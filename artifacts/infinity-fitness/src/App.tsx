@@ -11,6 +11,8 @@ import { Services } from '@/pages/Services';
 import { Membership } from '@/pages/Membership';
 import { Gallery } from '@/pages/Gallery';
 import { Contact } from '@/pages/Contact';
+import { Testimonials } from '@/pages/Testimonials';
+import { Owner } from '@/pages/Owner';
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
             <Route path="/membership" component={Membership} />
             <Route path="/gallery" component={Gallery} />
             <Route path="/contact" component={Contact} />
+            <Route path="/testimonials" component={Testimonials} />
+            <Route path="/owner" component={Owner} />
             <Route>
               <div className="flex-1 flex flex-col items-center justify-center pt-20">
                 <h1 className="text-4xl font-display font-bold text-primary mb-4">404</h1>

@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'wouter';
 import { motion } from 'framer-motion';
-import { ArrowRight, Phone, Dumbbell, HeartPulse, TrendingUp, Flame, Leaf, Zap, Star } from 'lucide-react';
+import { ArrowRight, Phone, Dumbbell, HeartPulse, TrendingUp, Flame, Leaf, Zap } from 'lucide-react';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
+import { Reviews } from '@/components/sections/Reviews';
 
 export function Home() {
   return (
@@ -39,7 +40,7 @@ export function Home() {
             transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
             className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
           >
-            <Link href="/membership" className="inline-flex items-center justify-center bg-primary text-primary-foreground px-8 py-4 font-display font-bold text-xl uppercase tracking-wider skew-x-[-10deg] hover:bg-primary/90 transition-colors box-glow hover:scale-105 active:scale-95 group">
+            <Link href="/membership" className="inline-flex items-center justify-center bg-gold text-gold-foreground px-8 py-4 font-display font-bold text-xl uppercase tracking-wider skew-x-[-10deg] hover:bg-gold/90 transition-colors hover:scale-105 active:scale-95 group" style={{ boxShadow: '0 0 30px hsl(38 91% 55% / 0.3)' }}>
               <span className="skew-x-[10deg] flex items-center gap-2">
                 Join Now <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>
@@ -50,6 +51,15 @@ export function Home() {
               </span>
             </a>
           </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="mt-5 text-sm text-muted-foreground tracking-wide"
+          >
+            <span className="text-gold font-bold">✓</span> First visit free — no commitment
+          </motion.p>
         </div>
       </section>
 
@@ -122,54 +132,8 @@ export function Home() {
         </div>
       </section>
 
-      {/* Testimonials — Auto-looping carousel */}
-      <section className="py-24 bg-[#050505] border-t border-white/5 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 text-center">
-          <div className="flex items-center justify-center gap-2 text-primary mb-4">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-6 h-6 fill-primary text-primary" />
-            ))}
-          </div>
-          <h2 className="text-5xl font-display font-bold mb-2">4.2 / 5.0</h2>
-          <p className="text-muted-foreground">Based on 40+ Google Reviews</p>
-        </div>
-
-        {/* Marquee track */}
-        <div
-          className="group overflow-hidden cursor-default select-none"
-          title="Hover to pause"
-        >
-          <div className="animate-marquee flex gap-6 w-max pause-marquee-target">
-            {[
-              { name: "Rahul Sharma",   stars: 5, text: "Best gym in Kaithal. The trainers really care about your progress and the equipment is top notch." },
-              { name: "Priya Singh",    stars: 5, text: "Lost 8 kg in 3 months here. The weight loss program is excellent and the environment is very supportive." },
-              { name: "Amit Kumar",     stars: 5, text: "The atmosphere here is unmatched. Everyone motivates each other and the trainers are always available to guide you." },
-              { name: "Neha Yadav",     stars: 5, text: "Affordable prices with world-class facilities. I joined 6 months ago and already see a huge difference in my strength." },
-              { name: "Suresh Verma",   stars: 4, text: "Modern equipment and clean facilities. The owner himself trains alongside members which is very inspiring." },
-              { name: "Pooja Devi",     stars: 5, text: "Finally a gym that feels like family. No judgment, just pure dedication and results. Highly recommend to everyone!" },
-              /* ── duplicate for seamless loop ── */
-              { name: "Rahul Sharma",   stars: 5, text: "Best gym in Kaithal. The trainers really care about your progress and the equipment is top notch." },
-              { name: "Priya Singh",    stars: 5, text: "Lost 8 kg in 3 months here. The weight loss program is excellent and the environment is very supportive." },
-              { name: "Amit Kumar",     stars: 5, text: "The atmosphere here is unmatched. Everyone motivates each other and the trainers are always available to guide you." },
-              { name: "Neha Yadav",     stars: 5, text: "Affordable prices with world-class facilities. I joined 6 months ago and already see a huge difference in my strength." },
-              { name: "Suresh Verma",   stars: 4, text: "Modern equipment and clean facilities. The owner himself trains alongside members which is very inspiring." },
-              { name: "Pooja Devi",     stars: 5, text: "Finally a gym that feels like family. No judgment, just pure dedication and results. Highly recommend to everyone!" },
-            ].map((review, i) => (
-              <div
-                key={i}
-                className="w-[300px] sm:w-[340px] shrink-0 bg-card border border-white/5 p-6 relative group-hover:[animation-play-state:paused]"
-              >
-                <div className="text-primary text-4xl font-display opacity-20 absolute top-4 right-4">"</div>
-                <div className="flex text-primary mb-3">
-                  {[...Array(review.stars)].map((_, j) => <Star key={j} className="w-4 h-4 fill-primary" />)}
-                </div>
-                <p className="text-gray-300 italic mb-4 relative z-10 text-sm leading-relaxed">"{review.text}"</p>
-                <div className="font-bold uppercase tracking-wider text-sm text-white">{review.name}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Member Reviews */}
+      <Reviews />
 
       {/* Final CTA */}
       <section className="py-24 bg-gradient-to-br from-primary/20 via-primary to-accent relative overflow-hidden text-center">
@@ -181,7 +145,7 @@ export function Home() {
             Ready to Start Your Journey?
           </h2>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/membership" className="inline-flex items-center justify-center bg-black text-white px-8 py-4 font-display font-bold text-xl uppercase tracking-wider skew-x-[-10deg] hover:bg-gray-900 transition-colors shadow-2xl hover:scale-105 active:scale-95 group">
+            <Link href="/membership" className="inline-flex items-center justify-center bg-gold text-gold-foreground px-8 py-4 font-display font-bold text-xl uppercase tracking-wider skew-x-[-10deg] hover:bg-gold/90 transition-colors shadow-2xl hover:scale-105 active:scale-95 group">
               <span className="skew-x-[10deg] flex items-center gap-2">
                 Join Now <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>

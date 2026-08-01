@@ -42,6 +42,8 @@ export function Footer() {
                 { name: 'Services', href: '/services' },
                 { name: 'Membership', href: '/membership' },
                 { name: 'Gallery', href: '/gallery' },
+                { name: 'Member Reviews', href: '/testimonials' },
+                { name: 'Our Story', href: '/owner' },
                 { name: 'Contact', href: '/contact' },
               ].map((link) => (
                 <li key={link.name}>

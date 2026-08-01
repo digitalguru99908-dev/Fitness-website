@@ -39,6 +39,10 @@
   --color-primary-foreground: hsl(var(--primary-foreground));
   --color-primary-border: hsl(var(--primary-border));
 
+  /* Amber/gold CTA accent — used on all conversion buttons */
+  --color-gold: hsl(var(--gold));
+  --color-gold-foreground: hsl(var(--gold-foreground));
+
   --color-secondary: hsl(var(--secondary));
   --color-secondary-foreground: hsl(var(--secondary-foreground));
   --color-secondary-border: hsl(var(--secondary-border));
@@ -80,6 +84,10 @@
   --primary: 272 80% 62%;
   --primary-foreground: 0 0% 100%;
   --primary-border: 272 80% 48%;
+
+  /* Amber/gold — warm CTA accent (#f5a623 range) */
+  --gold: 38 91% 55%;
+  --gold-foreground: 0 0% 0%;
 
   --secondary: 0 0% 12%;
   --secondary-foreground: 0 0% 90%;

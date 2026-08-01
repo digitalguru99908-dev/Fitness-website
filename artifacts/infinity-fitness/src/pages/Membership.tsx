@@ -77,7 +77,7 @@ export function Membership() {
                 <li className="flex gap-3">✓ Locker room access</li>
                 <li className="flex gap-3 text-muted-foreground">× No long-term commitment</li>
               </ul>
-              <Link href="/contact" className="w-full block text-center border border-white/20 text-white font-display font-bold uppercase py-4 skew-x-[-10deg] hover:bg-white/5 transition-colors mt-auto group">
+              <Link href="/contact" className="w-full block text-center bg-gold text-gold-foreground font-display font-bold uppercase py-4 skew-x-[-10deg] hover:bg-gold/90 transition-colors mt-auto group">
                 <div className="skew-x-[10deg] flex items-center justify-center gap-2">
                   Join Now <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -111,7 +111,7 @@ export function Membership() {
                 <li className="flex gap-3 font-medium text-primary">✓ Free fitness assessment</li>
                 <li className="flex gap-3 font-medium text-primary">✓ Priority support</li>
               </ul>
-              <Link href="/contact" className="w-full block text-center bg-primary text-white font-display font-bold text-lg uppercase py-5 skew-x-[-10deg] hover:bg-primary/90 transition-colors mt-auto box-glow hover:scale-105 active:scale-95 group">
+              <Link href="/contact" className="w-full block text-center bg-gold text-gold-foreground font-display font-bold text-lg uppercase py-5 skew-x-[-10deg] hover:bg-gold/90 transition-colors mt-auto hover:scale-105 active:scale-95 group" style={{ boxShadow: '0 0 30px hsl(38 91% 55% / 0.3)' }}>
                 <div className="skew-x-[10deg] flex items-center justify-center gap-2">
                   Claim Offer <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -144,7 +144,7 @@ export function Membership() {
                 <li className="flex gap-3">✓ Locker room access</li>
                 <li className="flex gap-3">✓ Flexible payment options</li>
               </ul>
-              <Link href="/contact" className="w-full block text-center border border-white/20 text-white font-display font-bold uppercase py-4 skew-x-[-10deg] hover:bg-white/5 transition-colors mt-auto group">
+              <Link href="/contact" className="w-full block text-center bg-gold text-gold-foreground font-display font-bold uppercase py-4 skew-x-[-10deg] hover:bg-gold/90 transition-colors mt-auto group">
                 <div className="skew-x-[10deg] flex items-center justify-center gap-2">
                   Join Now <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>

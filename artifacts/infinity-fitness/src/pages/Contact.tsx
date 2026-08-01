@@ -239,7 +239,7 @@ export function Contact() {
                   <button 
                     type="submit"
                     disabled={formStatus === 'sending'}
-                    className="w-full flex items-center justify-center gap-2 bg-primary text-white font-display font-bold text-lg uppercase py-4 skew-x-[-10deg] hover:bg-primary/90 transition-colors box-glow hover:scale-105 active:scale-95 group mt-4 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="w-full flex items-center justify-center gap-2 bg-gold text-gold-foreground font-display font-bold text-lg uppercase py-4 skew-x-[-10deg] hover:bg-gold/90 transition-colors hover:scale-105 active:scale-95 group mt-4 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
                     <span className="skew-x-[10deg] flex items-center gap-2">
                       {formStatus === 'sending' ? (

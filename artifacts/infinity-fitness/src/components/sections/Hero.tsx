@@ -47,7 +47,8 @@ export const Hero = () => {
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <a 
               href="#plans" 
-              className="bg-primary text-white px-8 py-4 rounded-sm font-display font-bold uppercase tracking-wider text-lg hover:bg-primary/90 transition-all text-center box-glow-hover transform hover:-translate-y-1"
+              className="bg-gold text-gold-foreground px-8 py-4 rounded-sm font-display font-bold uppercase tracking-wider text-lg hover:bg-gold/90 transition-all text-center transform hover:-translate-y-1"
+              style={{ boxShadow: '0 0 20px hsl(38 91% 55% / 0.25)' }}
             >
               Join Now
             </a>

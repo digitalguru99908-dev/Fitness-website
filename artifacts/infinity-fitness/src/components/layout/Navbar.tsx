@@ -10,6 +10,8 @@ const navLinks = [
   { name: 'Services', href: '/services' },
   { name: 'Membership', href: '/membership' },
   { name: 'Gallery', href: '/gallery' },
+  { name: 'Reviews', href: '/testimonials' },
+  { name: 'Our Story', href: '/owner' },
   { name: 'Contact', href: '/contact' },
 ];
 
@@ -38,7 +40,7 @@ export function Navbar() {
             </Link>
 
             {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-5">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
