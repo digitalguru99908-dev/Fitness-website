@@ -5,27 +5,16 @@ import { defineConfig } from 'vite';
 
 import runtimeErrorOverlay from '@replit/vite-plugin-runtime-error-modal';
 
-const rawPort = process.env.PORT;
-
-if (!rawPort) {
-  throw new Error(
-    'PORT environment variable is required but was not provided.',
-  );
-}
-
+// On Replit, PORT and BASE_PATH are injected by the artifact system.
+// Locally, fall back to sensible defaults so the app starts without any setup.
+const rawPort = process.env.PORT ?? '5173';
 const port = Number(rawPort);
 
 if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
 
-const basePath = process.env.BASE_PATH;
-
-if (!basePath) {
-  throw new Error(
-    'BASE_PATH environment variable is required but was not provided.',
-  );
-}
+const basePath = process.env.BASE_PATH ?? '/';
 
 export default defineConfig({
   base: basePath,
@@ -72,6 +61,16 @@ export default defineConfig({
     fs: {
       strict: true,
     },
+    // Locally, forward /api requests to the API server.
+    // On Replit, path-based routing handles this at the proxy level instead.
+    proxy: process.env.REPL_ID
+      ? undefined
+      : {
+          '/api': {
+            target: 'http://localhost:8080',
+            changeOrigin: true,
+          },
+        },
   },
   preview: {
     port,
