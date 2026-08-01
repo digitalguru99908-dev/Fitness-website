@@ -44,7 +44,7 @@ export function Navbar() {
     <>
       <motion.nav
         style={motionStyle}
-        className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b border-white/5"
+        className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b border-border"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
           <div className="flex items-center justify-between h-full">
@@ -53,9 +53,9 @@ export function Navbar() {
               <img
                 src={gymLogo}
                 alt="Infinity Fitness Gym Logo"
-                className="h-12 w-auto object-contain group-hover:scale-105 transition-transform drop-shadow-[0_0_8px_rgba(74,197,85,0.4)]"
+                className="h-12 w-auto object-contain group-hover:scale-105 transition-transform"
               />
-              <span className="font-display font-bold text-xl tracking-wider text-white group-hover:text-primary transition-colors">
+              <span className="font-display font-bold text-xl tracking-wider text-foreground group-hover:text-primary transition-colors">
                 INFINITY FITNESS
               </span>
             </Link>
@@ -88,7 +88,7 @@ export function Navbar() {
             <div className="md:hidden">
               <button
                 onClick={toggleMenu}
-                className="text-white p-2 hover:text-primary transition-colors focus:outline-none"
+                className="text-foreground p-2 hover:text-primary transition-colors focus:outline-none"
                 aria-label="Toggle menu"
               >
                 {isOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
@@ -120,7 +120,7 @@ export function Navbar() {
                     href={link.href}
                     onClick={closeMenu}
                     className={`block font-display text-4xl font-bold uppercase tracking-wide ${
-                      location === link.href ? 'text-primary' : 'text-white'
+                      location === link.href ? 'text-primary' : 'text-foreground'
                     }`}
                   >
                     {link.name}

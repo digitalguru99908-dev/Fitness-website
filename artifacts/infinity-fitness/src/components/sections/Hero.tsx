@@ -14,8 +14,8 @@ export const Hero = () => {
       />
       
       {/* Gradient Overlays */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-t from-background via-background/80 to-transparent" />
-      <div className="absolute inset-0 z-10 bg-gradient-to-r from-background via-background/60 to-transparent" />
+      <div className="absolute inset-0 z-10 bg-gradient-to-t from-black via-black/80 to-transparent" />
+      <div className="absolute inset-0 z-10 bg-gradient-to-r from-black via-black/60 to-transparent" />
       
       {/* Noise Texture */}
       <div className="absolute inset-0 z-10 opacity-20 pointer-events-none mix-blend-overlay" 

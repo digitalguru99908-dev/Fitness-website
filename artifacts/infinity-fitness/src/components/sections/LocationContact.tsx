@@ -4,7 +4,7 @@ import { Reveal } from '../ui/reveal';
 
 export const LocationContact = () => {
   return (
-    <section id="location" className="py-24 bg-[#0a0a0a] border-t border-border">
+    <section id="location" className="py-24 bg-secondary border-t border-border">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
           
@@ -12,16 +12,16 @@ export const LocationContact = () => {
           <div id="contact" className="order-2 lg:order-1">
             <Reveal direction="right">
               <h3 className="text-primary font-display tracking-widest uppercase text-sm mb-2">Reach Out</h3>
-              <h2 className="text-4xl md:text-5xl font-display font-bold uppercase text-white mb-8">Drop A <span className="text-primary">Line</span></h2>
+              <h2 className="text-4xl md:text-5xl font-display font-bold uppercase text-foreground mb-8">Drop A <span className="text-primary">Line</span></h2>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
                 <a href="tel:07206333820" className="flex items-start gap-4 p-4 rounded-sm border border-border bg-card hover:border-primary/50 transition-colors group">
                   <div className="w-10 h-10 rounded-full bg-secondary group-hover:bg-primary flex items-center justify-center shrink-0 transition-colors">
-                    <Phone className="text-white w-5 h-5" />
+                    <Phone className="text-primary group-hover:text-primary-foreground w-5 h-5 transition-colors" />
                   </div>
                   <div>
                     <h4 className="text-sm font-display uppercase tracking-wider text-muted-foreground mb-1">Call Us</h4>
-                    <p className="text-white font-medium">072063 33820</p>
+                    <p className="text-foreground font-medium">072063 33820</p>
                   </div>
                 </a>
                 
@@ -31,19 +31,19 @@ export const LocationContact = () => {
                   </div>
                   <div>
                     <h4 className="text-sm font-display uppercase tracking-wider text-muted-foreground mb-1">Hours</h4>
-                    <p className="text-white font-medium">Daily till 11 PM</p>
+                    <p className="text-foreground font-medium">Daily till 11 PM</p>
                   </div>
                 </div>
               </div>
               
               <div className="bg-card border border-border p-6 md:p-8 rounded-sm">
-                <h3 className="text-xl font-display font-bold uppercase text-white mb-6">Send an Inquiry</h3>
+                <h3 className="text-xl font-display font-bold uppercase text-foreground mb-6">Send an Inquiry</h3>
                 <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
                   <div>
                     <input 
                       type="text" 
                       placeholder="Your Name" 
-                      className="w-full bg-background border border-border px-4 py-3 rounded-sm text-white focus:outline-none focus:border-primary transition-colors"
+                      className="w-full bg-background border border-border px-4 py-3 rounded-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
                       required
                     />
                   </div>
@@ -51,7 +51,7 @@ export const LocationContact = () => {
                     <input 
                       type="tel" 
                       placeholder="Phone Number" 
-                      className="w-full bg-background border border-border px-4 py-3 rounded-sm text-white focus:outline-none focus:border-primary transition-colors"
+                      className="w-full bg-background border border-border px-4 py-3 rounded-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
                       required
                     />
                   </div>
@@ -59,13 +59,13 @@ export const LocationContact = () => {
                     <textarea 
                       placeholder="How can we help you?" 
                       rows={4}
-                      className="w-full bg-background border border-border px-4 py-3 rounded-sm text-white focus:outline-none focus:border-primary transition-colors resize-none"
+                      className="w-full bg-background border border-border px-4 py-3 rounded-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors resize-none"
                       required
                     ></textarea>
                   </div>
                   <button 
                     type="submit"
-                    className="w-full bg-primary text-white font-display font-bold uppercase tracking-wider py-4 rounded-sm hover:bg-primary/90 transition-colors"
+                    className="w-full bg-primary text-primary-foreground font-display font-bold uppercase tracking-wider py-4 rounded-sm hover:bg-primary/90 transition-colors"
                   >
                     Send Message
                   </button>
@@ -81,11 +81,11 @@ export const LocationContact = () => {
           <div className="order-1 lg:order-2 h-full flex flex-col">
             <Reveal direction="left" className="h-full flex flex-col">
               <h3 className="text-primary font-display tracking-widest uppercase text-sm mb-2">Find Us</h3>
-              <h2 className="text-4xl md:text-5xl font-display font-bold uppercase text-white mb-8">Our <span className="text-primary">Territory</span></h2>
+              <h2 className="text-4xl md:text-5xl font-display font-bold uppercase text-foreground mb-8">Our <span className="text-primary">Territory</span></h2>
               
               <div className="flex items-start gap-4 mb-6">
                 <MapPin className="text-primary w-6 h-6 shrink-0 mt-1" />
-                <p className="text-white text-lg leading-relaxed">
+                <p className="text-foreground text-lg leading-relaxed">
                   Kaithal - Dhand Rd, Opp. Maharaja Palace,<br />
                   Rishi Nagar, Kaithal, Haryana 136027
                 </p>
@@ -109,7 +109,7 @@ export const LocationContact = () => {
                 href="https://goo.gl/maps/search/Infinity+Fitness+Gym,+Kaithal+Dhand+Rd,+Rishi+Nagar,+Kaithal,+Haryana" 
                 target="_blank" 
                 rel="noreferrer"
-                className="mt-6 flex items-center justify-center gap-2 border border-border bg-card text-white px-6 py-4 rounded-sm font-display font-bold uppercase tracking-wider hover:border-primary hover:text-primary transition-colors"
+                className="mt-6 flex items-center justify-center gap-2 border border-border bg-card text-foreground px-6 py-4 rounded-sm font-display font-bold uppercase tracking-wider hover:border-primary hover:text-primary transition-colors"
               >
                 <MapPin size={18} />
                 Get Directions

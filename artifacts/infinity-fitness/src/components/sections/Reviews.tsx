@@ -43,12 +43,12 @@ export const Reviews = () => {
           <div className="lg:col-span-4">
             <Reveal direction="right">
               <h3 className="text-primary font-display tracking-widest uppercase text-sm mb-2">Real Results</h3>
-              <h2 className="text-4xl md:text-5xl font-display font-bold uppercase text-white mb-6">
+              <h2 className="text-4xl md:text-5xl font-display font-bold uppercase text-foreground mb-6">
                 Word On The <span className="text-primary">Street</span>
               </h2>
 
               <div className="flex items-center gap-4 mb-8 bg-card border border-border p-6 rounded-sm w-fit">
-                <div className="text-5xl font-display font-bold text-white">
+                <div className="text-5xl font-display font-bold text-foreground">
                   <AnimatedCounter to={4.2} decimals={1} duration={1.4} />
                 </div>
                 <div>
@@ -99,7 +99,7 @@ export const Reviews = () => {
                     className="bg-card border border-border p-8 rounded-sm relative group hover:border-primary/50 transition-colors h-full"
                     whileHover={prefersReduced ? {} : {
                       y: -4,
-                      boxShadow: '0 8px 28px rgba(139,92,246,0.15)',
+                      boxShadow: '0 8px 28px hsl(14 100% 50% / 0.12)',
                       transition: { duration: 0.22 },
                     }}
                     whileTap={prefersReduced ? {} : { scale: 0.99, transition: { duration: 0.1 } }}
@@ -117,11 +117,11 @@ export const Reviews = () => {
                     </p>
 
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-white font-display font-bold">
+                      <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-display font-bold">
                         {review.name.charAt(0)}
                       </div>
                       <div>
-                        <h4 className="text-white font-display uppercase tracking-wide font-bold">{review.name}</h4>
+                        <h4 className="text-foreground font-display uppercase tracking-wide font-bold">{review.name}</h4>
                         <span className="text-xs text-muted-foreground">{review.role}</span>
                       </div>
                     </div>

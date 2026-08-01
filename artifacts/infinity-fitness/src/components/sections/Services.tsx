@@ -41,9 +41,7 @@ export const Services = () => {
   const prefersReduced = useReducedMotion();
 
   return (
-    <section id="services" className="py-24 bg-[#0a0a0a] relative border-t border-b border-border">
-      {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+    <section id="services" className="py-24 bg-secondary relative border-t border-b border-border">
 
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="text-center mb-16">
@@ -73,7 +71,7 @@ export const Services = () => {
                            hover:border-primary/50"
                 whileHover={prefersReduced ? {} : {
                   y: -6,
-                  boxShadow: '0 8px 32px rgba(139,92,246,0.18)',
+                  boxShadow: '0 8px 32px hsl(14 100% 50% / 0.15)',
                   transition: { duration: 0.22 },
                 }}
                 whileTap={prefersReduced ? {} : { scale: 0.98, transition: { duration: 0.1 } }}
@@ -83,9 +81,9 @@ export const Services = () => {
 
                 <div className="relative z-10">
                   <div className="w-14 h-14 bg-secondary rounded-sm flex items-center justify-center mb-6 group-hover:bg-primary transition-colors duration-300">
-                    <service.icon className="w-7 h-7 text-primary group-hover:text-white transition-colors duration-300" />
+                    <service.icon className="w-7 h-7 text-primary group-hover:text-primary-foreground transition-colors duration-300" />
                   </div>
-                  <h3 className="text-xl font-display font-bold text-white uppercase tracking-wide mb-3">{service.title}</h3>
+                  <h3 className="text-xl font-display font-bold text-foreground uppercase tracking-wide mb-3">{service.title}</h3>
                   <p className="text-muted-foreground leading-relaxed">
                     {service.description}
                   </p>

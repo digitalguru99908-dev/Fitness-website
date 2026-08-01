@@ -10,7 +10,7 @@ export const About = () => {
           <div className="order-2 lg:order-1 relative">
             <Reveal direction="right">
               <div className="relative z-10 border-l-4 border-primary pl-6 py-2">
-                <h2 className="text-4xl md:text-5xl font-display font-bold uppercase mb-6 text-white leading-tight">
+                <h2 className="text-4xl md:text-5xl font-display font-bold uppercase mb-6 text-foreground leading-tight">
                   More Than Just <br/>A Gym. We Are A <span className="text-primary">Community.</span>
                 </h2>
                 <div className="space-y-6 text-muted-foreground text-lg leading-relaxed">
@@ -20,7 +20,7 @@ export const About = () => {
                   <p>
                     When you walk in, you'll hear the clanging of iron and feel an electric energy. It's dark, it's intense, but most importantly, it's welcoming. Whether you're lifting for the first time or prepping for a competition, you belong here.
                   </p>
-                  <p className="font-medium text-white">
+                  <p className="font-medium text-foreground">
                     Serious equipment, affordable prices, and a grind-it-out spirit. That's who we are.
                   </p>
                 </div>
@@ -28,11 +28,11 @@ export const About = () => {
                 <div className="mt-10 grid grid-cols-2 gap-6 border-t border-border pt-8">
                   <div>
                     <h4 className="text-sm uppercase tracking-widest text-primary mb-1">Location</h4>
-                    <p className="text-white font-medium">Opp. Maharaja Palace,<br/>Rishi Nagar, Kaithal</p>
+                    <p className="text-foreground font-medium">Opp. Maharaja Palace,<br/>Rishi Nagar, Kaithal</p>
                   </div>
                   <div>
                     <h4 className="text-sm uppercase tracking-widest text-primary mb-1">Hours</h4>
-                    <p className="text-white font-medium">Open Daily<br/>Closes 11 PM</p>
+                    <p className="text-foreground font-medium">Open Daily<br/>Closes 11 PM</p>
                   </div>
                 </div>
               </div>

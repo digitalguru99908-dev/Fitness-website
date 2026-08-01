@@ -53,7 +53,7 @@ export const Plans = () => {
         <div className="text-center mb-16">
           <Reveal>
             <h3 className="text-primary font-display tracking-widest uppercase text-sm mb-2">No Hidden Fees</h3>
-            <h2 className="text-4xl md:text-5xl font-display font-bold uppercase text-white mb-4">Honest <span className="text-primary">Pricing</span></h2>
+            <h2 className="text-4xl md:text-5xl font-display font-bold uppercase text-foreground mb-4">Honest <span className="text-primary">Pricing</span></h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Affordable access to serious equipment. Choose the commitment level that works for you. No contracts, no corporate BS.
             </p>
@@ -66,8 +66,8 @@ export const Plans = () => {
               <div 
                 className={`relative rounded-sm border p-8 h-full flex flex-col bg-card transition-all duration-300
                   ${plan.popular 
-                    ? 'border-primary shadow-[0_0_30px_rgba(139,92,246,0.2)] md:-mt-8 md:mb-8' 
-                    : 'border-border hover:border-border/80'
+                    ? 'border-primary shadow-[0_8px_40px_hsl(14_100%_50%/0.15)] md:-mt-8 md:mb-8' 
+                    : 'border-border hover:border-primary/30'
                   }`}
               >
                 {plan.badge && (
@@ -78,7 +78,7 @@ export const Plans = () => {
                 
                 <div className="mb-8">
                   <h3 className="text-xl font-display font-bold uppercase text-muted-foreground mb-4">{plan.name}</h3>
-                  <div className="flex items-end gap-1 text-white">
+                  <div className="flex items-end gap-1 text-foreground">
                     <span className="text-2xl font-bold">₹</span>
                     <span className="text-5xl font-display font-bold leading-none">{plan.price}</span>
                     <span className="text-muted-foreground font-medium mb-1">{plan.period}</span>
@@ -102,8 +102,8 @@ export const Plans = () => {
                   rel="noreferrer"
                   className={`w-full py-4 text-center font-display font-bold uppercase tracking-wider rounded-sm transition-all block mt-auto
                     ${plan.popular 
-                      ? 'bg-primary text-white hover:bg-primary/90 box-glow' 
-                      : 'bg-secondary text-white hover:bg-secondary/80'
+                      ? 'bg-primary text-primary-foreground hover:bg-primary/90 box-glow' 
+                      : 'bg-secondary text-foreground hover:bg-secondary/80 border border-border'
                     }`}
                 >
                   Get Started
