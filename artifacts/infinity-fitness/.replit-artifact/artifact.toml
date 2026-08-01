@@ -11,7 +11,7 @@ paths = [ "/" ]
 localPort = 18902
 
 [services.development]
-run = "pnpm --filter @workspace/infinity-fitness run dev"
+run = "pnpm install --frozen-lockfile && pnpm --filter @workspace/infinity-fitness run dev"
 
 [services.production]
 build = [ "pnpm", "--filter", "@workspace/infinity-fitness", "run", "build" ]
