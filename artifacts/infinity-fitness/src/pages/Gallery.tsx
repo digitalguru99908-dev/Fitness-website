@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
+import { staggerContainer, fadeUpItem } from '@/lib/animation';
 import img1 from '@assets/1_1785140838620.webp';
 import img2 from '@assets/2_1785140851182.webp';
 import img3 from '@assets/3_1785140851181.webp';
@@ -22,6 +23,7 @@ const images = [
 
 export function Gallery() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const prefersReduced = useReducedMotion();
 
   const openLightbox = (i: number) => setLightboxIndex(i);
   const closeLightbox = () => setLightboxIndex(null);
@@ -64,22 +66,29 @@ export function Gallery() {
         </div>
       </section>
 
-      {/* Gallery Grid */}
+      {/* Gallery Grid — staggered cascade */}
       <section className="py-12 md:py-24">
         <div className="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
+          <motion.div
+            className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4"
+            variants={staggerContainer(0.07)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '100px' }}
+          >
             {images.map((img, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "100px" }}
-                transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
+                variants={fadeUpItem}
                 className={`group relative overflow-hidden bg-card cursor-pointer ${
                   i === 0 || i === 4 ? 'row-span-2' : ''
                 }`}
                 style={{ aspectRatio: i === 0 || i === 4 ? '3/4' : '4/3' }}
                 onClick={() => openLightbox(i)}
+                whileHover={prefersReduced ? {} : {
+                  scale: 1.02,
+                  transition: { duration: 0.3 },
+                }}
               >
                 <img
                   src={img.src}
@@ -96,7 +105,7 @@ export function Gallery() {
                 </div>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 

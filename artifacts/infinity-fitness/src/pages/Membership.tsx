@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'wouter';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
+import { staggerContainer, fadeUpItem } from '@/lib/animation';
 
 const faqs = [
   {
@@ -28,6 +29,16 @@ const faqs = [
 ];
 
 export function Membership() {
+  const prefersReduced = useReducedMotion();
+
+  // Shared hover/tap for plan cards
+  const cardHover = prefersReduced ? {} : {
+    y: -6,
+    boxShadow: '0 12px 40px rgba(139,92,246,0.2)',
+    transition: { duration: 0.25 },
+  };
+  const cardTap = prefersReduced ? {} : { scale: 0.99, transition: { duration: 0.1 } };
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section */}
@@ -50,19 +61,24 @@ export function Membership() {
         </div>
       </section>
 
-      {/* Pricing Section */}
+      {/* Pricing Section — stagger the 3 cards */}
       <section className="py-24 relative">
         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center max-w-5xl mx-auto">
-            
+          <motion.div
+            className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center max-w-5xl mx-auto"
+            variants={staggerContainer(0.12)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+          >
+
             {/* Standard Monthly */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
+              variants={fadeUpItem}
+              whileHover={cardHover}
+              whileTap={cardTap}
               className="bg-card border border-white/10 p-8 flex flex-col h-full rounded-sm"
             >
               <h3 className="font-display text-2xl font-bold uppercase text-white mb-2">Standard Monthly</h3>
@@ -84,12 +100,19 @@ export function Membership() {
               </Link>
             </motion.div>
 
-            {/* 1-Year Package - Highly Elevated */}
+            {/* 1-Year Package — elevated: use scale variant */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              variants={{
+                hidden: { opacity: 0, scale: 0.95 },
+                visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: 'easeOut' } },
+              }}
+              whileHover={prefersReduced ? {} : {
+                y: -8,
+                scale: 1.02,
+                boxShadow: '0 16px 50px rgba(139,92,246,0.35)',
+                transition: { duration: 0.25 },
+              }}
+              whileTap={cardTap}
               className="bg-card border-2 border-primary p-10 flex flex-col h-[105%] relative shadow-[0_0_50px_rgba(139,92,246,0.25)] rounded-sm z-10"
             >
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary text-white text-sm font-bold uppercase tracking-widest py-1.5 px-6 whitespace-nowrap shadow-lg">
@@ -111,7 +134,11 @@ export function Membership() {
                 <li className="flex gap-3 font-medium text-primary">✓ Free fitness assessment</li>
                 <li className="flex gap-3 font-medium text-primary">✓ Priority support</li>
               </ul>
-              <Link href="/contact" className="w-full block text-center bg-gold text-gold-foreground font-display font-bold text-lg uppercase py-5 skew-x-[-10deg] hover:bg-gold/90 transition-colors mt-auto hover:scale-105 active:scale-95 group" style={{ boxShadow: '0 0 30px hsl(38 91% 55% / 0.3)' }}>
+              <Link
+                href="/contact"
+                className="w-full block text-center bg-gold text-gold-foreground font-display font-bold text-lg uppercase py-5 skew-x-[-10deg] hover:bg-gold/90 transition-colors mt-auto group"
+                style={{ boxShadow: '0 0 30px hsl(38 91% 55% / 0.3)' }}
+              >
                 <div className="skew-x-[10deg] flex items-center justify-center gap-2">
                   Claim Offer <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -120,10 +147,9 @@ export function Membership() {
 
             {/* 6-Month Package */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              variants={fadeUpItem}
+              whileHover={cardHover}
+              whileTap={cardTap}
               className="bg-card border border-white/10 p-8 flex flex-col h-full relative rounded-sm"
             >
               <div className="absolute top-0 right-0 bg-white/10 text-white text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-bl-sm">
@@ -151,17 +177,17 @@ export function Membership() {
               </Link>
             </motion.div>
 
-          </div>
-          
+          </motion.div>
+
           {/* Savings Callout */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="mt-16 bg-primary/10 border border-primary/20 p-6 md:p-8 text-center max-w-4xl mx-auto"
           >
             <p className="text-xl md:text-2xl font-display uppercase font-bold text-white">
-              On the 1-Year plan you pay just <span className="text-primary text-glow text-3xl mx-2">₹917/month</span> 
+              On the 1-Year plan you pay just <span className="text-primary text-glow text-3xl mx-2">₹917/month</span>
               <span className="text-muted-foreground text-lg block sm:inline mt-2 sm:mt-0 sm:ml-2">compared to ₹2,000 on monthly</span>
             </p>
           </motion.div>

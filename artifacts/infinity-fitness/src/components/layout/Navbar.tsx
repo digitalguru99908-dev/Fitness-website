@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Menu, X, Phone } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+  useMotionTemplate,
+  useReducedMotion,
+} from 'framer-motion';
 import gymLogo from '@assets/7_1785143551141.webp';
 
 const navLinks = [
@@ -18,15 +25,29 @@ const navLinks = [
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [location] = useLocation();
+  const prefersReduced = useReducedMotion();
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
+  // Scroll-driven nav shrink: height 80 → 60px, shadow fades in
+  const { scrollY } = useScroll();
+  const navHeight = useTransform(scrollY, [0, 80], [80, 60]);
+  const shadowOpacity = useTransform(scrollY, [0, 80], [0, 0.45]);
+  const boxShadow = useMotionTemplate`0 4px 30px rgba(0,0,0,${shadowOpacity})`;
+
+  const motionStyle = prefersReduced
+    ? {}
+    : { height: navHeight, boxShadow };
+
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+      <motion.nav
+        style={motionStyle}
+        className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b border-white/5"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+          <div className="flex items-center justify-between h-full">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group">
               <img
@@ -75,7 +96,7 @@ export function Navbar() {
             </div>
           </div>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* Mobile Nav Drawer */}
       <AnimatePresence>
@@ -106,7 +127,7 @@ export function Navbar() {
                   </Link>
                 </motion.div>
               ))}
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
