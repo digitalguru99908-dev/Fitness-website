@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'wouter';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Phone, Dumbbell, HeartPulse, TrendingUp, Flame, Leaf, Zap } from 'lucide-react';
-import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
+import { HeroVideoCarousel } from '@/components/HeroVideoCarousel';
+import { HeroPhotoStrip } from '@/components/HeroPhotoStrip';
 import { Reviews } from '@/components/sections/Reviews';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
 
@@ -21,74 +22,93 @@ export function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-[100svh] flex items-center justify-center pt-20 overflow-hidden">
-        <GymHeroSlideshow />
+      <section className="relative min-h-[100svh] flex items-center overflow-hidden pt-20">
+        {/* Video background */}
+        <HeroVideoCarousel />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold uppercase tracking-tight text-white mb-6 leading-tight">
-              Transform Your Body,<br />
-              <span className="text-primary text-glow">Transform Your Life</span>
-            </h1>
-          </motion.div>
+        {/* Hero content — 2-column on desktop, stacked on mobile */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-0">
+          <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-          >
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mb-10 font-medium">
-              Kaithal's premier community gym — real equipment, real results, real people.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-            className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
-          >
-            <motion.div
-              whileHover={prefersReduced ? {} : { scale: 1.05, transition: { duration: 0.2 } }}
-              whileTap={prefersReduced ? {} : { scale: 0.95, transition: { duration: 0.1 } }}
-            >
-              <Link
-                href="/membership"
-                className="inline-flex items-center justify-center bg-gold text-gold-foreground px-8 py-4 font-display font-bold text-xl uppercase tracking-wider skew-x-[-10deg] hover:bg-gold/90 transition-colors group"
-                style={{ boxShadow: '0 0 30px hsl(38 91% 55% / 0.3)' }}
+            {/* ── LEFT: Text + CTAs ── */}
+            <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
               >
-                <span className="skew-x-[10deg] flex items-center gap-2">
-                  Join Now <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </Link>
-            </motion.div>
-            <motion.div
-              whileHover={prefersReduced ? {} : { scale: 1.05, transition: { duration: 0.2 } }}
-              whileTap={prefersReduced ? {} : { scale: 0.95, transition: { duration: 0.1 } }}
-            >
-              <a
-                href="tel:07206333820"
-                className="inline-flex items-center justify-center bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-4 font-display font-bold text-xl uppercase tracking-wider skew-x-[-10deg] hover:bg-white/20 transition-colors group"
-              >
-                <span className="skew-x-[10deg] flex items-center gap-2">
-                  <Phone className="w-5 h-5" /> Call Now
-                </span>
-              </a>
-            </motion.div>
-          </motion.div>
+                <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl font-display font-bold uppercase tracking-tight text-white mb-6 leading-tight">
+                  Transform Your Body,<br />
+                  <span className="text-primary text-glow">Transform Your Life</span>
+                </h1>
+              </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-5 text-sm text-muted-foreground tracking-wide"
-          >
-            <span className="text-gold font-bold">✓</span> First visit free — no commitment
-          </motion.p>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+              >
+                <p className="text-lg md:text-xl text-muted-foreground max-w-xl mb-10 font-medium">
+                  Kaithal's premier community gym — real equipment, real results, real people.
+                </p>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+                className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
+              >
+                <motion.div
+                  whileHover={prefersReduced ? {} : { scale: 1.05, transition: { duration: 0.2 } }}
+                  whileTap={prefersReduced ? {} : { scale: 0.95, transition: { duration: 0.1 } }}
+                >
+                  <Link
+                    href="/membership"
+                    className="inline-flex items-center justify-center bg-gold text-gold-foreground px-8 py-4 font-display font-bold text-xl uppercase tracking-wider skew-x-[-10deg] hover:bg-gold/90 transition-colors group"
+                    style={{ boxShadow: '0 0 30px hsl(38 91% 55% / 0.3)' }}
+                  >
+                    <span className="skew-x-[10deg] flex items-center gap-2">
+                      Join Now <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </Link>
+                </motion.div>
+                <motion.div
+                  whileHover={prefersReduced ? {} : { scale: 1.05, transition: { duration: 0.2 } }}
+                  whileTap={prefersReduced ? {} : { scale: 0.95, transition: { duration: 0.1 } }}
+                >
+                  <a
+                    href="tel:07206333820"
+                    className="inline-flex items-center justify-center bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-4 font-display font-bold text-xl uppercase tracking-wider skew-x-[-10deg] hover:bg-white/20 transition-colors group"
+                  >
+                    <span className="skew-x-[10deg] flex items-center gap-2">
+                      <Phone className="w-5 h-5" /> Call Now
+                    </span>
+                  </a>
+                </motion.div>
+              </motion.div>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="mt-5 text-sm text-muted-foreground tracking-wide"
+              >
+                <span className="text-gold font-bold">✓</span> First visit free — no commitment
+              </motion.p>
+            </div>
+
+            {/* ── RIGHT: Photo collage strip ── */}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.9, delay: 0.3, ease: "easeOut" }}
+              className="flex-shrink-0 w-full lg:w-auto flex justify-center"
+            >
+              <HeroPhotoStrip />
+            </motion.div>
+
+          </div>
         </div>
       </section>
 
