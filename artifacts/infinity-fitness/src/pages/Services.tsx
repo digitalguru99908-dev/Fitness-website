@@ -1,7 +1,8 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Dumbbell, HeartPulse, TrendingUp, Flame, Leaf, Zap, CheckCircle2 } from 'lucide-react';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
+import { staggerContainer, fadeUpItem } from '@/lib/animation';
 
 const programs = [
   {
@@ -49,6 +50,8 @@ const programs = [
 ];
 
 export function Services() {
+  const prefersReduced = useReducedMotion();
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section */}
@@ -74,15 +77,25 @@ export function Services() {
       {/* Services Grid */}
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {programs.map((program, i) => (
+          {/* staggerContainer replaces per-item delay: i * 0.1 */}
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 gap-8"
+            variants={staggerContainer(0.09)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+          >
+            {programs.map((program) => (
               <motion.div
                 key={program.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="bg-card border border-white/5 p-8 flex flex-col hover:border-primary/30 transition-colors group relative overflow-hidden"
+                variants={fadeUpItem}
+                whileHover={prefersReduced ? {} : {
+                  y: -4,
+                  boxShadow: '0 6px 24px rgba(139,92,246,0.18)',
+                  transition: { duration: 0.22 },
+                }}
+                whileTap={prefersReduced ? {} : { scale: 0.98, transition: { duration: 0.1 } }}
+                className="bg-card border border-white/5 p-8 flex flex-col hover:border-primary/30 transition-colors group relative overflow-hidden cursor-default"
               >
                 {/* Accent glow on hover */}
                 <div className="absolute -right-20 -top-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-colors"></div>
@@ -95,7 +108,7 @@ export function Services() {
                     {program.title}
                   </h2>
                 </div>
-                
+
                 <p className="text-muted-foreground text-lg mb-8 leading-relaxed relative z-10 flex-grow">
                   {program.description}
                 </p>
@@ -110,7 +123,7 @@ export function Services() {
                 </div>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
     </div>

@@ -1,13 +1,16 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ShieldCheck, Dumbbell, Sparkles, Users, Phone, Instagram, Award, Heart } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
+import { staggerContainer, fadeUpItem } from '@/lib/animation';
+import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 import about1 from '@assets/generated_images/about-1.jpg';
 import about2 from '@assets/generated_images/about-2.jpg';
 import about3 from '@assets/generated_images/about-3.jpg';
 import about4 from '@assets/generated_images/about-4.jpg';
 
+/** Used for single-item entrance animations where custom delay is still appropriate */
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
   visible: (i = 0) => ({
@@ -17,11 +20,17 @@ const fadeUp = {
   }),
 };
 
+/** Photo reveal variant — scale instead of y for the grid at the bottom */
+const photoRevealItem = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: 'easeOut' } },
+};
+
 const ownerStats = [
-  { icon: Dumbbell, label: 'Years in Fitness', value: '10+' },
-  { icon: Users,   label: 'Members Trained',  value: '500+' },
-  { icon: Award,   label: 'Certifications',   value: '3+' },
-  { icon: Heart,   label: 'Lives Changed',    value: '1000+' },
+  { icon: Dumbbell, label: 'Years in Fitness',  numericValue: 10,   suffix: '+' },
+  { icon: Users,   label: 'Members Trained',    numericValue: 500,  suffix: '+' },
+  { icon: Award,   label: 'Certifications',     numericValue: 3,    suffix: '+' },
+  { icon: Heart,   label: 'Lives Changed',      numericValue: 1000, suffix: '+' },
 ];
 
 const ownerValues = [
@@ -44,6 +53,8 @@ const ownerValues = [
 ];
 
 export function About() {
+  const prefersReduced = useReducedMotion();
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section */}
@@ -98,7 +109,14 @@ export function About() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* staggerContainer replaces per-item delay: i * 0.1 */}
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+            variants={staggerContainer(0.09)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+          >
             {[
               {
                 icon: ShieldCheck,
@@ -120,14 +138,17 @@ export function About() {
                 title: "Community Vibe",
                 desc: "A supportive, grind-it-out atmosphere where everyone pushes each other to be better."
               }
-            ].map((feature, i) => (
+            ].map((feature) => (
               <motion.div
                 key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="bg-card border border-white/5 p-8 text-center group hover:border-primary/50 transition-colors"
+                variants={fadeUpItem}
+                whileHover={prefersReduced ? {} : {
+                  y: -4,
+                  boxShadow: '0 6px 24px rgba(139,92,246,0.14)',
+                  transition: { duration: 0.22 },
+                }}
+                whileTap={prefersReduced ? {} : { scale: 0.98, transition: { duration: 0.1 } }}
+                className="bg-card border border-white/5 p-8 text-center group hover:border-primary/50 transition-colors cursor-default"
               >
                 <div className="mx-auto w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
                   <feature.icon className="w-8 h-8 text-primary" />
@@ -136,7 +157,7 @@ export function About() {
                 <p className="text-muted-foreground">{feature.desc}</p>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -203,51 +224,69 @@ export function About() {
               </p>
 
               <div className="flex flex-wrap gap-4 pt-2">
-                <a
+                <motion.a
                   href="tel:07206333820"
+                  whileHover={prefersReduced ? {} : { scale: 1.04, transition: { duration: 0.2 } }}
+                  whileTap={prefersReduced ? {} : { scale: 0.97, transition: { duration: 0.1 } }}
                   className="flex items-center gap-2 bg-primary text-black font-display font-bold uppercase tracking-wider px-6 py-3 hover:bg-primary/90 transition-colors"
                 >
                   <Phone className="w-4 h-4" />
                   Call Us
-                </a>
-                <a
+                </motion.a>
+                <motion.a
                   href="https://wa.me/917206333820"
                   target="_blank"
                   rel="noreferrer"
+                  whileHover={prefersReduced ? {} : { scale: 1.04, transition: { duration: 0.2 } }}
+                  whileTap={prefersReduced ? {} : { scale: 0.97, transition: { duration: 0.1 } }}
                   className="flex items-center gap-2 border border-[#25D366] text-[#25D366] font-display font-bold uppercase tracking-wider px-6 py-3 hover:bg-[#25D366]/10 transition-colors"
                 >
                   <FaWhatsapp size={18} />
                   WhatsApp
-                </a>
-                <a
+                </motion.a>
+                <motion.a
                   href="https://instagram.com/infinityfitnessgyms"
                   target="_blank"
                   rel="noreferrer"
+                  whileHover={prefersReduced ? {} : { scale: 1.04, transition: { duration: 0.2 } }}
+                  whileTap={prefersReduced ? {} : { scale: 0.97, transition: { duration: 0.1 } }}
                   className="flex items-center gap-2 border border-white/20 text-white font-display font-bold uppercase tracking-wider px-6 py-3 hover:border-primary hover:text-primary transition-colors"
                 >
                   <Instagram className="w-4 h-4" />
                   Instagram
-                </a>
+                </motion.a>
               </div>
             </motion.div>
           </div>
 
-          {/* Stats bar */}
-          <div className="bg-primary py-12 px-4 -mx-4 sm:mx-0 sm:rounded-none grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-            {ownerStats.map((stat, i) => (
+          {/* Stats bar — staggerContainer + AnimatedCounter replaces custom={i * 0.1} + static text */}
+          <motion.div
+            className="bg-primary py-12 px-4 -mx-4 sm:mx-0 sm:rounded-none grid grid-cols-2 md:grid-cols-4 gap-8 mb-16"
+            variants={staggerContainer(0.1)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+          >
+            {ownerStats.map((stat) => (
               <motion.div
                 key={stat.label}
-                variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i * 0.1}
+                variants={fadeUpItem}
                 className="text-center"
               >
                 <stat.icon className="w-8 h-8 text-black/60 mx-auto mb-3" />
-                <p className="font-display font-bold text-4xl text-black leading-none">{stat.value}</p>
+                <p className="font-display font-bold text-4xl text-black leading-none">
+                  <AnimatedCounter
+                    to={stat.numericValue}
+                    suffix={stat.suffix}
+                    duration={1.4}
+                  />
+                </p>
                 <p className="text-black/70 text-sm uppercase tracking-widest mt-1">{stat.label}</p>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
 
-          {/* Core Values */}
+          {/* Core Values heading */}
           <motion.div
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-center mb-10"
@@ -255,62 +294,65 @@ export function About() {
             <p className="text-primary font-semibold uppercase tracking-[0.3em] text-sm mb-3">What We Stand For</p>
             <h3 className="font-display font-bold text-3xl sm:text-4xl text-white uppercase">Our Core Values</h3>
           </motion.div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {ownerValues.map((v, i) => (
+
+          {/* Core Values grid — staggerContainer replaces custom={i * 0.1} */}
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+            variants={staggerContainer(0.1)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+          >
+            {ownerValues.map((v) => (
               <motion.div
                 key={v.title}
-                variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i * 0.1}
-                className="bg-[#111] border border-white/5 p-8 hover:border-primary/30 transition-colors group"
+                variants={fadeUpItem}
+                whileHover={prefersReduced ? {} : {
+                  y: -3,
+                  boxShadow: '0 4px 20px rgba(139,92,246,0.12)',
+                  transition: { duration: 0.22 },
+                }}
+                whileTap={prefersReduced ? {} : { scale: 0.99, transition: { duration: 0.1 } }}
+                className="bg-[#111] border border-white/5 p-8 hover:border-primary/30 transition-colors group cursor-default"
               >
                 <div className="w-8 h-1 bg-primary mb-6 group-hover:w-16 transition-all duration-300" />
                 <h4 className="font-display font-bold text-xl text-white uppercase mb-3">{v.title}</h4>
                 <p className="text-muted-foreground leading-relaxed">{v.desc}</p>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Photo Grid */}
+      {/* Photo Grid — staggerContainer replaces hardcoded transition delays */}
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="aspect-square md:aspect-[4/3] bg-card overflow-hidden group"
-            >
-              <img src={about1} alt="Community training" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            </motion.div>
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="aspect-square md:aspect-[4/3] bg-card overflow-hidden group"
-            >
-              <img src={about2} alt="Modern equipment room" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            </motion.div>
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="aspect-square md:aspect-[4/3] bg-card overflow-hidden group"
-            >
-              <img src={about3} alt="Personal training session" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            </motion.div>
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="aspect-square md:aspect-[4/3] bg-card overflow-hidden group"
-            >
-              <img src={about4} alt="Gym entrance" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            </motion.div>
-          </div>
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            variants={staggerContainer(0.1)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+          >
+            {[
+              { src: about1, alt: 'Community training' },
+              { src: about2, alt: 'Modern equipment room' },
+              { src: about3, alt: 'Personal training session' },
+              { src: about4, alt: 'Gym entrance' },
+            ].map((photo) => (
+              <motion.div
+                key={photo.alt}
+                variants={photoRevealItem}
+                className="aspect-square md:aspect-[4/3] bg-card overflow-hidden group"
+              >
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
     </div>
