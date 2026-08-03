@@ -42,8 +42,8 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "PORT=5173 BASE_PATH=/ pnpm install --frozen-lockfile && PORT=5173 BASE_PATH=/ pnpm --filter @workspace/infinity-fitness run dev"
-waitForPort = 5173
+args = "PORT=18902 BASE_PATH=/ pnpm install --frozen-lockfile && PORT=18902 BASE_PATH=/ pnpm --filter @workspace/infinity-fitness run dev"
+waitForPort = 18902
 
 [workflows.workflow.metadata]
 outputType = "webview"
