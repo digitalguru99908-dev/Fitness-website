@@ -27,7 +27,14 @@ pnpm install
 ```
 
 ### On Replit
-Workflows start automatically. `PORT` and `BASE_PATH` are injected by the artifact system.
+The committed `.replit` configuration uses the default **Project** workflow,
+which starts both services in parallel:
+
+- **Backend:** `artifacts/api-server: API Server` — Express API on port `8080`
+- **Frontend:** `artifacts/infinity-fitness: web` — Vite site on port `18902`
+
+Workflows start automatically. Replit injects `PORT` and `BASE_PATH` for the
+artifact services; do not add those manually.
 
 ### Locally (any machine / any browser)
 No env vars required — sensible defaults kick in automatically.
@@ -48,11 +55,23 @@ For the contact form to send real emails locally, copy `.env.example` to `.env` 
 
 ## Environment / Secrets
 
-| Key | Required | Purpose |
-|-----|----------|---------|
-| `GMAIL_APP_PASSWORD` | Yes (for contact form) | Gmail app password for `digitalguru99908@gmail.com` — used by Nodemailer to send inquiry emails |
-| `SESSION_SECRET` | Set | Express session secret |
-| `DATABASE_URL` | Auto-managed | Replit PostgreSQL connection string |
+### Add manually
+
+| Key | When needed | Purpose |
+|-----|-------------|---------|
+| `GMAIL_APP_PASSWORD` | Required for the contact form to send email | Gmail app password for `digitalguru99908@gmail.com`, used by Nodemailer |
+
+### Replit-managed / injected
+
+| Key | Source | Purpose |
+|-----|--------|---------|
+| `SESSION_SECRET` | Already configured in this Repl | Session signing secret; keep it private |
+| `DATABASE_URL` | Replit PostgreSQL, if/when provisioned | Database connection string for the shared DB package |
+| `PORT` | Artifact workflow | Service port |
+| `BASE_PATH` | Artifact workflow | Frontend URL base path |
+
+Never commit `.env` files or secret values. The committed `.env.example` contains
+placeholders only.
 
 ## User Preferences
 
