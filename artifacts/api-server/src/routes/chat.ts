@@ -124,11 +124,11 @@ router.post("/tts", async (req, res) => {
         "Cartesia-Version": "2024-06-10",
       },
       body: JSON.stringify({
-        model_id: "cartesia/sonic-2",
+        model_id: "sonic-2",
         transcript: text,
         voice: {
           mode: "id",
-          id: "car_5iZMDNRrkMZcFD2pGNccti",
+          id: "a167e0f3-df7e-4d52-a9c3-f949145efdab",
         },
         output_format: {
           container: "mp3",

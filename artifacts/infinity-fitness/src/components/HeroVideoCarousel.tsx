@@ -3,56 +3,42 @@ import { Volume2, VolumeX } from 'lucide-react';
 
 export function HeroVideoCarousel() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
   const [muted, setMuted] = useState(true);
 
   useEffect(() => {
     const vid = videoRef.current;
-    const aud = audioRef.current;
     if (!vid) return;
 
     vid.muted = true;
-    vid.volume = 0;
-    if (aud) aud.muted = true;
-    vid.load();
 
-    const startBoth = () => {
+    const tryPlay = () => {
       vid.play().then(() => {
-        if (aud) {
-          aud.currentTime = 0;
-          aud.play().catch(() => {});
-        }
         setTimeout(() => {
-          if (aud) aud.muted = false;
+          vid.muted = false;
           setMuted(false);
-        }, 2000);
+        }, 500);
       }).catch(() => {});
     };
 
     if (vid.readyState >= 2) {
-      startBoth();
+      tryPlay();
     } else {
-      vid.addEventListener('canplay', startBoth, { once: true });
+      vid.addEventListener('canplay', tryPlay, { once: true });
     }
 
-    return () => {
-      vid.removeEventListener('canplay', startBoth);
-    };
+    return () => {};
   }, []);
 
   const toggleMute = () => {
     const vid = videoRef.current;
-    const aud = audioRef.current;
-    if (aud) {
-      aud.muted = !aud.muted;
-      setMuted(aud.muted);
-    }
+    if (!vid) return;
+    vid.muted = !vid.muted;
+    setMuted(vid.muted);
   };
 
   return (
     <>
       <div className="absolute inset-0 z-0 bg-black overflow-hidden">
-        <audio ref={audioRef} src="/hero-audio.mp3" loop muted preload="auto" />
         <video
           ref={videoRef}
           src="/hero-bg.mp4"
