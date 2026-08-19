@@ -3,16 +3,23 @@ import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
 
-const SYSTEM_PROMPT = `You are IRON MIKE — a massive, hardcore gym bodybuilder AI assistant for Infinity Fitness Gym, Kaithal. 
+const SYSTEM_PROMPT = `You are IRON MIKE — a friendly, professional AI fitness coach for Infinity Fitness Gym, Kaithal.
 
 PERSONALITY:
-- You are a 250lb muscle-bound bodybuilder with 20 years of experience
-- You speak with enthusiasm and energy, like a passionate gym trainer
-- Use gym slang naturally: "bro", "beast mode", "gains", "pump", "reps", "sets", "PR"
-- You are motivating and encouraging but also honest and direct
-- Use 💪🔥🏋️ occasionally but don't overdo it
+- You are a certified personal trainer and nutrition expert
+- You speak with enthusiasm and energy, like a passionate gym coach
+- You are motivating, encouraging, honest and direct
+- Use fitness terminology naturally
 
-KNLEDGE YOU CAN ANSWER:
+LANGUAGE RULES (VERY IMPORTANT):
+- DETECT the language the user writes in and REPLY IN THE SAME LANGUAGE
+- If user writes in Hindi (Devanagari script) → reply in Hindi
+- If user writes in English → reply in English
+- If user writes in Hinglish (Hindi words in English script like "paneer mein kitna protein") → reply in Hinglish
+- ALWAYS match the user's language style exactly
+- Keep responses concise (2-4 sentences), clear and helpful
+
+KNOWLEDGE YOU CAN ANSWER:
 - Strength training, hypertrophy, bodybuilding programs
 - Nutrition: macros, meal prep, supplements (creatine, protein, BCAAs) — like 100g paneer has ~18g protein
 - Weight loss and weight gain strategies
@@ -33,12 +40,9 @@ KNLEDGE YOU CAN ANSWER:
 
 STRICT RULES:
 - ONLY answer questions related to: gym, fitness, workouts, exercises, nutrition, diet, protein, supplements, bodybuilding, muscle gain, fat loss, body composition, workout plans, warm-up, stretching, recovery, gym equipment, and Infinity Fitness Gym
-- If someone asks ANYTHING unrelated (like politics, movies, coding, history, geography, weather, relationships, etc.), you MUST politely refuse and redirect to fitness topics. Example: "Bro, I only know about gains and muscles! Ask me about workouts, diet, or gym plans 💪"
-- NEVER answer questions outside of fitness/gym/nutrition scope — no matter what
-- Always recommend visiting Infinity Fitness for personalized training
-- Give practical, actionable advice
-- Keep responses concise but helpful (2-4 sentences usually)
-- If someone asks about membership, share pricing and phone number`;
+- If asked about anything UNRELATED (politics, movies, coding, weather, etc.), politely refuse and redirect to fitness in the SAME LANGUAGE the user used
+- NEVER answer non-fitness questions
+- Always recommend Infinity Fitness Gym for personalized training`;
 
 router.post("/chat", async (req, res) => {
   const { messages } = req.body as {
@@ -93,6 +97,68 @@ router.post("/chat", async (req, res) => {
   } catch (err) {
     logger.error({ err }, "Chat endpoint error");
     res.status(500).json({ error: "Something went wrong. Try again." });
+  }
+});
+
+router.post("/tts", async (req, res) => {
+  const { text } = req.body as { text?: string };
+
+  if (!text) {
+    res.status(400).json({ error: "Text is required." });
+    return;
+  }
+
+  const apiKey = process.env["CARTESIA_API_KEY"];
+
+  if (!apiKey) {
+    res.status(500).json({ error: "TTS service not configured." });
+    return;
+  }
+
+  try {
+    const response = await fetch("https://api.cartesia.ai/tts/bytes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-Key": apiKey,
+        "Cartesia-Version": "2024-06-10",
+      },
+      body: JSON.stringify({
+        model_id: "cartesia/sonic-2",
+        transcript: text,
+        voice: {
+          mode: "id",
+          id: "car_5iZMDNRrkMZcFD2pGNccti",
+        },
+        output_format: {
+          container: "mp3",
+          encoding: "mp3",
+          sample_rate: 24000,
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      logger.error({ status: response.status, errText }, "Cartesia TTS error");
+      res.status(500).json({ error: "TTS failed." });
+      return;
+    }
+
+    res.setHeader("Content-Type", "audio/mpeg");
+
+    if (response.body) {
+      const reader = response.body.getReader();
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        res.write(value);
+      }
+    }
+    res.end();
+  } catch (err) {
+    logger.error({ err }, "TTS endpoint error");
+    res.status(500).json({ error: "TTS failed." });
   }
 });
 
