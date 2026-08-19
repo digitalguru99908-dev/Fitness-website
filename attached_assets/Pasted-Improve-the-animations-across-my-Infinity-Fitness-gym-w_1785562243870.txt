@@ -1,0 +1,38 @@
+Improve the animations across my Infinity Fitness gym website (artifacts/infinity-fitness). 
+The project already uses framer-motion — build on top of it, don't add a new library.
+
+1. PAGE TRANSITIONS:
+   - Wrap the route Switch in src/App.tsx with framer-motion's AnimatePresence (mode="wait") 
+     so that navigating between pages (Home, About, Services, Membership, Gallery, Contact, 
+     Testimonials, Owner) produces a smooth fade + slight upward slide transition instead of 
+     an instant page swap. Use the current location as the animation key.
+
+2. STAGGERED LIST/GRID ANIMATIONS:
+   - Wherever there's a grid of cards (Services list, Gallery images, Membership plans, 
+     Testimonials/Reviews), replace any manually hardcoded per-item delays with a proper 
+     framer-motion staggerChildren/variants pattern on the parent container, so items 
+     cascade in one after another automatically.
+
+3. ANIMATED STAT COUNTERS:
+   - On the Home page and Testimonials page, animate any numeric stats (like member count, 
+     "40+ reviews", years of experience) to count up from 0 to the target number when they 
+     scroll into view, instead of appearing as static text.
+
+4. NAVBAR SCROLL EFFECT:
+   - Make src/components/layout/Navbar.tsx animate smoothly (background opacity/blur and 
+     slight height shrink) as the user scrolls down, instead of any abrupt state change.
+
+5. BUTTON & CARD MICRO-INTERACTIONS:
+   - Add subtle framer-motion whileHover and whileTap effects (slight scale + shadow glow) 
+     to primary CTA buttons and pricing/service cards, replacing plain CSS hover classes 
+     where they exist, for a more tactile feel.
+
+6. PERFORMANCE & ACCESSIBILITY:
+   - Respect prefers-reduced-motion: users with that setting should get instant/no 
+     animations instead of forcing motion on them.
+   - Keep animation durations short (0.3–0.6s) and avoid animating too many elements 
+     simultaneously on mobile so scrolling stays smooth on low-end phones.
+
+Keep the visual design and layout exactly as it is — this is purely about adding and 
+polishing motion/animation, not changing colors, text, or structure. Show me a summary 
+of every file you changed when done.

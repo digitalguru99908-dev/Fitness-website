@@ -1,0 +1,40 @@
+Build a modern, responsive, single-page website for a local gym called "Infinity Fitness Gym" located in Kaithal, Haryana.
+
+BUSINESS INFO:
+- Name: Infinity Fitness Gym
+- Address: Kaithal - Dhand Rd, Opp. Maharaja Palace, Rishi Nagar, Kaithal, Haryana 136027
+- Phone: 072063 33820
+- Hours: Open daily, closes 11 PM (busiest 6 PM - 9 PM, quiet during midday)
+- Google Rating: 4.2 stars (40+ reviews)
+- Instagram: @infinityfitnessgyms (3K+ followers)
+- Services: Strength Training, Cardio, Weight Gain Programs, Weight Loss Programs, Yoga, Modern Equipment
+
+MEMBERSHIP PLANS (show as pricing cards):
+- 1 Month: ₹500
+- 3 Months: ₹1200
+- Annual Membership: ₹6000
+
+DESIGN STYLE:
+- Bold, energetic, dark theme (black/charcoal background with a vibrant accent color like orange, red, or electric green — like typical gym branding)
+- Strong, bold typography for headings
+- Mobile-first, fully responsive
+
+SECTIONS NEEDED:
+1. Hero section — gym name, tagline (e.g. "Transform Your Body, Transform Your Life"), CTA buttons ("Join Now" and "Call Now")
+2. About Us — short intro about the gym, its environment and mission
+3. Services/Programs — grid/cards for Strength, Cardio, Weight Gain, Weight Loss, Yoga, Modern Equipment
+4. Membership Plans — pricing cards for 1 Month / 3 Months / Annual, with a "Get Started" button on each
+5. Gallery — image placeholder grid for gym photos (equipment, interiors)
+6. Testimonials/Reviews — highlight the 4.2★ rating with a few sample review cards
+7. Location — embedded Google Map (use the address above) + directions button
+8. Contact — phone number (click-to-call), WhatsApp button, Instagram link, and a simple contact/inquiry form
+9. Footer — business name, address, phone, social icons, opening hours
+
+FUNCTIONALITY:
+- Smooth scroll navigation with a sticky navbar
+- Click-to-call phone number link
+- WhatsApp chat button (floating, bottom-right)
+- Fully responsive on mobile, tablet, desktop
+- Fast-loading, clean code (HTML, CSS, JavaScript — no unnecessary frameworks unless needed)
+
+Use placeholder images where actual gym photos aren't available, but keep the layout ready for real photos to be swapped in later.

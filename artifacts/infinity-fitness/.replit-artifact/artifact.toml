@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Infinity Fitness Gym"
+version = "1.0.0"
+id = "artifacts/infinity-fitness"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18902
+
+[services.development]
+run = "pnpm install --frozen-lockfile && pnpm --filter @workspace/infinity-fitness run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/infinity-fitness", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/infinity-fitness/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18902"
+BASE_PATH = "/"

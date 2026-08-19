@@ -1,0 +1,22 @@
+Fix the following 3 issues in my multi-page Infinity Fitness Gym website:
+
+1. SCROLL POSITION BUG ON PAGE NAVIGATION:
+   Currently, when a user scrolls down on any page (e.g., Home) and then clicks a navbar link to go to another page (e.g., Gallery), the new page opens at the SAME scroll position (bottom) instead of starting from the top.
+   FIX: Every page must open from the TOP (scroll position 0,0) whenever navigated to via any navbar link, button, or route change — no matter where the user was scrolled on the previous page.
+   - If using React Router: add a ScrollToTop component that listens to route changes (using useLocation + useEffect) and calls window.scrollTo(0, 0) on every route change.
+   - If using plain HTML multi-page setup: ensure no anchor/hash links are causing scroll retention, and that each page load naturally starts at the top (also add window.scrollTo(0,0) on page load as a safeguard).
+
+2. MOVE OWNER DETAILS SECTION INTO ABOUT PAGE:
+   Currently the "Owner Details" section is a separate standalone section/page on its own.
+   FIX: Remove it as a standalone section and instead integrate it INTO the About Us page — place it as a dedicated sub-section within the About page (e.g., after the "Why Choose Us" section), titled something like "Meet the Owner" or "Meet Our Founder", including owner photo placeholder, name, short bio, and message/quote. It should NOT appear as its own separate page or standalone section anywhere else in the navbar.
+
+3. TESTIMONIALS/REVIEWS SHOULD AUTO-LOOP CONTINUOUSLY:
+   Currently the reviews/testimonials section is static.
+   FIX: Convert the testimonials section into an auto-scrolling, continuously looping carousel/slider:
+   - Reviews should scroll/slide automatically on a timer (e.g., every 3-4 seconds) without requiring user interaction
+   - The loop should be seamless/infinite (when it reaches the last review, it smoothly continues back to the first, no jarring jump or blank pause)
+   - Pause auto-scroll on hover/touch (for usability), then resume after a few seconds
+   - Should remain fully responsive on mobile and desktop
+   - Use CSS animations or a lightweight carousel approach (e.g., a horizontally scrolling track with duplicated review cards for seamless looping, or a JS-based carousel library if already in use in the project)
+
+Apply these fixes across all pages consistently while keeping the existing design, color scheme, and layout intact.
