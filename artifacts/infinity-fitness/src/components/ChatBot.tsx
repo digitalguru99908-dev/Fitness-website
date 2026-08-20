@@ -180,6 +180,15 @@ export function ChatBot() {
     messagesEndRef.current = messages;
   }, [messages]);
 
+  // Stop speaking when chatbot closes
+  useEffect(() => {
+    if (!open && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setSpeaking(false);
+    }
+  }, [open]);
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (!open) return;
@@ -198,30 +207,54 @@ export function ChatBot() {
     return 'en';
   };
 
+  const ttsAbortRef = useRef<AbortController | null>(null);
+
   const speak = async (text: string, userText?: string) => {
     if (muted || !text) return;
+
+    // Cancel any previous TTS request
+    if (ttsAbortRef.current) {
+      ttsAbortRef.current.abort();
+    }
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+
     const lang = userText ? detectLang(userText) : 'en';
+    const controller = new AbortController();
+    ttsAbortRef.current = controller;
+
     try {
       setSpeaking(true);
       const res = await fetch(`${import.meta.env.BASE_URL}api/tts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, lang }),
+        signal: controller.signal,
       });
-      if (!res.ok) return;
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      if (audioRef.current) {
-        audioRef.current.pause();
-        URL.revokeObjectURL(audioRef.current.src);
+      if (!res.ok || !res.body) { setSpeaking(false); return; }
+
+      // Stream audio for faster playback
+      const reader = res.body.getReader();
+      const chunks: Uint8Array[] = [];
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
       }
+
+      if (controller.signal.aborted) return;
+
+      const blob = new Blob(chunks, { type: 'audio/mpeg' });
+      const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
       audioRef.current = audio;
       audio.onended = () => { setSpeaking(false); URL.revokeObjectURL(url); };
       audio.onerror = () => { setSpeaking(false); URL.revokeObjectURL(url); };
       await audio.play();
-    } catch {
-      setSpeaking(false);
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') setSpeaking(false);
     }
   };
 
