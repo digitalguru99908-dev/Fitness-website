@@ -166,7 +166,7 @@ export function Contact() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-card border border-white/10 p-8 md:p-10"
+              className="bg-card border border-border p-8 md:p-10"
             >
               <h2 className="text-3xl font-display font-bold uppercase tracking-wider mb-2">Send an Inquiry</h2>
               <p className="text-muted-foreground mb-8">Fill out the form below and we'll get back to you within 24 hours.</p>
@@ -186,32 +186,32 @@ export function Contact() {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-bold uppercase tracking-wider text-gray-300 mb-2">Name</label>
+                    <label htmlFor="name" className="block text-sm font-bold uppercase tracking-wider text-foreground mb-2">Name</label>
                     <input 
                       type="text" 
                       id="name" 
                       required
-                      className="w-full bg-background border border-white/10 px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors rounded-sm"
+                      className="w-full bg-background border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors rounded-sm"
                       placeholder="John Doe"
                     />
                   </div>
                   
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-bold uppercase tracking-wider text-gray-300 mb-2">Phone Number</label>
+                    <label htmlFor="phone" className="block text-sm font-bold uppercase tracking-wider text-foreground mb-2">Phone Number</label>
                     <input 
                       type="tel" 
                       id="phone" 
                       required
-                      className="w-full bg-background border border-white/10 px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors rounded-sm"
+                      className="w-full bg-background border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors rounded-sm"
                       placeholder="10-digit mobile number"
                     />
                   </div>
                   
                   <div>
-                    <label htmlFor="plan" className="block text-sm font-bold uppercase tracking-wider text-gray-300 mb-2">Preferred Plan</label>
+                    <label htmlFor="plan" className="block text-sm font-bold uppercase tracking-wider text-foreground mb-2">Preferred Plan</label>
                     <select 
                       id="plan"
-                      className="w-full bg-background border border-white/10 px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors rounded-sm appearance-none"
+                      className="w-full bg-background border border-border px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors rounded-sm appearance-none"
                     >
                       <option value="Not sure">Not sure yet</option>
                       <option value="Monthly">Monthly Plan (₹2,000)</option>
@@ -221,11 +221,11 @@ export function Contact() {
                   </div>
                   
                   <div>
-                    <label htmlFor="message" className="block text-sm font-bold uppercase tracking-wider text-gray-300 mb-2">Message (Optional)</label>
+                    <label htmlFor="message" className="block text-sm font-bold uppercase tracking-wider text-foreground mb-2">Message (Optional)</label>
                     <textarea 
                       id="message" 
                       rows={4}
-                      className="w-full bg-background border border-white/10 px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors rounded-sm resize-none"
+                      className="w-full bg-background border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors rounded-sm resize-none"
                       placeholder="Any specific goals or questions?"
                     ></textarea>
                   </div>
