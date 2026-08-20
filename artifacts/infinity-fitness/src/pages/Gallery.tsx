@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
@@ -25,106 +25,83 @@ const images = [
   { src: img7, caption: "Reception & Lounge" },
 ];
 
-function VideoCard({ video, onClick }: { video: typeof videos[0]; onClick: () => void }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [playing, setPlaying] = useState(false);
-  const [muted, setMuted] = useState(true);
+export function Gallery() {
+  const [videoLightbox, setVideoLightbox] = useState<number | null>(null);
+  const [imageLightbox, setImageLightbox] = useState<number | null>(null);
+  const [lbPlaying, setLbPlaying] = useState(false);
+  const [lbMuted, setLbMuted] = useState(true);
+  const lightboxVideoRef = useRef<HTMLVideoElement>(null);
+  const prefersReduced = useReducedMotion();
 
-  const togglePlay = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const vid = videoRef.current;
+  // Video lightbox controls
+  const openVideoLightbox = useCallback((i: number) => {
+    setVideoLightbox(i);
+    setLbPlaying(false);
+    setLbMuted(true);
+  }, []);
+
+  const closeVideoLightbox = useCallback(() => {
+    if (lightboxVideoRef.current) {
+      lightboxVideoRef.current.pause();
+      lightboxVideoRef.current.currentTime = 0;
+    }
+    setVideoLightbox(null);
+    setLbPlaying(false);
+  }, []);
+
+  const toggleLbPlay = useCallback(() => {
+    const vid = lightboxVideoRef.current;
     if (!vid) return;
-    if (playing) {
+    if (lbPlaying) {
       vid.pause();
-      setPlaying(false);
+      setLbPlaying(false);
     } else {
       vid.muted = false;
-      setMuted(false);
+      setLbMuted(false);
       vid.play();
-      setPlaying(true);
+      setLbPlaying(true);
     }
-  };
+  }, [lbPlaying]);
 
-  const toggleMute = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const vid = videoRef.current;
+  const toggleLbMute = useCallback(() => {
+    const vid = lightboxVideoRef.current;
     if (!vid) return;
     vid.muted = !vid.muted;
-    setMuted(vid.muted);
-  };
+    setLbMuted(vid.muted);
+  }, []);
 
-  const stopVideo = () => {
-    const vid = videoRef.current;
-    if (vid) {
-      vid.pause();
-      vid.currentTime = 0;
-      setPlaying(false);
+  // Auto play when video lightbox opens
+  useEffect(() => {
+    if (videoLightbox !== null && lightboxVideoRef.current) {
+      const vid = lightboxVideoRef.current;
+      vid.muted = true;
+      setLbMuted(true);
+      const playPromise = vid.play();
+      if (playPromise) {
+        playPromise.then(() => {
+          setLbPlaying(true);
+        }).catch(() => setLbPlaying(false));
+      }
     }
-  };
+  }, [videoLightbox]);
 
-  return (
-    <div className="group relative overflow-hidden bg-card cursor-pointer row-span-2" style={{ aspectRatio: '3/4' }}
-      onClick={onClick}
-      onMouseLeave={stopVideo}
-    >
-      <video
-        ref={videoRef}
-        src={video.src}
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-        muted
-        loop
-        playsInline
-        preload="metadata"
-      />
+  // Keyboard controls for video lightbox
+  useEffect(() => {
+    if (videoLightbox === null) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeVideoLightbox();
+      if (e.key === ' ') { e.preventDefault(); toggleLbPlay(); }
+      if (e.key === 'm' || e.key === 'M') toggleLbMute();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [videoLightbox, closeVideoLightbox, toggleLbPlay, toggleLbMute]);
 
-      {/* Play/Pause overlay */}
-      <div className="absolute inset-0 flex items-center justify-center z-20">
-        <button
-          onClick={togglePlay}
-          className="w-16 h-16 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-black/70 transition-all"
-        >
-          {playing ? <Pause className="w-7 h-7 text-white" fill="white" /> : <Play className="w-7 h-7 text-white ml-1" fill="white" />}
-        </button>
-      </div>
-
-      {/* Mute button */}
-      <button
-        onClick={toggleMute}
-        className="absolute top-3 right-3 z-30 w-9 h-9 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-black/70 transition-all"
-      >
-        {muted ? <VolumeX className="w-4 h-4 text-white" /> : <Volume2 className="w-4 h-4 text-white" />}
-      </button>
-
-      {/* Video badge */}
-      <div className="absolute top-3 left-3 z-30">
-        <span className="bg-primary/90 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-sm">
-          Video
-        </span>
-      </div>
-
-      {/* Caption */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 flex items-end">
-        <div className="p-4 sm:p-6 w-full translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-          <h3 className="font-display text-white font-bold uppercase tracking-wider text-lg sm:text-xl border-l-4 border-primary pl-3">
-            {video.caption}
-          </h3>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function Gallery() {
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const [lightboxType, setLightboxType] = useState<'image' | 'video'>('image');
-  const prefersReduced = useReducedMotion();
-  const lightboxVideoRef = useRef<HTMLVideoElement>(null);
-  const [lbMuted, setLbMuted] = useState(true);
-
-  const openImageLightbox = (i: number) => { setLightboxType('image'); setLightboxIndex(i); };
-  const closeLightbox = () => { setLightboxIndex(null); if (lightboxVideoRef.current) { lightboxVideoRef.current.pause(); } };
-  const prev = () => setLightboxIndex(i => i === null ? null : (i - 1 + images.length) % images.length);
-  const next = () => setLightboxIndex(i => i === null ? null : (i + 1) % images.length);
+  // Image lightbox
+  const openImageLightbox = (i: number) => setImageLightbox(i);
+  const closeImageLightbox = () => setImageLightbox(null);
+  const prevImage = () => setImageLightbox(i => i === null ? null : (i - 1 + images.length) % images.length);
+  const nextImage = () => setImageLightbox(i => i === null ? null : (i + 1) % images.length);
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -147,7 +124,7 @@ export function Gallery() {
         </div>
       </section>
 
-      {/* Videos first */}
+      {/* Videos first - click to open in lightbox */}
       <section className="py-6 md:py-12">
         <div className="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-8">
           <h2 className="text-2xl font-display font-bold uppercase tracking-wider text-foreground mb-6 border-l-4 border-primary pl-4">
@@ -161,8 +138,10 @@ export function Gallery() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.15 }}
-                className="group relative overflow-hidden bg-card"
+                className="group relative overflow-hidden bg-card cursor-pointer rounded-sm"
                 style={{ aspectRatio: '9/16', maxHeight: '600px' }}
+                onClick={() => openVideoLightbox(i)}
+                whileHover={prefersReduced ? {} : { scale: 1.02, transition: { duration: 0.3 } }}
               >
                 <video
                   src={video.src}
@@ -172,12 +151,15 @@ export function Gallery() {
                   playsInline
                   preload="metadata"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end">
-                  <div className="p-4 sm:p-6 w-full">
-                    <h3 className="font-display text-white font-bold uppercase tracking-wider text-lg border-l-4 border-primary pl-3">
-                      {video.caption}
-                    </h3>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Play className="w-7 h-7 text-white ml-1" fill="white" />
                   </div>
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+                  <h3 className="font-display text-white font-bold uppercase tracking-wider text-lg border-l-4 border-primary pl-3">
+                    {video.caption}
+                  </h3>
                 </div>
                 <div className="absolute top-3 left-3 z-30">
                   <span className="bg-primary/90 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-sm">
@@ -233,42 +215,107 @@ export function Gallery() {
         </div>
       </section>
 
-      {/* Lightbox */}
+      {/* Video Lightbox */}
       <AnimatePresence>
-        {lightboxIndex !== null && (
+        {videoLightbox !== null && (
           <motion.div
-            key="lightbox"
+            key="video-lightbox"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/98 flex items-center justify-center"
+            onClick={closeVideoLightbox}
+          >
+            {/* Close */}
+            <button className="absolute top-4 right-4 z-20 text-white/70 hover:text-white transition-colors p-2" onClick={closeVideoLightbox}>
+              <X className="w-8 h-8" />
+            </button>
+
+            {/* Video */}
+            <div className="relative max-h-[85vh] max-w-[90vw]" onClick={e => e.stopPropagation()}>
+              <video
+                ref={lightboxVideoRef}
+                key={videoLightbox}
+                src={videos[videoLightbox].src}
+                className="max-h-[85vh] max-w-[90vw] rounded-sm shadow-2xl"
+                loop
+                playsInline
+                muted
+                onClick={toggleLbPlay}
+              />
+
+              {/* Play/Pause button overlay */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className={`w-20 h-20 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-opacity duration-300 ${lbPlaying ? 'opacity-0' : 'opacity-100'}`}>
+                  <Play className="w-9 h-9 text-white ml-1" fill="white" />
+                </div>
+              </div>
+
+              {/* Controls bar */}
+              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={toggleLbPlay}
+                    className="w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-black/70 transition-all"
+                  >
+                    {lbPlaying ? <Pause className="w-5 h-5 text-white" fill="white" /> : <Play className="w-5 h-5 text-white ml-0.5" fill="white" />}
+                  </button>
+                  <button
+                    onClick={toggleLbMute}
+                    className="w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-black/70 transition-all"
+                  >
+                    {lbMuted ? <VolumeX className="w-5 h-5 text-white" /> : <Volume2 className="w-5 h-5 text-white" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Caption */}
+              <div className="absolute top-4 left-4">
+                <span className="font-display font-bold uppercase tracking-widest text-white/80 text-sm border-l-2 border-primary pl-3 bg-black/40 backdrop-blur-sm px-3 py-1 rounded-sm">
+                  {videos[videoLightbox].caption}
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Image Lightbox */}
+      <AnimatePresence>
+        {imageLightbox !== null && (
+          <motion.div
+            key="image-lightbox"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
-            onClick={closeLightbox}
+            onClick={closeImageLightbox}
           >
-            <button className="absolute top-4 right-4 z-10 text-white/70 hover:text-white transition-colors p-2" onClick={closeLightbox}>
+            <button className="absolute top-4 right-4 z-10 text-white/70 hover:text-white transition-colors p-2" onClick={closeImageLightbox}>
               <X className="w-8 h-8" />
             </button>
-            <button className="absolute left-4 z-10 text-white/70 hover:text-white transition-colors p-2" onClick={e => { e.stopPropagation(); prev(); }}>
+            <button className="absolute left-4 z-10 text-white/70 hover:text-white transition-colors p-2" onClick={e => { e.stopPropagation(); prevImage(); }}>
               <ChevronLeft className="w-10 h-10" />
             </button>
             <motion.img
-              key={lightboxIndex}
+              key={imageLightbox}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.25 }}
-              src={images[lightboxIndex].src}
-              alt={images[lightboxIndex].caption}
+              src={images[imageLightbox].src}
+              alt={images[imageLightbox].caption}
               className="max-h-[85vh] max-w-[90vw] object-contain rounded-sm shadow-2xl"
               onClick={e => e.stopPropagation()}
             />
-            <button className="absolute right-4 z-10 text-white/70 hover:text-white transition-colors p-2" onClick={e => { e.stopPropagation(); next(); }}>
+            <button className="absolute right-4 z-10 text-white/70 hover:text-white transition-colors p-2" onClick={e => { e.stopPropagation(); nextImage(); }}>
               <ChevronRight className="w-10 h-10" />
             </button>
             <div className="absolute bottom-6 left-0 right-0 text-center">
               <span className="font-display font-bold uppercase tracking-widest text-white/80 text-sm border-l-2 border-primary pl-3">
-                {images[lightboxIndex].caption}
+                {images[imageLightbox].caption}
               </span>
-              <span className="text-white/40 text-sm ml-4">{lightboxIndex + 1} / {images.length}</span>
+              <span className="text-white/40 text-sm ml-4">{imageLightbox + 1} / {images.length}</span>
             </div>
           </motion.div>
         )}

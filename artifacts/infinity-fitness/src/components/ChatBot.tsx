@@ -119,11 +119,16 @@ export function ChatBot() {
   const panelRef = useRef<HTMLDivElement>(null);
   const fabRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const messagesEndRef = useRef<ChatMessage[]>([WELCOME_MSG]);
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
+  }, [messages]);
+
+  useEffect(() => {
+    messagesEndRef.current = messages;
   }, [messages]);
 
   // Click outside to close
@@ -170,7 +175,9 @@ export function ChatBot() {
     if (!msg || loading) return;
 
     const userMsg: ChatMessage = { role: 'user', content: msg };
-    setMessages((prev) => [...prev, userMsg]);
+    const updatedMessages = [...messagesEndRef.current, userMsg];
+    messagesEndRef.current = updatedMessages;
+    setMessages(updatedMessages);
     setInput('');
     setLoading(true);
 
@@ -179,7 +186,7 @@ export function ChatBot() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: [...messages, userMsg].map((m) => ({
+          messages: updatedMessages.map((m) => ({
             role: m.role,
             content: m.content,
           })),
@@ -189,15 +196,16 @@ export function ChatBot() {
       if (!res.ok) throw new Error('Failed');
       const data = await res.json();
       const reply = data.reply;
-      setMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
+      const finalMessages = [...updatedMessages, { role: 'assistant' as const, content: reply }];
+      messagesEndRef.current = finalMessages;
+      setMessages(finalMessages);
 
       // Auto-speak the reply
       speak(reply);
     } catch {
-      setMessages((prev) => [
-        ...prev,
-        { role: 'assistant', content: 'Server busy right now, try again! 💪' },
-      ]);
+      const errorMsgs = [...updatedMessages, { role: 'assistant' as const, content: 'Server busy right now, try again! 💪' }];
+      messagesEndRef.current = errorMsgs;
+      setMessages(errorMsgs);
     } finally {
       setLoading(false);
     }

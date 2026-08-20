@@ -73,7 +73,7 @@ router.post("/chat", async (req, res) => {
         model: "groq/compound-mini",
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
-          ...messages.slice(-10),
+          ...messages.slice(-20),
         ],
         temperature: 0.7,
         max_tokens: 512,
