@@ -18,7 +18,6 @@ const navLinks = [
   { name: 'Membership', href: '/membership' },
   { name: 'Gallery', href: '/gallery' },
   { name: 'Reviews', href: '/testimonials' },
-  { name: 'Our Story', href: '/owner' },
   { name: 'Contact', href: '/contact' },
 ];
 
