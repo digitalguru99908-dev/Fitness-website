@@ -144,14 +144,21 @@ export function ChatBot() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [open]);
 
-  const speak = async (text: string) => {
+  const detectLang = (text: string): string => {
+    const devanagari = /[\u0900-\u097F]/;
+    if (devanagari.test(text)) return 'hi';
+    return 'en';
+  };
+
+  const speak = async (text: string, userText?: string) => {
     if (muted || !text) return;
+    const lang = userText ? detectLang(userText) : 'en';
     try {
       setSpeaking(true);
       const res = await fetch(`${import.meta.env.BASE_URL}api/tts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text, lang }),
       });
       if (!res.ok) return;
       const blob = await res.blob();
@@ -201,7 +208,7 @@ export function ChatBot() {
       setMessages(finalMessages);
 
       // Auto-speak the reply
-      speak(reply);
+      speak(reply, msg);
     } catch {
       const errorMsgs = [...updatedMessages, { role: 'assistant' as const, content: 'Server busy right now, try again! 💪' }];
       messagesEndRef.current = errorMsgs;

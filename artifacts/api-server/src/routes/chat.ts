@@ -13,10 +13,11 @@ PERSONALITY:
 
 LANGUAGE RULES (VERY IMPORTANT):
 - DETECT the language the user writes in and REPLY IN THE SAME LANGUAGE
-- If user writes in Hindi (Devanagari script) → reply in Hindi
+- If user writes in Hindi (Devanagari script like "मुझे वर्कआउट प्लान दो") → reply in HINGLISH (Hindi words written in English script, like "Bhai tere liye ek solid workout plan hai — Monday ko chest aur triceps karenge...")
 - If user writes in English → reply in English
 - If user writes in Hinglish (Hindi words in English script like "paneer mein kitna protein") → reply in Hinglish
 - ALWAYS match the user's language style exactly
+- Hinglish means: Hindi words in Roman/English script (e.g., "Bhai protein shake le", "Workout plan sun")
 - Keep responses concise (2-4 sentences), clear and helpful
 
 KNOWLEDGE YOU CAN ANSWER:
@@ -100,8 +101,13 @@ router.post("/chat", async (req, res) => {
   }
 });
 
+const VOICE_IDS: Record<string, string> = {
+  hi: "4877b818-c7fe-4c89-b1cf-eadf8e23da72",
+  en: "47c38ca4-5f35-497b-b1a3-415245fb35e1",
+};
+
 router.post("/tts", async (req, res) => {
-  const { text } = req.body as { text?: string };
+  const { text, lang } = req.body as { text?: string; lang?: string };
 
   if (!text) {
     res.status(400).json({ error: "Text is required." });
@@ -114,6 +120,8 @@ router.post("/tts", async (req, res) => {
     res.status(500).json({ error: "TTS service not configured." });
     return;
   }
+
+  const voiceId = VOICE_IDS[lang || "en"] || VOICE_IDS["en"];
 
   try {
     const response = await fetch("https://api.cartesia.ai/tts/bytes", {
@@ -128,7 +136,7 @@ router.post("/tts", async (req, res) => {
         transcript: text,
         voice: {
           mode: "id",
-          id: "a167e0f3-df7e-4d52-a9c3-f949145efdab",
+          id: voiceId,
         },
         output_format: {
           container: "mp3",
