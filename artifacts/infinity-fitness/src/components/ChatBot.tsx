@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, Volume2, VolumeX, Minus, Dumbbell, Mic } from 'lucide-react';
+import { X, Send, Volume2, VolumeX, Minus, Dumbbell, Zap, Flame, Apple } from 'lucide-react';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -9,100 +9,149 @@ interface ChatMessage {
 
 const WELCOME_MSG: ChatMessage = {
   role: 'assistant',
-  content: "Welcome to Infinity Fitness AI! 💪 I'm your personal trainer. Ask me anything about Workout, Diet, Supplements or Fitness!",
+  content: "Welcome to Infinity Fitness AI! I'm your personal trainer. Ask me anything about Workout, Diet, Supplements or Fitness!",
 };
 
 const QUICK_ACTIONS = [
   { icon: '💪', label: 'Workout Plan', query: 'Give me a workout plan' },
-  { icon: '🍴', label: 'Diet & Nutrition', query: 'What should I eat for muscle gain?' },
+  { icon: '🍎', label: 'Diet & Nutrition', query: 'What should I eat for muscle gain?' },
   { icon: '🧴', label: 'Supplements', query: 'Which supplements should I take?' },
   { icon: '❓', label: 'Ask Anything', query: '' },
 ];
 
-function CoachSVG({ className = '' }: { className?: string }) {
+function BodyBuilderSVG({ className = '' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 140 200" className={className} xmlns="http://www.w3.org/2000/svg">
-      {/* Shadow */}
-      <ellipse cx="70" cy="195" rx="35" ry="5" fill="rgba(255,106,0,0.15)" />
-      {/* Head */}
-      <ellipse cx="70" cy="30" rx="18" ry="20" fill="#2a2a2a" />
-      {/* Hair */}
-      <path d="M52 24 Q56 6 70 4 Q84 6 88 24 Q86 14 70 10 Q54 14 52 24Z" fill="#111" />
-      <path d="M55 18 Q60 12 70 10 Q65 16 58 20Z" fill="#1a1a1a" />
-      {/* Face */}
-      <ellipse cx="70" cy="30" rx="16" ry="18" fill="#333" />
-      {/* Eyes */}
-      <ellipse cx="63" cy="28" rx="2.5" ry="2" fill="#ff6a00" />
-      <ellipse cx="77" cy="28" rx="2.5" ry="2" fill="#ff6a00" />
-      <circle cx="63" cy="27.5" r="0.8" fill="#fff" />
-      <circle cx="77" cy="27.5" r="0.8" fill="#fff" />
-      {/* Eyebrows */}
-      <path d="M59 24 Q63 22 67 24" stroke="#222" strokeWidth="1.5" fill="none" />
-      <path d="M73 24 Q77 22 81 24" stroke="#222" strokeWidth="1.5" fill="none" />
-      {/* Nose */}
-      <path d="M70 30 L68 34 L72 34Z" fill="#3a3a3a" />
-      {/* Smile */}
-      <path d="M63 37 Q70 43 77 37" stroke="#ff6a00" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-      {/* Neck */}
-      <rect x="63" y="47" width="14" height="10" rx="4" fill="#2a2a2a" />
-      {/* Trapezius */}
-      <path d="M48 57 L92 57 L88 52 L52 52Z" fill="#222" />
-      {/* Tank top body */}
-      <path d="M44 57 L96 57 L100 130 L40 130Z" fill="#111" rx="3" />
-      <path d="M45 58 L95 58 L99 129 L41 129Z" fill="#1a1a1a" />
-      {/* V-neck */}
-      <path d="M60 57 L70 72 L80 57" fill="#222" />
-      {/* Orange side stripes */}
-      <path d="M44 57 L48 57 L46 130 L40 130Z" fill="#ff6a00" opacity="0.85" />
-      <path d="M92 57 L96 57 L100 130 L94 130Z" fill="#ff6a00" opacity="0.85" />
-      {/* INFINITY text on chest */}
-      <text x="70" y="90" textAnchor="middle" fill="#ff6a00" fontSize="7" fontWeight="900" fontFamily="Arial" letterSpacing="1">INFINITY</text>
-      <text x="70" y="102" textAnchor="middle" fill="#ff6a00" fontSize="6" fontFamily="Arial" letterSpacing="2">FITNESS</text>
-      {/* Muscle definition lines */}
-      <path d="M55 75 Q58 85 55 100" stroke="#222" strokeWidth="0.5" fill="none" />
-      <path d="M85 75 Q82 85 85 100" stroke="#222" strokeWidth="0.5" fill="none" />
-      <path d="M60 75 L70 80 L80 75" stroke="#222" strokeWidth="0.5" fill="none" />
-      {/* Left arm - bicep */}
-      <path d="M44 59 Q30 62 22 78 Q16 92 18 105 Q20 110 26 105 Q30 95 34 82 Q36 74 44 66Z" fill="#1a1a1a" />
-      <ellipse cx="24" cy="82" rx="9" ry="12" fill="#222" opacity="0.4" />
-      {/* Left bicep peak */}
-      <path d="M22 72 Q18 80 20 90" stroke="#ff6a00" strokeWidth="0.8" fill="none" opacity="0.3" />
-      {/* Right arm - bicep */}
-      <path d="M96 59 Q110 62 118 78 Q124 92 122 105 Q120 110 114 105 Q110 95 106 82 Q104 74 96 66Z" fill="#1a1a1a" />
-      <ellipse cx="116" cy="82" rx="9" ry="12" fill="#222" opacity="0.4" />
-      {/* Right bicep peak */}
-      <path d="M118 72 Q122 80 120 90" stroke="#ff6a00" strokeWidth="0.8" fill="none" opacity="0.3" />
-      {/* Fists */}
-      <ellipse cx="18" cy="108" rx="7" ry="6" fill="#1a1a1a" />
-      <ellipse cx="122" cy="108" rx="7" ry="6" fill="#1a1a1a" />
-      {/* Towel around neck */}
-      <path d="M52 55 Q58 50 66 55" stroke="#ff6a00" strokeWidth="2.5" fill="none" opacity="0.5" strokeLinecap="round" />
-      <path d="M74 55 Q82 50 88 55" stroke="#ff6a00" strokeWidth="2.5" fill="none" opacity="0.5" strokeLinecap="round" />
-      <path d="M48 55 L52 58" stroke="#ff6a00" strokeWidth="1.5" fill="none" opacity="0.4" />
-      <path d="M92 55 L88 58" stroke="#ff6a00" strokeWidth="1.5" fill="none" opacity="0.4" />
-      {/* Shorts */}
-      <path d="M41 130 L99 130 L96 160 L76 160 L70 140 L64 160 L44 160Z" fill="#111" />
-      <path d="M41 130 L44 130 L44 160 L41 160Z" fill="#ff6a00" opacity="0.7" />
-      <path d="M96 130 L99 130 L99 160 L96 160Z" fill="#ff6a00" opacity="0.7" />
-      {/* Legs */}
-      <rect x="48" y="160" width="16" height="26" rx="6" fill="#1a1a1a" />
-      <rect x="76" y="160" width="16" height="26" rx="6" fill="#1a1a1a" />
-      {/* Calves */}
-      <ellipse cx="56" cy="178" rx="8" ry="5" fill="#222" opacity="0.3" />
-      <ellipse cx="84" cy="178" rx="8" ry="5" fill="#222" opacity="0.3" />
-      {/* Shoes */}
-      <ellipse cx="56" cy="190" rx="12" ry="5" fill="#111" />
-      <ellipse cx="84" cy="190" rx="12" ry="5" fill="#111" />
-      <path d="M44 190 L68 190" stroke="#ff6a00" strokeWidth="1" opacity="0.5" />
-      <path d="M72 190 L96 190" stroke="#ff6a00" strokeWidth="1" opacity="0.5" />
-      {/* Orange glow effect */}
-      <ellipse cx="70" cy="100" rx="50" ry="60" fill="url(#coachGlow)" opacity="0.08" />
+    <svg viewBox="0 0 200 280" className={className} xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <radialGradient id="coachGlow">
-          <stop offset="0%" stopColor="#ff6a00" />
-          <stop offset="100%" stopColor="transparent" />
+        <radialGradient id="muscleGlow" cx="50%" cy="40%" r="50%">
+          <stop offset="0%" stopColor="#ff6a00" stopOpacity="0.3" />
+          <stop offset="100%" stopColor="transparent" stopOpacity="0" />
         </radialGradient>
+        <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#d4a574" />
+          <stop offset="50%" stopColor="#c4956a" />
+          <stop offset="100%" stopColor="#b8875c" />
+        </linearGradient>
+        <linearGradient id="tankGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#1a1a1a" />
+          <stop offset="100%" stopColor="#0d0d0d" />
+        </linearGradient>
+        <linearGradient id="orangeAccent" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#ff8c33" />
+          <stop offset="100%" stopColor="#ff6a00" />
+        </linearGradient>
+        <filter id="innerShadow">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#000" floodOpacity="0.5" />
+        </filter>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="4" result="blur" />
+          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
       </defs>
+
+      {/* Background glow */}
+      <ellipse cx="100" cy="140" rx="80" ry="100" fill="url(#muscleGlow)" />
+
+      {/* Shadow */}
+      <ellipse cx="100" cy="268" rx="40" ry="6" fill="rgba(255,106,0,0.12)" />
+
+      {/* Head */}
+      <ellipse cx="100" cy="42" rx="24" ry="26" fill="url(#skinGrad)" />
+
+      {/* Hair */}
+      <path d="M76 32 Q80 10 100 6 Q120 10 124 32 Q122 18 100 14 Q78 18 76 32Z" fill="#1a1a1a" />
+      <path d="M78 24 Q84 16 100 14 Q88 22 80 26Z" fill="#111" />
+
+      {/* Face shadow */}
+      <ellipse cx="100" cy="42" rx="22" ry="24" fill="url(#skinGrad)" opacity="0.9" />
+
+      {/* Eyes */}
+      <ellipse cx="91" cy="40" rx="3.5" ry="2.8" fill="#111" />
+      <ellipse cx="109" cy="40" rx="3.5" ry="2.8" fill="#111" />
+      <circle cx="91" cy="39.5" r="1.2" fill="#fff" />
+      <circle cx="109" cy="39.5" r="1.2" fill="#fff" />
+
+      {/* Eyebrows */}
+      <path d="M84 34 Q91 31 98 34" stroke="#1a1a1a" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+      <path d="M102 34 Q109 31 116 34" stroke="#1a1a1a" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+
+      {/* Nose */}
+      <path d="M100 42 L97 48 L103 48Z" fill="#b8875c" opacity="0.6" />
+
+      {/* Smile */}
+      <path d="M91 52 Q100 60 109 52" stroke="#ff6a00" strokeWidth="2" fill="none" strokeLinecap="round" />
+
+      {/* Neck */}
+      <rect x="90" y="64" width="20" height="14" rx="6" fill="url(#skinGrad)" />
+
+      {/* Trapezius */}
+      <path d="M64 78 L136 78 L130 72 L70 72Z" fill="#c4956a" />
+
+      {/* Tank top */}
+      <path d="M56 78 L144 78 L150 190 L50 190Z" fill="url(#tankGrad)" rx="4" />
+
+      {/* V-neck */}
+      <path d="M84 78 L100 98 L116 78" fill="#c4956a" />
+
+      {/* Orange side stripes */}
+      <path d="M56 78 L62 78 L60 190 L50 190Z" fill="url(#orangeAccent)" opacity="0.9" />
+      <path d="M138 78 L144 78 L150 190 L140 190Z" fill="url(#orangeAccent)" opacity="0.9" />
+
+      {/* INFINITY text on chest */}
+      <text x="100" y="128" textAnchor="middle" fill="#ff6a00" fontSize="10" fontWeight="900" fontFamily="Arial" letterSpacing="2">INFINITY</text>
+      <text x="100" y="144" textAnchor="middle" fill="#ff6a00" fontSize="8" fontFamily="Arial" letterSpacing="3">FITNESS</text>
+
+      {/* Muscle definition */}
+      <path d="M72 95 Q78 115 72 140" stroke="#111" strokeWidth="0.8" fill="none" opacity="0.4" />
+      <path d="M128 95 Q122 115 128 140" stroke="#111" strokeWidth="0.8" fill="none" opacity="0.4" />
+      <path d="M82 95 L100 102 L118 95" stroke="#111" strokeWidth="0.5" fill="none" opacity="0.3" />
+
+      {/* LEFT ARM - massive bicep */}
+      <path d="M56 80 Q34 84 22 102 Q14 118 16 140 Q18 148 26 142 Q32 132 38 116 Q42 104 56 90Z" fill="url(#skinGrad)" />
+      {/* Bicep peak */}
+      <ellipse cx="26" cy="110" rx="12" ry="16" fill="#c4956a" opacity="0.4" />
+      <path d="M20 100 Q16 112 18 124" stroke="#ff6a00" strokeWidth="1" fill="none" opacity="0.3" />
+      {/* Forearm */}
+      <path d="M16 140 Q12 155 14 168 Q16 174 22 170 Q24 160 24 148Z" fill="url(#skinGrad)" />
+      {/* Fist */}
+      <ellipse cx="18" cy="172" rx="8" ry="7" fill="#c4956a" />
+
+      {/* RIGHT ARM - massive bicep */}
+      <path d="M144 80 Q166 84 178 102 Q186 118 184 140 Q182 148 174 142 Q168 132 162 116 Q158 104 144 90Z" fill="url(#skinGrad)" />
+      {/* Bicep peak */}
+      <ellipse cx="174" cy="110" rx="12" ry="16" fill="#c4956a" opacity="0.4" />
+      <path d="M180 100 Q184 112 182 124" stroke="#ff6a00" strokeWidth="1" fill="none" opacity="0.3" />
+      {/* Forearm */}
+      <path d="M184 140 Q188 155 186 168 Q184 174 178 170 Q176 160 176 148Z" fill="url(#skinGrad)" />
+      {/* Fist */}
+      <ellipse cx="182" cy="172" rx="8" ry="7" fill="#c4956a" />
+
+      {/* Dumbbell in right hand */}
+      <rect x="172" y="166" width="20" height="4" rx="2" fill="#555" />
+      <rect x="168" y="162" width="6" height="12" rx="2" fill="#ff6a00" />
+      <rect x="190" y="162" width="6" height="12" rx="2" fill="#ff6a00" />
+
+      {/* Shorts */}
+      <path d="M50 190 L150 190 L146 228 L116 228 L100 210 L84 228 L54 228Z" fill="#111" />
+      <path d="M50 190 L54 190 L54 228 L50 228Z" fill="url(#orangeAccent)" opacity="0.8" />
+      <path d="M146 190 L150 190 L150 228 L146 228Z" fill="url(#orangeAccent)" opacity="0.8" />
+
+      {/* Legs */}
+      <rect x="66" y="228" width="22" height="32" rx="8" fill="url(#skinGrad)" />
+      <rect x="112" y="228" width="22" height="32" rx="8" fill="url(#skinGrad)" />
+
+      {/* Calves */}
+      <ellipse cx="77" cy="248" rx="11" ry="7" fill="#c4956a" opacity="0.3" />
+      <ellipse cx="123" cy="248" rx="11" ry="7" fill="#c4956a" opacity="0.3" />
+
+      {/* Shoes */}
+      <ellipse cx="77" cy="264" rx="16" ry="7" fill="#111" />
+      <ellipse cx="123" cy="264" rx="16" ry="7" fill="#111" />
+      <path d="M61 264 L93 264" stroke="#ff6a00" strokeWidth="1.5" opacity="0.6" />
+      <path d="M107 264 L139 264" stroke="#ff6a00" strokeWidth="1.5" opacity="0.6" />
+
+      {/* Orange aura */}
+      <ellipse cx="100" cy="140" rx="70" ry="80" fill="none" stroke="#ff6a00" strokeWidth="0.5" opacity="0.15" />
     </svg>
   );
 }
@@ -131,7 +180,6 @@ export function ChatBot() {
     messagesEndRef.current = messages;
   }, [messages]);
 
-  // Click outside to close
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (!open) return;
@@ -206,11 +254,9 @@ export function ChatBot() {
       const finalMessages = [...updatedMessages, { role: 'assistant' as const, content: reply }];
       messagesEndRef.current = finalMessages;
       setMessages(finalMessages);
-
-      // Auto-speak the reply
       speak(reply, msg);
     } catch {
-      const errorMsgs = [...updatedMessages, { role: 'assistant' as const, content: 'Server busy right now, try again! 💪' }];
+      const errorMsgs = [...updatedMessages, { role: 'assistant' as const, content: 'Server busy right now, try again!' }];
       messagesEndRef.current = errorMsgs;
       setMessages(errorMsgs);
     } finally {
@@ -220,12 +266,9 @@ export function ChatBot() {
 
   const toggleMute = useCallback(() => {
     setMuted((prev) => {
-      if (!prev) {
-        // Muting - stop current audio
-        if (audioRef.current) {
-          audioRef.current.pause();
-          setSpeaking(false);
-        }
+      if (!prev && audioRef.current) {
+        audioRef.current.pause();
+        setSpeaking(false);
       }
       return !prev;
     });
@@ -240,32 +283,32 @@ export function ChatBot() {
 
   return (
     <>
-      {/* ── FAB Button ── */}
+      {/* FAB */}
       <motion.div
         ref={fabRef}
         className="fixed bottom-24 right-6 z-50"
-        animate={open ? {} : { y: [0, -6, 0] }}
-        transition={open ? {} : { duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        animate={open ? {} : { y: [0, -8, 0] }}
+        transition={open ? {} : { duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
       >
         <motion.button
           onClick={() => { setOpen(!open); setMinimized(false); }}
-          whileHover={{ scale: 1.1 }}
+          whileHover={{ scale: 1.12 }}
           whileTap={{ scale: 0.9 }}
           className="relative group"
           aria-label="Open Infinity Fitness AI"
         >
           {/* Outer glow rings */}
-          <div className="absolute -inset-4 rounded-full border border-orange-500/20 animate-ping" style={{ animationDuration: '3s' }} />
-          <div className="absolute -inset-2 rounded-full bg-gradient-to-br from-orange-500/30 to-amber-500/10 blur-lg" />
+          <div className="absolute -inset-5 rounded-full border border-orange-500/15 animate-ping" style={{ animationDuration: '3.5s' }} />
+          <div className="absolute -inset-3 rounded-full bg-gradient-to-br from-orange-500/25 to-amber-500/10 blur-xl" />
           {/* Neon ring */}
-          <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-orange-500 via-amber-400 to-orange-600 opacity-70 blur-sm" />
+          <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-orange-500 via-amber-400 to-orange-600 opacity-60 blur-sm" />
           {/* Button body */}
           <div className="relative w-16 h-16 rounded-full flex items-center justify-center overflow-hidden"
             style={{
-              background: 'linear-gradient(145deg, #1a1a1a, #0a0a0a)',
-              boxShadow: '0 0 30px rgba(255,106,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)',
+              background: 'linear-gradient(145deg, #1c1c1c, #0a0a0a)',
+              boxShadow: '0 0 35px rgba(255,106,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08)',
             }}>
-            <CoachSVG className="w-14 h-16" />
+            <BodyBuilderSVG className="w-14 h-16" />
           </div>
           {/* Online dot */}
           {!open && (
@@ -288,67 +331,67 @@ export function ChatBot() {
         </motion.button>
       </motion.div>
 
-      {/* ── Chat Panel ── */}
+      {/* Chat Panel */}
       <AnimatePresence>
         {open && (
           <motion.div
             ref={panelRef}
-            initial={{ opacity: 0, y: 40, scale: 0.9, rotateX: 10 }}
+            initial={{ opacity: 0, y: 50, scale: 0.85, rotateX: 15 }}
             animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-            exit={{ opacity: 0, y: 40, scale: 0.9, rotateX: 10 }}
-            transition={{ type: 'spring', damping: 20, stiffness: 260 }}
+            exit={{ opacity: 0, y: 50, scale: 0.85, rotateX: 15 }}
+            transition={{ type: 'spring', damping: 22, stiffness: 280 }}
             className="fixed bottom-40 right-6 z-50 w-[420px] max-w-[calc(100vw-2rem)] rounded-3xl overflow-hidden flex flex-col"
             style={{
-              height: minimized ? '80px' : '600px',
+              height: minimized ? '80px' : '620px',
               maxHeight: 'calc(100vh - 140px)',
-              perspective: '1000px',
+              perspective: '1200px',
             }}
           >
-            {/* ── Outer neon border ── */}
+            {/* Outer neon border */}
             <div className="absolute inset-0 rounded-3xl pointer-events-none"
               style={{
-                border: '1.5px solid rgba(255,106,0,0.4)',
-                boxShadow: '0 0 40px rgba(255,106,0,0.15), 0 0 80px rgba(255,106,0,0.05), 0 30px 60px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.05)',
+                border: '1.5px solid rgba(255,106,0,0.35)',
+                boxShadow: '0 0 50px rgba(255,106,0,0.12), 0 0 100px rgba(255,106,0,0.04), 0 35px 70px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.04)',
               }}
             />
 
-            {/* ── Glass bg ── */}
+            {/* Glass bg */}
             <div className="absolute inset-0 rounded-3xl"
               style={{
-                background: 'linear-gradient(165deg, rgba(18,18,18,0.98) 0%, rgba(8,8,8,0.99) 50%, rgba(5,5,5,1) 100%)',
-                backdropFilter: 'blur(30px)',
+                background: 'linear-gradient(165deg, rgba(16,16,16,0.98) 0%, rgba(8,8,8,0.99) 50%, rgba(4,4,4,1) 100%)',
+                backdropFilter: 'blur(40px)',
               }}
             />
 
-            {/* ── Holographic shimmer ── */}
+            {/* Holographic shimmer */}
             <div className="absolute inset-0 rounded-3xl pointer-events-none overflow-hidden">
-              <div className="absolute -top-1/2 -left-1/2 w-full h-full opacity-[0.03]"
+              <div className="absolute -top-1/2 -left-1/2 w-full h-full opacity-[0.02]"
                 style={{
                   background: 'conic-gradient(from 0deg, transparent, #ff6a00, transparent, transparent)',
-                  animation: 'spin 8s linear infinite',
+                  animation: 'spin 10s linear infinite',
                 }}
               />
             </div>
 
-            {/* Content wrapper */}
+            {/* Content */}
             <div className="relative flex flex-col h-full">
-              {/* ── Header ── */}
-              <div className="relative px-5 py-4 border-b border-orange-500/15 flex-shrink-0">
+              {/* Header */}
+              <div className="relative px-5 py-4 border-b border-orange-500/10 flex-shrink-0">
                 <div className="absolute inset-0"
-                  style={{ background: 'linear-gradient(180deg, rgba(255,106,0,0.06) 0%, transparent 100%)' }} />
+                  style={{ background: 'linear-gradient(180deg, rgba(255,106,0,0.05) 0%, transparent 100%)' }} />
 
                 <div className="relative flex items-center gap-3">
-                  {/* 3D Coach Avatar */}
+                  {/* 3D Avatar */}
                   <div className="relative flex-shrink-0">
-                    <div className="absolute -inset-1 rounded-xl opacity-40 blur-md"
+                    <div className="absolute -inset-1.5 rounded-xl opacity-30 blur-md"
                       style={{ background: 'linear-gradient(135deg, #ff6a00, #e85d00)' }} />
                     <div className="relative w-14 h-14 rounded-xl flex items-center justify-center overflow-hidden"
                       style={{
-                        background: 'linear-gradient(145deg, #1a1a1a, #0a0a0a)',
-                        border: '1px solid rgba(255,106,0,0.3)',
-                        boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
+                        background: 'linear-gradient(145deg, #1c1c1c, #0a0a0a)',
+                        border: '1px solid rgba(255,106,0,0.25)',
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
                       }}>
-                      <CoachSVG className="w-12 h-16" />
+                      <BodyBuilderSVG className="w-12 h-16" />
                     </div>
                     <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-gray-900">
                       <span className="absolute inset-0 bg-green-400 rounded-full animate-ping opacity-40" style={{ animationDuration: '2s' }} />
@@ -357,28 +400,27 @@ export function ChatBot() {
 
                   <div className="flex-1 min-w-0">
                     <h3 className="text-white font-black uppercase tracking-[0.2em] text-sm leading-tight"
-                      style={{ textShadow: '0 0 25px rgba(255,106,0,0.4)' }}>
+                      style={{ textShadow: '0 0 30px rgba(255,106,0,0.4)' }}>
                       INFINITY FITNESS AI
                     </h3>
                     <div className="flex items-center gap-1.5 mt-1">
                       <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
                       <span className="text-green-400 text-[10px] font-bold tracking-wider">ONLINE</span>
                     </div>
-                    <p className="text-orange-400/50 text-[10px] font-semibold tracking-[0.15em] uppercase mt-0.5">
-                      Gym & Diet Chatbot
+                    <p className="text-orange-400/40 text-[10px] font-semibold tracking-[0.15em] uppercase mt-0.5">
+                      Gym & Diet Coach
                     </p>
                   </div>
 
                   <div className="flex items-center gap-1.5">
-                    {/* Voice mute button */}
                     <motion.button
                       onClick={toggleMute}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
                       style={{
-                        background: muted ? 'rgba(239,68,68,0.15)' : 'rgba(255,106,0,0.1)',
-                        border: `1px solid ${muted ? 'rgba(239,68,68,0.2)' : 'rgba(255,106,0,0.15)'}`,
+                        background: muted ? 'rgba(239,68,68,0.12)' : 'rgba(255,106,0,0.08)',
+                        border: `1px solid ${muted ? 'rgba(239,68,68,0.2)' : 'rgba(255,106,0,0.12)'}`,
                       }}
                       title={muted ? 'Voice ON karo' : 'Voice OFF karo'}
                     >
@@ -398,28 +440,28 @@ export function ChatBot() {
 
               {!minimized && (
                 <>
-                  {/* ── Messages ── */}
+                  {/* Messages */}
                   <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-4"
                     style={{ background: 'transparent' }}>
 
                     {messages.map((msg, i) => (
                       <motion.div
                         key={i}
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3, delay: 0.05 }}
+                        initial={{ opacity: 0, y: 14, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        transition={{ duration: 0.35, delay: 0.05 }}
                         className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                       >
                         {msg.role === 'assistant' && (
                           <div className="mr-2.5 flex-shrink-0 mt-0.5 relative">
-                            <div className="absolute -inset-0.5 rounded-lg opacity-25 blur-sm"
+                            <div className="absolute -inset-0.5 rounded-lg opacity-20 blur-sm"
                               style={{ background: 'linear-gradient(135deg, #ff6a00, #e85d00)' }} />
                             <div className="relative w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden"
                               style={{
-                                background: 'linear-gradient(145deg, #1a1a1a, #0a0a0a)',
+                                background: 'linear-gradient(145deg, #1c1c1c, #0a0a0a)',
                                 border: '1px solid rgba(255,106,0,0.2)',
                               }}>
-                              <CoachSVG className="w-7 h-10" />
+                              <BodyBuilderSVG className="w-7 h-10" />
                             </div>
                           </div>
                         )}
@@ -431,11 +473,11 @@ export function ChatBot() {
                           }`}
                           style={msg.role === 'user' ? {
                             background: 'linear-gradient(135deg, #ff6a00, #e85d00)',
-                            boxShadow: '0 4px 25px rgba(255,106,0,0.25), inset 0 1px 0 rgba(255,255,255,0.15)',
+                            boxShadow: '0 4px 25px rgba(255,106,0,0.25), inset 0 1px 0 rgba(255,255,255,0.12)',
                           } : {
                             background: 'rgba(255,255,255,0.04)',
                             border: '1px solid rgba(255,255,255,0.06)',
-                            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)',
+                            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.02)',
                           }}
                         >
                           {msg.content}
@@ -446,14 +488,14 @@ export function ChatBot() {
                     {loading && (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
                         <div className="mr-2.5 flex-shrink-0 relative">
-                          <div className="absolute -inset-0.5 rounded-lg opacity-25 blur-sm"
+                          <div className="absolute -inset-0.5 rounded-lg opacity-20 blur-sm"
                             style={{ background: 'linear-gradient(135deg, #ff6a00, #e85d00)' }} />
                           <div className="relative w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden"
                             style={{
-                              background: 'linear-gradient(145deg, #1a1a1a, #0a0a0a)',
+                              background: 'linear-gradient(145deg, #1c1c1c, #0a0a0a)',
                               border: '1px solid rgba(255,106,0,0.2)',
                             }}>
-                            <CoachSVG className="w-7 h-10" />
+                            <BodyBuilderSVG className="w-7 h-10" />
                           </div>
                         </div>
                         <div className="px-4 py-3 rounded-2xl rounded-bl-lg"
@@ -467,64 +509,62 @@ export function ChatBot() {
                       </motion.div>
                     )}
 
-                    {/* Speaking indicator */}
                     {speaking && !loading && (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
                         <div className="px-3 py-1.5 rounded-full flex items-center gap-2"
-                          style={{ background: 'rgba(255,106,0,0.08)', border: '1px solid rgba(255,106,0,0.15)' }}>
+                          style={{ background: 'rgba(255,106,0,0.06)', border: '1px solid rgba(255,106,0,0.12)' }}>
                           <Volume2 className="w-3 h-3 text-orange-400 animate-pulse" />
-                          <span className="text-orange-400/80 text-[10px] font-medium">Speaking...</span>
+                          <span className="text-orange-400/70 text-[10px] font-medium">Speaking...</span>
                         </div>
                       </motion.div>
                     )}
                   </div>
 
-                  {/* ── Quick Actions ── */}
+                  {/* Quick Actions */}
                   {messages.length <= 1 && (
                     <div className="px-4 pb-3 grid grid-cols-2 gap-2 flex-shrink-0">
                       {QUICK_ACTIONS.map((action, i) => (
                         <motion.button
                           key={i}
-                          initial={{ opacity: 0, y: 10 }}
+                          initial={{ opacity: 0, y: 12 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.1 * i }}
                           onClick={() => { if (action.query) send(action.query); }}
-                          className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-left transition-all hover:scale-[1.02]"
+                          className="flex items-center gap-2.5 px-3 py-3 rounded-xl text-left transition-all hover:scale-[1.03]"
                           style={{
-                            background: 'rgba(255,106,0,0.06)',
-                            border: '1px solid rgba(255,106,0,0.12)',
-                            boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+                            background: 'rgba(255,106,0,0.05)',
+                            border: '1px solid rgba(255,106,0,0.1)',
+                            boxShadow: '0 2px 12px rgba(0,0,0,0.2)',
                           }}
                         >
-                          <span className="text-base">{action.icon}</span>
+                          <span className="text-lg">{action.icon}</span>
                           <span className="text-white/70 text-[11px] font-semibold">{action.label}</span>
                         </motion.button>
                       ))}
                     </div>
                   )}
 
-                  {/* ── Pedestal text ── */}
                   {messages.length <= 1 && (
                     <div className="px-4 pb-2 flex-shrink-0">
                       <div className="text-center py-2 rounded-xl"
                         style={{
-                          background: 'linear-gradient(90deg, transparent, rgba(255,106,0,0.06), transparent)',
-                          borderTop: '1px solid rgba(255,106,0,0.1)',
+                          background: 'linear-gradient(90deg, transparent, rgba(255,106,0,0.04), transparent)',
+                          borderTop: '1px solid rgba(255,106,0,0.08)',
                         }}>
-                        <p className="text-orange-400/30 text-[9px] font-bold tracking-[0.25em] uppercase">
-                          LET'S BUILD A BETTER YOU 💪
+                        <p className="text-orange-400/25 text-[9px] font-bold tracking-[0.25em] uppercase">
+                          LET'S BUILD A BETTER YOU
                         </p>
                       </div>
                     </div>
                   )}
 
-                  {/* ── Input ── */}
+                  {/* Input */}
                   <div className="px-4 pb-4 pt-2 flex-shrink-0">
                     <div className="flex gap-2 items-center p-1.5 rounded-2xl"
                       style={{
                         background: 'rgba(255,255,255,0.03)',
                         border: '1px solid rgba(255,255,255,0.06)',
-                        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.2)',
+                        boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.25)',
                       }}>
                       <input
                         type="text"
@@ -543,7 +583,7 @@ export function ChatBot() {
                         style={{
                           background: input.trim()
                             ? 'linear-gradient(135deg, #ff6a00, #e85d00)'
-                            : 'rgba(255,106,0,0.1)',
+                            : 'rgba(255,106,0,0.08)',
                           boxShadow: input.trim() ? '0 4px 20px rgba(255,106,0,0.3)' : 'none',
                         }}
                       >
@@ -554,9 +594,9 @@ export function ChatBot() {
                 </>
               )}
 
-              {/* ── Bottom glow ── */}
+              {/* Bottom glow */}
               <div className="h-[1px] w-full flex-shrink-0"
-                style={{ background: 'linear-gradient(90deg, transparent, rgba(255,106,0,0.5), transparent)' }} />
+                style={{ background: 'linear-gradient(90deg, transparent, rgba(255,106,0,0.4), transparent)' }} />
             </div>
           </motion.div>
         )}
