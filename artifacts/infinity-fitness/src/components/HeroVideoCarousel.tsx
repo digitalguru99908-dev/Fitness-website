@@ -25,7 +25,7 @@ export function HeroVideoCarousel() {
     <div className="absolute inset-0 z-0 bg-black overflow-hidden">
       <video
         ref={videoRef}
-        src="/hero-bg.mp4"
+        src="/infinity.mp4"
         className="absolute inset-0 w-full h-full object-cover"
         autoPlay
         loop

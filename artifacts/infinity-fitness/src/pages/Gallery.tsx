@@ -12,6 +12,9 @@ import img7 from '@assets/1a4c7a90-e805-426f-a6ee-c310dc609be2_1785141254714.web
 
 const videos = [
   { src: '/gallery-video-1.mp4', caption: 'Infinity Fitness Gym Reel' },
+  { src: '/client-review.mp4', caption: 'Client Review' },
+  { src: '/comeback.mp4', caption: 'Comeback Story' },
+  { src: '/infinity.mp4', caption: 'Infinity Fitness' },
   { src: '/gallery-video-2.mp4', caption: 'Best Gym in Kaithal' },
 ];
 
@@ -29,7 +32,7 @@ export function Gallery() {
   const [videoLightbox, setVideoLightbox] = useState<number | null>(null);
   const [imageLightbox, setImageLightbox] = useState<number | null>(null);
   const [lbPlaying, setLbPlaying] = useState(false);
-  const [lbMuted, setLbMuted] = useState(true);
+  const [lbMuted, setLbMuted] = useState(false);
   const lightboxVideoRef = useRef<HTMLVideoElement>(null);
   const prefersReduced = useReducedMotion();
 
@@ -37,7 +40,7 @@ export function Gallery() {
   const openVideoLightbox = useCallback((i: number) => {
     setVideoLightbox(i);
     setLbPlaying(false);
-    setLbMuted(true);
+    setLbMuted(false);
   }, []);
 
   const closeVideoLightbox = useCallback(() => {
@@ -70,17 +73,31 @@ export function Gallery() {
     setLbMuted(vid.muted);
   }, []);
 
-  // Auto play when video lightbox opens
+  // Sequence playback: ek video khatam → agla apne aap chalu
+  const playNextVideo = useCallback(() => {
+    setVideoLightbox(i => (i === null ? null : (i + 1) % videos.length));
+  }, []);
+
+  const playPrevVideo = useCallback(() => {
+    setVideoLightbox(i => (i === null ? null : (i - 1 + videos.length) % videos.length));
+  }, []);
+
+  // Auto play when video lightbox opens — sound ke saath try karo,
+  // browser block kare to muted fallback
   useEffect(() => {
     if (videoLightbox !== null && lightboxVideoRef.current) {
       const vid = lightboxVideoRef.current;
-      vid.muted = true;
-      setLbMuted(true);
+      vid.muted = false;
+      setLbMuted(false);
       const playPromise = vid.play();
       if (playPromise) {
         playPromise.then(() => {
           setLbPlaying(true);
-        }).catch(() => setLbPlaying(false));
+        }).catch(() => {
+          vid.muted = true;
+          setLbMuted(true);
+          vid.play().then(() => setLbPlaying(true)).catch(() => setLbPlaying(false));
+        });
       }
     }
   }, [videoLightbox]);
@@ -92,10 +109,12 @@ export function Gallery() {
       if (e.key === 'Escape') closeVideoLightbox();
       if (e.key === ' ') { e.preventDefault(); toggleLbPlay(); }
       if (e.key === 'm' || e.key === 'M') toggleLbMute();
+      if (e.key === 'ArrowRight') playNextVideo();
+      if (e.key === 'ArrowLeft') playPrevVideo();
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [videoLightbox, closeVideoLightbox, toggleLbPlay, toggleLbMute]);
+  }, [videoLightbox, closeVideoLightbox, toggleLbPlay, toggleLbMute, playNextVideo, playPrevVideo]);
 
   // Image lightbox
   const openImageLightbox = (i: number) => setImageLightbox(i);
@@ -130,7 +149,7 @@ export function Gallery() {
           <h2 className="text-2xl font-display font-bold uppercase tracking-wider text-foreground mb-6 border-l-4 border-primary pl-4">
             Gym Reels
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-4">
             {videos.map((video, i) => (
               <motion.div
                 key={i}
@@ -139,9 +158,10 @@ export function Gallery() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.15 }}
                 className="group relative overflow-hidden bg-card cursor-pointer rounded-sm"
-                style={{ aspectRatio: '9/16', maxHeight: '600px' }}
+                style={{ aspectRatio: '9/16' }}
                 onClick={() => openVideoLightbox(i)}
                 whileHover={prefersReduced ? {} : { scale: 1.02, transition: { duration: 0.3 } }}
+                whileTap={prefersReduced ? {} : { scale: 0.95, transition: { duration: 0.12 } }}
               >
                 <video
                   src={video.src}
@@ -151,20 +171,18 @@ export function Gallery() {
                   playsInline
                   preload="metadata"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Play className="w-7 h-7 text-white ml-1" fill="white" />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300" />
+                {/* Play hint — sirf hover par */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="w-12 h-12 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center">
+                    <Play className="w-5 h-5 text-white ml-0.5" fill="white" />
                   </div>
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
-                  <h3 className="font-display text-white font-bold uppercase tracking-wider text-lg border-l-4 border-primary pl-3">
+                {/* Minimal caption — sirf hover par */}
+                <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                  <p className="text-white/90 text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-center">
                     {video.caption}
-                  </h3>
-                </div>
-                <div className="absolute top-3 left-3 z-30">
-                  <span className="bg-primary/90 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-sm">
-                    Video
-                  </span>
+                  </p>
                 </div>
               </motion.div>
             ))}
@@ -189,25 +207,23 @@ export function Gallery() {
               <motion.div
                 key={i}
                 variants={fadeUpItem}
-                className={`group relative overflow-hidden bg-card cursor-pointer ${
-                  i === 0 || i === 4 ? 'row-span-2' : ''
-                }`}
-                style={{ aspectRatio: i === 0 || i === 4 ? '3/4' : '4/3' }}
+                className="group relative overflow-hidden bg-card cursor-pointer rounded-sm"
+                style={{ aspectRatio: '3/4' }}
                 onClick={() => openImageLightbox(i)}
                 whileHover={prefersReduced ? {} : { scale: 1.02, transition: { duration: 0.3 } }}
+                whileTap={prefersReduced ? {} : { scale: 0.95, transition: { duration: 0.12 } }}
               >
                 <img
                   src={img.src}
                   alt={img.caption}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                  <div className="p-4 sm:p-6 w-full translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 className="font-display text-white font-bold uppercase tracking-wider text-lg sm:text-xl border-l-4 border-primary pl-3">
-                      {img.caption}
-                    </h3>
-                  </div>
+                <div className="absolute inset-0 ring-1 ring-inset ring-white/5 group-hover:ring-primary/40 rounded-sm pointer-events-none transition-all duration-300" />
+                <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                  <p className="text-white/90 text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-center">
+                    {img.caption}
+                  </p>
                 </div>
               </motion.div>
             ))}
@@ -238,10 +254,10 @@ export function Gallery() {
                 key={videoLightbox}
                 src={videos[videoLightbox].src}
                 className="max-h-[85vh] max-w-[90vw] rounded-sm shadow-2xl"
-                loop
                 playsInline
-                muted
+                muted={lbMuted}
                 onClick={toggleLbPlay}
+                onEnded={playNextVideo}
               />
 
               {/* Play/Pause button overlay */}
@@ -265,6 +281,26 @@ export function Gallery() {
                     className="w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-black/70 transition-all"
                   >
                     {lbMuted ? <VolumeX className="w-5 h-5 text-white" /> : <Volume2 className="w-5 h-5 text-white" />}
+                  </button>
+                </div>
+                {/* Sequence navigation */}
+                <div className="flex items-center gap-2">
+                  <span className="text-white/60 text-xs font-bold tracking-widest mr-1">
+                    {videoLightbox + 1} / {videos.length}
+                  </span>
+                  <button
+                    onClick={playPrevVideo}
+                    className="w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-black/70 transition-all"
+                    aria-label="Previous video"
+                  >
+                    <ChevronLeft className="w-5 h-5 text-white" />
+                  </button>
+                  <button
+                    onClick={playNextVideo}
+                    className="w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-black/70 transition-all"
+                    aria-label="Next video"
+                  >
+                    <ChevronRight className="w-5 h-5 text-white" />
                   </button>
                 </div>
               </div>

@@ -1,9 +1,9 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { Phone, Instagram, Award, Users, Dumbbell, Heart } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: (i = 0) => ({
     opacity: 1,

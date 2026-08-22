@@ -9,8 +9,13 @@ import slide7 from '@assets/1a4c7a90-e805-426f-a6ee-c310dc609be2_1785141254714.w
 
 const gymSlides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7];
 
-export function GymHeroSlideshow() {
-  const [current, setCurrent] = useState(0);
+interface GymHeroSlideshowProps {
+  /** Har page alag photo se start ho — loop aage same sequence me chalta rehta hai */
+  startIndex?: number;
+}
+
+export function GymHeroSlideshow({ startIndex = 0 }: GymHeroSlideshowProps) {
+  const [current, setCurrent] = useState(() => startIndex % gymSlides.length);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -30,7 +35,8 @@ export function GymHeroSlideshow() {
           style={{ opacity: i === current ? 1 : 0 }}
         />
       ))}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent"></div>
+      {/* Text readability ke liye darker scrim */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-black/10"></div>
     </div>
   );
 }

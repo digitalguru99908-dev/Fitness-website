@@ -55,3 +55,47 @@
 
 - [agent.md] — File created. Ye change-log/context file banayi gayi taaki har session
   (koi bhi AI agent use ho) sabse pehle ise read kare aur apne changes yahan record kare.
+
+### 2026-08-23
+
+- [artifacts/infinity-fitness/public/infinity.mp4] — Nayi video `infinity.mp4`
+  (`C:\Users\LENOVO\Videos\Captures\infinity.mp4` se copy ki) public folder me add ki.
+- [artifacts/infinity-fitness/src/components/HeroVideoCarousel.tsx] — Home page hero
+  background video `/hero-bg.mp4` se hatakar `/infinity.mp4` par point kiya.
+  Video `muted` attribute + `vid.muted = true` (useEffect) ke saath mute hi chalegi.
+- [artifacts/infinity-fitness/public/client-review.mp4, comeback.mp4] — Captures folder
+  (`C:\Users\LENOVO\Videos\Captures\`) se `client review.mp4` → `client-review.mp4` aur
+  `comeback.mp4` copy karke public me add kiya.
+- [artifacts/infinity-fitness/src/pages/Gallery.tsx] — Gallery section update:
+  (1) 3 nayi videos add ki (Client Review, Comeback Story, Infinity Fitness — total 5),
+  (2) lightbox me video ab sound ke saath khulti hai + mute/unmute button,
+  browser block kare to auto-muted fallback,
+  (3) sequence playback — video khatam hone par agli apne aap chalti hai (wrap-around),
+  prev/next buttons + ArrowLeft/ArrowRight keyboard support + counter "1 / 5",
+  (4) videos aur photos grid items par whileTap press animation (scale 0.95).
+- [artifacts/infinity-fitness/src] — Saare pre-existing TypeScript errors fix kiye
+  (typecheck ab 0 errors):
+  - `About.tsx`, `Owner.tsx` — fadeUp/photoRevealItem variants ko framer-motion ke
+    `Variants` type se annotate kiya (`ease: 'easeOut'` string widen ho kar type error
+    de raha tha). Runtime behavior unchanged.
+  - `ChatBot.tsx:154` — `new Blob(chunks)` me TS 5.7+ ki new `Uint8Array<ArrayBufferLike>`
+    generic typing BlobPart se match nahi hoti thi; `chunks as BlobPart[]` cast lagaya.
+    Runtime behavior unchanged.
+- [artifacts/infinity-fitness/src/pages/Gallery.tsx] — Video/photo cards ka clutter
+  hataya (user feedback: "bekaar ki cheezein, attractive nahi"):
+  - Videos: "Video" badge + hamesha dikhne wala bada play button + heavy border caption
+    hataye. Ab clean reels-style grid (5 columns), play button + caption sirf hover par
+    fade-in hote hain.
+  - Photos: mixed aspect-ratio + row-span-2 wala uneven grid hata kar uniform `3/4`
+    portrait grid kiya. Caption ab hover par slide-up hota hai, subtle ring highlight
+    hover par add kiya.
+- [artifacts/infinity-fitness/src/pages/Gallery.tsx] — Videos ki sequence badli (user
+  request): Infinity Fitness Gym Reel → Client Review → Comeback Story → Infinity
+  Fitness → Best Gym in Kaithal.
+- [artifacts/infinity-fitness/src/components/GymHeroSlideshow.tsx] — `startIndex` prop
+  add kiya taaki har page ki hero slideshow alag photo se shuru ho (pehle sab pages me
+  first photo same thi). Overlay bhi dark kiya (`from-black/75 via-black/35 to-black/10`)
+  kyunki About/Services/Membership pages par white text visible nahi ho raha tha.
+- [artifacts/infinity-fitness/src/pages/About.tsx, Services.tsx, Membership.tsx,
+  Contact.tsx] — Alag-alag startIndex pass kiya: About=0, Services=2, Membership=4,
+  Contact=6. Loop sequence same rahta hai.

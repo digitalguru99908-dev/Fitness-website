@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion, type Variants } from 'framer-motion';
 import { ShieldCheck, Dumbbell, Sparkles, Users, Phone, Instagram, Award, Heart } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
@@ -11,7 +11,7 @@ import about3 from '@assets/generated_images/about-3.jpg';
 import about4 from '@assets/generated_images/about-4.jpg';
 
 /** Used for single-item entrance animations where custom delay is still appropriate */
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: (i = 0) => ({
     opacity: 1,
@@ -21,7 +21,7 @@ const fadeUp = {
 };
 
 /** Photo reveal variant — scale instead of y for the grid at the bottom */
-const photoRevealItem = {
+const photoRevealItem: Variants = {
   hidden: { opacity: 0, scale: 0.95 },
   visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: 'easeOut' } },
 };
@@ -59,7 +59,7 @@ export function About() {
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative h-[60svh] min-h-[400px] flex items-center justify-center pt-20 overflow-hidden">
-        <GymHeroSlideshow />
+        <GymHeroSlideshow startIndex={0} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div

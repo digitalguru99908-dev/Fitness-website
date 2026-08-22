@@ -151,7 +151,7 @@ export function ChatBot() {
         chunks.push(value);
       }
       if (controller.signal.aborted) return;
-      const blob = new Blob(chunks, { type: 'audio/mpeg' });
+      const blob = new Blob(chunks as BlobPart[], { type: 'audio/mpeg' });
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
       audioRef.current = audio;
