@@ -51,7 +51,7 @@ $apiUp = $false
 $feUp = $false
 
 try {
-    $resp = Invoke-WebRequest -Uri "http://localhost:8080/api/health" -TimeoutSec 3
+    $resp = Invoke-WebRequest -Uri "http://localhost:8080/api/healthz" -TimeoutSec 3
     $apiUp = $true
     Write-Host "[API Server]    UP  - http://localhost:8080" -ForegroundColor Green
 } catch {

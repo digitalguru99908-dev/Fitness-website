@@ -42,6 +42,48 @@ function AvatarSVG({ size = 'normal' }: { size?: 'small' | 'normal' }) {
   );
 }
 
+const HINGLISH_WORDS = [
+  // verbs / helpers
+  'hai', 'hain', 'ho', 'hu', 'hun', 'hoon', 'thi', 'tha',
+  'raha', 'rahi', 'rahe', 'hoga', 'hogi', 'honge',
+  // pronouns
+  'aap', 'ap', 'tum', 'tu', 'tera', 'teri', 'tere',
+  'mera', 'meri', 'mere', 'mujhe', 'muje', 'hum', 'apna', 'apni', 'apne',
+  // question words
+  'kya', 'kyu', 'kyun', 'kyunki', 'ku', 'kab', 'kb', 'kaha', 'kahan',
+  'kaise', 'kaisa', 'kaisi', 'kaun', 'kitna', 'kitne', 'kitni',
+  // kar-family
+  'kar', 'karo', 'kardo', 'karde', 'karna', 'karta', 'karti', 'karte',
+  'karein', 'kriye', 'kiya', 'kia',
+  // negation / affirmation
+  'nahi', 'nahin', 'nhi', 'na', 'haan', 'han', 'ji', 'bilkul', 'zaroor',
+  // common adjectives / responses
+  'acha', 'achha', 'accha', 'theek', 'thik',
+  'chahiye', 'chaiye', 'cahiye', 'chahta', 'chahti', 'chahte',
+  // address / social
+  'bhai', 'bhaiya', 'bhen', 'didi', 'yaar', 'dost',
+  // connectors / misc
+  'aur', 'lekin', 'magar', 'sab', 'kuch', 'bahut', 'bohot', 'bohat',
+  'abhi', 'phir', 'fir', 'bhi', 'toh', 'bas', 'jaldi', 'turant', 'zyada',
+  // imperative verbs
+  'batao', 'bata', 'bolo', 'bol', 'suna', 'suno', 'dekho',
+  'dedo', 'dijiye', 'dena', 'lena', 'lelo', 'lana', 'laao',
+  'mila', 'milega', 'mangta', 'mangti', 'chal', 'chalega', 'shuru',
+  'sakta', 'sakti', 'sakte', 'banao', 'bana',
+  // suffix-like common words
+  'wala', 'wali', 'wale', 'waala', 'waali',
+  'matlab', 'tarah', 'liye', 'saath', 'baad', 'paani', 'khana', 'sona', 'jaag',
+];
+
+const detectLang = (text: string): string => {
+  // Devanagari script → definitely Hindi
+  if (/[\u0900-\u097F]/.test(text)) return 'hi';
+  // Roman script → look for known Hindi/Hinglish words (word-boundary match)
+  const words = text.toLowerCase().split(/[^a-z]+/).filter(Boolean);
+  const hasHinglish = words.some((w) => HINGLISH_WORDS.includes(w));
+  return hasHinglish ? 'hi' : 'en';
+};
+
 export function ChatBot() {
   const [open, setOpen] = useState(false);
   const [minimized, setMinimized] = useState(false);
@@ -84,8 +126,6 @@ export function ChatBot() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [open]);
-
-  const detectLang = (text: string): string => /[\u0900-\u097F]/.test(text) ? 'hi' : 'en';
 
   const speak = async (text: string, userText?: string) => {
     if (muted || !text) return;

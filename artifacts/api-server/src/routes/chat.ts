@@ -106,6 +106,46 @@ const VOICE_IDS: Record<string, string> = {
   en: "47c38ca4-5f35-497b-b1a3-415245fb35e1",
 };
 
+const HINGLISH_WORDS = new Set([
+  // verbs / helpers
+  'hai', 'hain', 'ho', 'hu', 'hun', 'hoon', 'thi', 'tha',
+  'raha', 'rahi', 'rahe', 'hoga', 'hogi', 'honge',
+  // pronouns
+  'aap', 'ap', 'tum', 'tu', 'tera', 'teri', 'tere',
+  'mera', 'meri', 'mere', 'mujhe', 'muje', 'hum', 'apna', 'apni', 'apne',
+  // question words
+  'kya', 'kyu', 'kyun', 'kyunki', 'ku', 'kab', 'kb', 'kaha', 'kahan',
+  'kaise', 'kaisa', 'kaisi', 'kaun', 'kitna', 'kitne', 'kitni',
+  // kar-family
+  'kar', 'karo', 'kardo', 'karde', 'karna', 'karta', 'karti', 'karte',
+  'karein', 'kriye', 'kiya', 'kia',
+  // negation / affirmation
+  'nahi', 'nahin', 'nhi', 'na', 'haan', 'han', 'ji', 'bilkul', 'zaroor',
+  // common adjectives / responses
+  'acha', 'achha', 'accha', 'theek', 'thik',
+  'chahiye', 'chaiye', 'cahiye', 'chahta', 'chahti', 'chahte',
+  // address / social
+  'bhai', 'bhaiya', 'bhen', 'didi', 'yaar', 'dost',
+  // connectors / misc
+  'aur', 'lekin', 'magar', 'sab', 'kuch', 'bahut', 'bohot', 'bohat',
+  'abhi', 'phir', 'fir', 'bhi', 'toh', 'bas', 'jaldi', 'turant', 'zyada',
+  // imperative verbs
+  'batao', 'bata', 'bolo', 'bol', 'suna', 'suno', 'dekho',
+  'dedo', 'dijiye', 'dena', 'lena', 'lelo', 'lana', 'laao',
+  'mila', 'milega', 'mangta', 'mangti', 'chal', 'chalega', 'shuru',
+  'sakta', 'sakti', 'sakte', 'banao', 'bana',
+  // suffix-like common words
+  'wala', 'wali', 'wale', 'waala', 'waali',
+  'matlab', 'tarah', 'liye', 'saath', 'baad', 'paani', 'khana', 'sona', 'jaag',
+]);
+
+// Detect Hindi/Hinglish from the text itself (works for Devanagari AND Roman script).
+const detectLang = (text: string): "hi" | "en" => {
+  if (/[\u0900-\u097F]/.test(text)) return "hi";
+  const words = text.toLowerCase().split(/[^a-z]+/).filter(Boolean);
+  return words.some((w) => HINGLISH_WORDS.has(w)) ? "hi" : "en";
+};
+
 router.post("/tts", async (req, res) => {
   const { text, lang } = req.body as { text?: string; lang?: string };
 
@@ -121,7 +161,11 @@ router.post("/tts", async (req, res) => {
     return;
   }
 
-  const voiceId = VOICE_IDS[lang || "en"] || VOICE_IDS["en"];
+  // Trust the client's lang only if it explicitly says "hi";
+  // otherwise re-check the text so Hinglish never falls back to the English voice.
+  const effectiveLang =
+    lang === "hi" ? "hi" : detectLang(text);
+  const voiceId = VOICE_IDS[effectiveLang] || VOICE_IDS["en"];
 
   try {
     const response = await fetch("https://api.cartesia.ai/tts/bytes", {
