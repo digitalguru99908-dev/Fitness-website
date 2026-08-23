@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { MapPin, Phone, Clock, Instagram, Mail, Send, CheckCircle2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { MapPin, Phone, Clock, Instagram, Mail, Send, CheckCircle2, Loader2 } from 'lucide-react';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
 
 export function Contact() {
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'submitted' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  const [sentName, setSentName] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -15,6 +16,7 @@ export function Contact() {
     const form = e.currentTarget;
     const data = {
       name: (form.elements.namedItem('name') as HTMLInputElement).value,
+      email: (form.elements.namedItem('email') as HTMLInputElement).value,
       phone: (form.elements.namedItem('phone') as HTMLInputElement).value,
       plan: (form.elements.namedItem('plan') as HTMLSelectElement).value,
       message: (form.elements.namedItem('message') as HTMLTextAreaElement).value,
@@ -32,6 +34,7 @@ export function Contact() {
         throw new Error((json as { error?: string }).error || 'Something went wrong.');
       }
 
+      setSentName(data.name);
       setFormStatus('submitted');
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : 'Failed to send. Please try again.');
@@ -171,20 +174,74 @@ export function Contact() {
               <h2 className="text-3xl font-display font-bold uppercase tracking-wider mb-2">Send an Inquiry</h2>
               <p className="text-muted-foreground mb-8">Fill out the form below and we'll get back to you within 24 hours.</p>
 
+              <AnimatePresence mode="wait" initial={false}>
               {formStatus === 'submitted' ? (
-                <div className="bg-[#25D366]/10 border border-[#25D366]/30 rounded-sm p-8 text-center flex flex-col items-center justify-center h-[400px]">
-                  <CheckCircle2 className="w-16 h-16 text-[#25D366] mb-4" />
-                  <h3 className="text-2xl font-display font-bold uppercase text-white mb-2">Message Sent!</h3>
-                  <p className="text-gray-300 mb-6">Thanks! We'll call you back within 24 hours.</p>
-                  <button 
+                <motion.div
+                  key="success"
+                  initial={{ opacity: 0, scale: 0.88 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ type: 'spring', stiffness: 240, damping: 20 }}
+                  className="bg-[#25D366]/10 border border-[#25D366]/30 rounded-sm p-8 text-center flex flex-col items-center justify-center h-[400px]"
+                >
+                  <div className="relative flex items-center justify-center mb-4">
+                    {/* Ripple burst behind the checkmark */}
+                    <motion.span
+                      initial={{ scale: 0.4, opacity: 0.7 }}
+                      animate={{ scale: 2.2, opacity: 0 }}
+                      transition={{ duration: 1, delay: 0.3, ease: 'easeOut' }}
+                      className="absolute w-20 h-20 rounded-full bg-[#25D366]/40"
+                    />
+                    <motion.div
+                      initial={{ scale: 0, rotate: -40 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ type: 'spring', stiffness: 320, damping: 13, delay: 0.15 }}
+                    >
+                      <CheckCircle2 className="w-16 h-16 text-[#25D366]" />
+                    </motion.div>
+                  </div>
+                  <motion.h3
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.35, duration: 0.35 }}
+                    className="text-2xl font-display font-bold uppercase text-white mb-2"
+                  >
+                    Message Sent!
+                  </motion.h3>
+                  <motion.p
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.45, duration: 0.35 }}
+                    className="text-gray-300 mb-3"
+                  >
+                    Thanks{sentName ? `, ${sentName.split(/\s+/)[0]}` : ''}!
+                  </motion.p>
+                  <motion.p
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.55, duration: 0.35 }}
+                    className="text-muted-foreground mb-6"
+                  >
+                    We'll contact you within 24 hours.
+                  </motion.p>
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.7, duration: 0.3 }}
                     onClick={() => setFormStatus('idle')}
                     className="text-primary font-bold uppercase tracking-wider text-sm hover:text-white transition-colors"
                   >
                     Send another message
-                  </button>
-                </div>
+                  </motion.button>
+                </motion.div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <motion.form
+                  key="form"
+                  onSubmit={handleSubmit}
+                  exit={{ opacity: 0, y: -14 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-6"
+                >
                   <div>
                     <label htmlFor="name" className="block text-sm font-bold uppercase tracking-wider text-foreground mb-2">Name</label>
                     <input 
@@ -196,6 +253,17 @@ export function Contact() {
                     />
                   </div>
                   
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-bold uppercase tracking-wider text-foreground mb-2">Email</label>
+                    <input
+                      type="email"
+                      id="email"
+                      required
+                      className="w-full bg-background border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors rounded-sm"
+                      placeholder="you@example.com"
+                    />
+                  </div>
+
                   <div>
                     <label htmlFor="phone" className="block text-sm font-bold uppercase tracking-wider text-foreground mb-2">Phone Number</label>
                     <input 
@@ -231,26 +299,35 @@ export function Contact() {
                   </div>
                   
                   {formStatus === 'error' && (
-                    <p className="text-red-400 text-sm font-medium border border-red-400/30 bg-red-400/10 px-4 py-3 rounded-sm">
+                    <motion.p
+                      initial={{ x: 0, opacity: 0 }}
+                      animate={{ x: [0, -8, 8, -5, 5, -2, 0], opacity: 1 }}
+                      transition={{ duration: 0.45 }}
+                      className="text-red-400 text-sm font-medium border border-red-400/30 bg-red-400/10 px-4 py-3 rounded-sm"
+                    >
                       ⚠ {errorMsg}
-                    </p>
+                    </motion.p>
                   )}
 
-                  <button 
+                  <button
                     type="submit"
                     disabled={formStatus === 'sending'}
-                    className="w-full flex items-center justify-center gap-2 bg-gold text-gold-foreground font-display font-bold text-lg uppercase py-4 skew-x-[-10deg] hover:bg-gold/90 transition-colors hover:scale-105 active:scale-95 group mt-4 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className={`w-full flex items-center justify-center gap-2 bg-gold text-gold-foreground font-display font-bold text-lg uppercase py-4 skew-x-[-10deg] hover:bg-gold/90 transition-colors group mt-4 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 ${formStatus === 'sending' ? 'animate-pulse' : ''}`}
                   >
                     <span className="skew-x-[10deg] flex items-center gap-2">
                       {formStatus === 'sending' ? (
-                        <>Sending…</>
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          Sending…
+                        </>
                       ) : (
                         <>Send Inquiry <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" /></>
                       )}
                     </span>
                   </button>
-                </form>
+                </motion.form>
               )}
+              </AnimatePresence>
             </motion.div>
           </div>
         </div>

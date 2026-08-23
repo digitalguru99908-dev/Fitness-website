@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Star, MessageSquare } from 'lucide-react';
+import { Star, MessageSquare, Volume2, VolumeX } from 'lucide-react';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 
@@ -45,24 +45,102 @@ const reviews = [
 
 export function Testimonials() {
   const prefersReduced = useReducedMotion();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [muted, setMuted] = useState(true);
+
+  useEffect(() => {
+    const vid = videoRef.current;
+    if (!vid) return;
+
+    vid.muted = true;
+    const tryPlay = () => {
+      vid.play().catch(() => {});
+    };
+    if (vid.readyState >= 2) {
+      tryPlay();
+    } else {
+      vid.addEventListener('canplay', tryPlay, { once: true });
+    }
+  }, []);
+
+  const toggleMute = () => {
+    const vid = videoRef.current;
+    if (!vid) return;
+    vid.muted = !vid.muted;
+    setMuted(vid.muted);
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      {/* Hero Section */}
+      {/* Hero Section — client review reel card + ambient blurred backdrop */}
       <section className="relative pt-32 pb-16 flex items-center justify-center overflow-hidden bg-[#050505]">
-        <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, hsl(var(--primary)) 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
+        {/* Ambient backdrop — same video, blurred, sirf vibe ke liye */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <video
+            src="/client-review.mp4"
+            className="absolute inset-0 w-full h-full object-cover scale-125 blur-3xl opacity-35"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/55 to-[#050505]/80"></div>
+        </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h1 className="text-5xl md:text-7xl font-display font-bold uppercase tracking-tight text-white mb-6">
-              What Our <span className="text-primary text-glow">Members Say</span>
-            </h1>
-          </motion.div>
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-10 lg:gap-20">
+
+            {/* Heading */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-center lg:text-left max-w-xl"
+            >
+              <p className="text-primary font-semibold uppercase tracking-[0.3em] text-sm mb-4">
+                Real Members &middot; Real Results
+              </p>
+              <h1 className="text-5xl md:text-7xl font-display font-bold uppercase tracking-tight text-white mb-6">
+                What Our <span className="text-primary text-glow">Members Say</span>
+              </h1>
+              <p className="text-lg text-muted-foreground font-medium">
+                Client review suno unhi ki zubani — seedha gym floor se.
+              </p>
+            </motion.div>
+
+            {/* Reel-style portrait video card — poori video dikhti hai (no face crop) */}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.9, delay: 0.2, ease: 'easeOut' }}
+              whileHover={prefersReduced ? {} : { scale: 1.02, transition: { duration: 0.25 } }}
+              className="relative w-64 md:w-72 shrink-0"
+            >
+              <div className="absolute -inset-3 bg-gradient-to-b from-primary/25 to-transparent rounded-3xl blur-xl opacity-70"></div>
+              <div className="relative aspect-[9/16] overflow-hidden rounded-2xl border border-white/15 shadow-2xl ring-1 ring-white/10 bg-black">
+                <video
+                  ref={videoRef}
+                  src="/client-review.mp4"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+
+                {/* Mute / Unmute toggle */}
+                <button
+                  onClick={toggleMute}
+                  aria-label={muted ? 'Unmute video' : 'Mute video'}
+                  title={muted ? 'Unmute' : 'Mute'}
+                  className="absolute bottom-3 right-3 z-20 w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-black/70 hover:border-primary/50 transition-all"
+                >
+                  {muted ? <VolumeX className="w-5 h-5 text-white" /> : <Volume2 className="w-5 h-5 text-white" />}
+                </button>
+              </div>
+            </motion.div>
+
+          </div>
         </div>
       </section>
 

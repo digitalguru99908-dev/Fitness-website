@@ -176,8 +176,9 @@ router.post("/tts", async (req, res) => {
         "Cartesia-Version": "2024-06-10",
       },
       body: JSON.stringify({
-        model_id: "sonic-2",
+        model_id: "sonic-3",
         transcript: text,
+        language: effectiveLang,
         voice: {
           mode: "id",
           id: voiceId,

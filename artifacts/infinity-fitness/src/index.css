@@ -69,18 +69,20 @@
 }
 
 :root {
-  /* White base */
-  --background: 0 0% 100%;
-  --foreground: 0 0% 10%;
+  /* Dark base — site ka pura design dark-first hai (text-white / bg-[#050505]
+     hardcoded hai), isliye root tokens ko DARK rakhna zaroori hai warna
+     white-on-white text invisible ho jata hai */
+  --background: 0 0% 4%;
+  --foreground: 0 0% 98%;
 
-  /* Very light gray cards with soft borders */
-  --card: 0 0% 98%;
-  --card-foreground: 0 0% 10%;
-  --card-border: 0 0% 91%;
+  /* Slightly lighter dark cards with soft borders */
+  --card: 0 0% 9%;
+  --card-foreground: 0 0% 98%;
+  --card-border: 0 0% 15%;
 
-  --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 10%;
-  --popover-border: 0 0% 91%;
+  --popover: 0 0% 7%;
+  --popover-foreground: 0 0% 98%;
+  --popover-border: 0 0% 15%;
 
   /* Orange-red — matches the logo (#FF3C00) */
   --primary: 14 100% 50%;
@@ -91,26 +93,26 @@
   --gold: 38 91% 48%;
   --gold-foreground: 0 0% 10%;
 
-  /* Light gray — alternate section backgrounds */
-  --secondary: 0 0% 96%;
-  --secondary-foreground: 0 0% 20%;
-  --secondary-border: 0 0% 88%;
+  /* Dark gray — alternate section backgrounds */
+  --secondary: 0 0% 10%;
+  --secondary-foreground: 0 0% 85%;
+  --secondary-border: 0 0% 18%;
 
-  --muted: 0 0% 96%;
-  --muted-foreground: 0 0% 45%;
-  --muted-border: 0 0% 88%;
+  --muted: 0 0% 10%;
+  --muted-foreground: 0 0% 64%;
+  --muted-border: 0 0% 20%;
 
-  /* Very light orange tint for accent surfaces */
-  --accent: 14 90% 96%;
-  --accent-foreground: 14 100% 38%;
-  --accent-border: 14 50% 88%;
+  /* Dark orange tint for accent surfaces (hover states) */
+  --accent: 14 30% 12%;
+  --accent-foreground: 14 100% 65%;
+  --accent-border: 14 40% 22%;
 
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
   --destructive-border: 0 84.2% 50%;
 
-  --border: 0 0% 90%;
-  --input: 0 0% 96%;
+  --border: 0 0% 15%;
+  --input: 0 0% 15%;
   --ring: 14 100% 50%;
 
   /* More rounded for a modern, professional look */
