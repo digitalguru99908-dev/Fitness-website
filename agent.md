@@ -99,3 +99,21 @@
 - [artifacts/infinity-fitness/src/pages/About.tsx, Services.tsx, Membership.tsx,
   Contact.tsx] — Alag-alag startIndex pass kiya: About=0, Services=2, Membership=4,
   Contact=6. Loop sequence same rahta hai.
+- [start-servers.ps1] — Preview "Failed to load page" bug fix (user report: VS Code
+  band karke wapas kholne par localhost:5173 nahi khulta). Root cause: dev servers
+  VS Code terminal ke andar chalte the, VS Code close hote hi processes mar jaate
+  the. Fix: servers ab `cmd.exe` wrapper + `Start-Process -WindowStyle Hidden` se
+  DETACHED hidden processes me start hote hain (VS Code/terminal band hone par bhi
+  zinda rehte hain). Purane Start-Job approach ko replace kiya (jo parent session
+  ke saath mar jaata tha). Ports 8080/5173 par stale processes ab start se pehle
+  clean hote hain; API dist missing ho to auto-build; health-check polling add ki.
+- [scripts/dev-api.cmd, scripts/dev-web.cmd] — Naye cmd wrappers jo api/vite ko
+  logs redirect (`logs/api-server.log`, `logs/web-dev.log`) ke saath detached
+  chalate hain.
+- [stop-servers.ps1] — Naya script: dono servers (ports 8080 & 5173) gracefully
+  band karne ke liye.
+- [.vscode/tasks.json] — "Gym: Start Servers" task `runOn: folderOpen` ke saath:
+  project VS Code me khulte hi dono servers AUTOMATIC background me start ho jaate
+  hain. Plus "Gym: Stop Servers" aur "Gym: Restart Servers" tasks.
+- [.vscode/settings.json] — `"task.allowAutomaticTasks": "on"` taaki folderOpen
+  task bina permission prompt ke chale.
