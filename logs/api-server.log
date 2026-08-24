@@ -1,0 +1,22 @@
+[22:00:22.710] [32mINFO[39m (3528): [36mServer listening[39m
+    [35mport[39m: 8080
+[22:00:37.844] [32mINFO[39m (3528): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "POST",
+      "url": "/api/tts"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 1377
+[22:00:38.818] [32mINFO[39m (3528): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "POST",
+      "url": "/api/tts"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 924
