@@ -42,7 +42,7 @@ export function Membership() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative h-[60svh] min-h-[400px] flex items-center justify-center pt-20 overflow-hidden">
+      <section className="relative h-[80svh] min-h-[520px] flex items-center justify-center pt-20 overflow-hidden">
         <GymHeroSlideshow startIndex={4} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

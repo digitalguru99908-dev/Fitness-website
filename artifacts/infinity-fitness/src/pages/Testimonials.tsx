@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Star, MessageSquare, Volume2, VolumeX } from 'lucide-react';
-import { staggerContainer, fadeUpItem } from '@/lib/animation';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 
 const reviews = [
@@ -42,6 +41,43 @@ const reviews = [
     date: "5 months ago"
   }
 ];
+
+type Review = (typeof reviews)[number];
+
+// 3D cube ke 4 faces par dikhne wale featured reviews
+const featuredReviews = [reviews[0], reviews[1], reviews[3], reviews[5]];
+const facePositions = ['front', 'right', 'back', 'left'] as const;
+
+// Seamless infinite marquee ke liye list ek baar double
+const marqueeReviews = [...reviews, ...reviews];
+
+function Stars({ count }: { count: number }) {
+  return (
+    <div className="flex gap-1">
+      {[...Array(5)].map((_, j) => (
+        <Star key={j} className={`w-4 h-4 ${j < count ? 'fill-primary text-primary' : 'fill-primary/20 text-primary/20'}`} />
+      ))}
+    </div>
+  );
+}
+
+function CubeFace({ item, position }: { item: Review; position: (typeof facePositions)[number] }) {
+  return (
+    <div className={`cube-face cube-face-${position} bg-[#0b0b0b] border border-white/10 p-5 sm:p-6 flex flex-col overflow-hidden`}>
+      <MessageSquare className="absolute top-5 right-5 w-7 h-7 text-primary/10" />
+      <Stars count={item.rating} />
+      <p className="text-gray-200 italic text-sm leading-relaxed my-4 flex-grow">
+        "{item.review}"
+      </p>
+      <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-3">
+        <span className="font-display font-bold uppercase tracking-wider text-white text-sm">
+          {item.name}
+        </span>
+        <span className="text-xs text-muted-foreground">{item.date}</span>
+      </div>
+    </div>
+  );
+}
 
 export function Testimonials() {
   const prefersReduced = useReducedMotion();
@@ -153,7 +189,7 @@ export function Testimonials() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex flex-col items-center justify-center text-center mb-16 bg-card border border-white/5 py-12 px-6 max-w-3xl mx-auto"
+            className="flex flex-col items-center justify-center text-center mb-20 bg-card border border-white/5 py-12 px-6 max-w-3xl mx-auto"
           >
             <div className="text-7xl font-display font-bold text-white mb-4 tracking-tighter">
               <AnimatedCounter to={4.2} decimals={1} duration={1.4} />
@@ -169,46 +205,73 @@ export function Testimonials() {
             </p>
           </motion.div>
 
-          {/* Review Grid — staggered cascade */}
+          {/* Featured Reviews — rotating 3D cube */}
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16"
-            variants={staggerContainer(0.09)}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-14"
           >
-            {reviews.map((item, i) => (
-              <motion.div key={i} variants={fadeUpItem}>
-                <motion.div
-                  className="bg-[#080808] border border-white/5 p-8 relative flex flex-col hover:border-primary/30 transition-colors h-full"
-                  whileHover={prefersReduced ? {} : {
-                    y: -4,
-                    boxShadow: '0 8px 28px rgba(139,92,246,0.12)',
-                    transition: { duration: 0.22 },
-                  }}
-                  whileTap={prefersReduced ? {} : { scale: 0.99, transition: { duration: 0.1 } }}
-                >
-                  <MessageSquare className="absolute top-8 right-8 w-8 h-8 text-primary/10" />
-                  <div className="flex gap-1 mb-6">
-                    {[...Array(5)].map((_, j) => (
-                      <Star key={j} className={`w-4 h-4 ${j < item.rating ? 'fill-primary text-primary' : 'fill-primary/20 text-primary/20'}`} />
-                    ))}
-                  </div>
-                  <p className="text-gray-300 italic mb-8 flex-grow leading-relaxed">
-                    "{item.review}"
-                  </p>
-                  <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
-                    <div className="font-display font-bold uppercase tracking-wider text-white">
-                      {item.name}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {item.date}
-                    </div>
-                  </div>
-                </motion.div>
-              </motion.div>
-            ))}
+            <p className="text-primary font-semibold uppercase tracking-[0.3em] text-sm mb-4">
+              Featured Reviews
+            </p>
+            <h2 className="text-4xl md:text-6xl font-display font-bold uppercase tracking-tight text-white">
+              Hear It From <span className="text-primary text-glow">Every Angle</span>
+            </h2>
+            <p className="text-muted-foreground mt-4 font-medium">
+              Cube ko hover karo — ghumna ruk jayega, review padho.
+            </p>
           </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
+            className="relative flex justify-center mb-20"
+          >
+            {/* Ambient glow behind the cube */}
+            <div aria-hidden="true" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
+
+            <div className="cube-scene relative">
+              <div className={`cube ${prefersReduced ? '' : 'cube-spin'}`}>
+                {featuredReviews.map((item, i) => (
+                  <CubeFace key={i} item={item} position={facePositions[i]} />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Reviews Marquee — infinite loop, hover par pause */}
+          <div className="relative mb-20">
+            <div className="overflow-hidden py-2">
+              <div className={`flex items-stretch gap-6 w-max pr-6 ${prefersReduced ? '' : 'animate-marquee'}`}>
+                {marqueeReviews.map((item, i) => (
+                  <div
+                    key={i}
+                    aria-hidden={i >= reviews.length}
+                    className="w-[300px] sm:w-[380px] shrink-0 bg-[#080808] border border-white/5 p-6 sm:p-7 relative flex flex-col"
+                  >
+                    <MessageSquare className="absolute top-6 right-6 w-7 h-7 text-primary/10" />
+                    <Stars count={item.rating} />
+                    <p className="text-gray-300 italic mt-4 mb-6 flex-grow leading-relaxed">
+                      "{item.review}"
+                    </p>
+                    <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
+                      <span className="font-display font-bold uppercase tracking-wider text-white">
+                        {item.name}
+                      </span>
+                      <span className="text-xs text-muted-foreground whitespace-nowrap ml-3">{item.date}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Dono taraf edge fade — cards smooth fade-out hoke loop me wapas aate hain */}
+            <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-28 bg-gradient-to-r from-background to-transparent"></div>
+            <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-28 bg-gradient-to-l from-background to-transparent"></div>
+          </div>
 
           {/* CTA */}
           <div className="text-center">

@@ -228,3 +228,65 @@
 - [SESSION END 2026-08-24] — Site state LOCKED hai user ke request par. Agla kaam
   jab user bole. Premium/user-friendly suggestions sirf baat-cheet me diye gaye,
   implement NAHI kiye.
+- [artifacts/infinity-fitness/src/components/GymHeroSlideshow.tsx] — **CUT PHOTO FIX**
+  (user report: About/Services/Membership/Contact hero background loop me photos adhi
+  kati hui dikhti thin). Root cause: `object-cover` ultrawide hero (≈2.5:1+) me 4:3 /
+  portrait photos se 40–68% hissa kat deta tha (7 slides me 6 landscape `680x510`,
+  1 portrait `382x510` — WIC se dimensions verify kiye). Fix: har slide ab do layers me —
+  backdrop = usi photo ka halka dark blur extension (`object-cover blur-lg brightness-[0.4]
+  saturate-75`) jo screen fill karta hai, aur upar main photo `object-contain` se POORI
+  sharp (zero crop) + drop-shadow. Scrim gradient adjust (from-black/65 via-black/25 to-
+  [#050505]). Crossfade ab wrapper-level. V1 me blur-3xl heavy smudge jaisa lag raha tha
+  (user feedback), v2 me halka blur + darkened backdrop.
+- [artifacts/infinity-fitness/src/index.css] — Rotating 3D review cube CSS add kiya:
+  `.cube-scene` responsive `--cube-size` (250→340px), `@keyframes cube-spin`
+  (rotateX(-10deg) tilt + full Y rotation, 28s), `.cube-face-*` front/right/back/left
+  transforms with `backface-visibility: hidden`, hover par spin pause.
+- [artifacts/infinity-fitness/src/pages/Testimonials.tsx] — **REVIEWS LOOP + 3D CUBE**
+  (user request): purana static review grid hataya. Ab (1) **rotating 3D cube** jiske
+  4 side faces par top 5-star reviews ghoomte hain (hover = pause, prefers-reduced-motion
+  par spin off, peeche primary ambient glow); (2) saare 6 reviews ka **infinite horizontal
+  marquee** (list double karke seamless loop, existing `.animate-marquee` reuse, hover
+  pause, dono taraf edge fade). Rating callout + CTA   unchanged. Hero video section
+  unchanged. Typecheck + vite build dono pass.
+- [artifacts/infinity-fitness/src/components/GymHeroSlideshow.tsx] — **REVERT** (user
+  feedback: blur/contain wale dono experiments pasand nahi aaye, "pehle jaise vhi shi
+  the"): slideshow original `object-cover object-center` full-bleed version par wapas
+  kiya (crossfade + darker scrim ke saath, bilkul pre-session jaisa). Typecheck pass.
+- [artifacts/infinity-fitness/src] — **TOP-CROP REDUCTION** (user idea: photo cut nahi
+  honi chahiye, especially TOP area — hero ko halka niche expand karke dekho):
+  (1) GymHeroSlideshow images `object-center` → `object-top` — ab crop sirf bottom se
+  hota hai, photos ka upar wala area (boards/logo) hamesha safe; (2) hero sections ek
+  level taller kiye — About/Services/Membership `h-[60svh] min-h-[400px]` →
+  `h-[70svh] min-h-[460px]`, Contact `h-[50svh] min-h-[400px]` → `h-[60svh]
+  min-h-[440px]` (zyada height = kam total crop). Typecheck pass.
+- [artifacts/infinity-fitness/src/pages] — User feedback ("halka sa or increase kardo")
+  par heroes ek level aur taller: About/Services/Membership `h-[70svh]` → `h-[75svh]
+  min-h-[490px]`, Contact `h-[60svh]` → `h-[65svh] min-h-[470px]`. Typecheck pass.
+- [artifacts/infinity-fitness/src/pages] — Ek aur bump (user: "halka sa or bada karo"):
+  About/Services/Membership `h-[75svh]` → `h-[80svh] min-h-[520px]`, Contact
+  `h-[65svh]` → `h-[70svh] min-h-[500px]`. Typecheck pass.
+- [.vscode/settings.json, .vscode/extensions.json] — **VS CODE LSP SMOOTHNESS** (user
+  request): workspace TypeScript SDK enable kiya (`typescript.tsdk:
+  node_modules/typescript/lib` + prompt-on-open) taaki VS Code project ke apne TS se
+  intellisense/typecheck de; `editor.quickSuggestions.strings: on` + suggestOnTrigger —
+  className strings me bhi suggestions; extensions.json me `bradlc.vscode-tailwindcss`
+  recommend kiya (Tailwind class IntelliSense).   NOTE: opencode agent apne tools se
+  typecheck karta hai — LSP sirf VS Code editing experience ke liye hai.
+- [artifacts/infinity-fitness/src/components/GymHeroSlideshow.tsx] — **OBJECT-TOP
+  REGRESSION FIX + PORTRAIT SPLIT** (user feedback: trainer-lifting photo me sirf head
+  dikh raha tha, weight nahi; "starting me proper fit aa rahi thi"). object-top ne
+  action shots ko top-band tak sikod diya tha → wapas `object-center` (original known-
+  good). Portrait slide (slide7, 382x510) desktop rotation se nikali — wide hero me
+  ~68% cut hoti thi (useless); ab component do stacks render karta hai: `hidden md:block`
+  = sirf 6 landscape slides, `md:hidden` = saari 7 (mobile par portrait container me
+  portrait photo poori dikhti hai). Dono stacks ek hi 4s tick par sync ghoomte hain.
+  Contact page ka startIndex={6} ab desktop par landscape stack me wrap ho jata hai
+  (6 % 6 = 0), mobile par portrait se start. NOTE: agent ki image-viewing tool is model
+  me images support nahi karti — per-photo visual framing nahi kar sakta; agar photo-wise
+  detail chahiye to user se description lena hoga. Typecheck pass.
+- [artifacts/infinity-fitness/src/pages/About.tsx] — **AI PHOTO GRID REMOVED** (user
+  request: About page ke end wala Photo Grid section hata do jo AI-generated images thi):
+  `@assets/generated_images/about-1..4.jpg` imports + poora bottom Photo Grid section +
+  ab-unused `photoRevealItem` variant remove kiye. Page ab Core Values grid par end
+  hota hai. Typecheck pass.

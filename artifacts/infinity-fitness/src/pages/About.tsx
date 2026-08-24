@@ -5,10 +5,6 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
-import about1 from '@assets/generated_images/about-1.jpg';
-import about2 from '@assets/generated_images/about-2.jpg';
-import about3 from '@assets/generated_images/about-3.jpg';
-import about4 from '@assets/generated_images/about-4.jpg';
 
 /** Used for single-item entrance animations where custom delay is still appropriate */
 const fadeUp: Variants = {
@@ -18,12 +14,6 @@ const fadeUp: Variants = {
     y: 0,
     transition: { duration: 0.6, delay: i * 0.1, ease: 'easeOut' },
   }),
-};
-
-/** Photo reveal variant — scale instead of y for the grid at the bottom */
-const photoRevealItem: Variants = {
-  hidden: { opacity: 0, scale: 0.95 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: 'easeOut' } },
 };
 
 const ownerStats = [
@@ -58,7 +48,7 @@ export function About() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative h-[60svh] min-h-[400px] flex items-center justify-center pt-20 overflow-hidden">
+      <section className="relative h-[80svh] min-h-[520px] flex items-center justify-center pt-20 overflow-hidden">
         <GymHeroSlideshow startIndex={0} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -318,38 +308,6 @@ export function About() {
                 <div className="w-8 h-1 bg-primary mb-6 group-hover:w-16 transition-all duration-300" />
                 <h4 className="font-display font-bold text-xl text-white uppercase mb-3">{v.title}</h4>
                 <p className="text-muted-foreground leading-relaxed">{v.desc}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Photo Grid — staggerContainer replaces hardcoded transition delays */}
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 gap-4"
-            variants={staggerContainer(0.1)}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
-          >
-            {[
-              { src: about1, alt: 'Community training' },
-              { src: about2, alt: 'Modern equipment room' },
-              { src: about3, alt: 'Personal training session' },
-              { src: about4, alt: 'Gym entrance' },
-            ].map((photo) => (
-              <motion.div
-                key={photo.alt}
-                variants={photoRevealItem}
-                className="aspect-square md:aspect-[4/3] bg-card overflow-hidden group"
-              >
-                <img
-                  src={photo.src}
-                  alt={photo.alt}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                />
               </motion.div>
             ))}
           </motion.div>
