@@ -210,3 +210,9 @@
   tracking se nikal di (disk par abhi bhi hain) — dev logs repo me nahi jaane chahiye.
 - [git] — Saare pending commits (2 purane + aaj ka autostart fix) GitHub par push kiye.
   `master` ab `origin/master` ke saath fully synced hai.
+- [git] — **BRANCH CONSOLIDATION** (user request: do branches confusing hain): Ab sirf
+  EK branch `main` hai. Master ka pura content force-push karke `main` par daala
+  (main ab 42f7bc0 = latest), remote + local dono se `master` delete. Purani
+  Replit-era history (c385466) safety tag `legacy-replit-history` me preserved.
+  GitHub default `main` hi tha, to ab repo khulte hi latest changes dikhenge.
+  Verify kiya: ls-remote me sirf `main` + tag, working tree clean, upstream synced.
