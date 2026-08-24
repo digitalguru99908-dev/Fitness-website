@@ -14,6 +14,10 @@
 4. Purani entries ko kabhi delete ya edit mat karo — sirf append karo.
 5. User preference (from replit.md): existing project structure ko maintain rakho —
    bina poochhe restructure/migrate mat karo.
+6. **⚠️ STRICT USER INSTRUCTION (2026-08-24):** Site me ABHI KOI CHANGES NAHI karne —
+   jaisi hai waisi hi rehne do. Koi bhi purana/legacy content (purani `main` branch ki
+   cheezein: `zipFile.zip`, `attached_assets/VID_2026*.mp4` waghera) wapas add ya
+   restore NAHI karna. Sirf bug fixes ya jo user khud maange wahi karo.
 
 ---
 
