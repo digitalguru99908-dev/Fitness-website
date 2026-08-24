@@ -190,3 +190,19 @@
   **http://localhost:5173** par kholni hai (koi HTTPS setup nahi hai local dev me).
   Agar Chrome force kare to chrome://net-internals/#hsts → "Delete domain security
   policies" → `localhost` daal ke clear karo.
+
+### 2026-08-24
+
+- [install-autostart.ps1] — **PERMANENT SERVER FIX** (user report: purana fix fail —
+  VS Code band karke localhost:5173 phir nahi khulta). Asli root cause ab confirm hua:
+  VS Code Windows par integrated-terminal/task ke saare child processes ko ek Job
+  Object (KILL_ON_JOB_CLOSE) me daal deta hai, isliye `Start-Process -WindowStyle
+  Hidden` wala "detached" process bhi VS Code exit par mar jaata tha. Purani approach
+  fundamentally insufficient thi.
+- [Windows Scheduled Task "Infinity Fitness Servers"] — Naya fix jo server lifecycle
+  ko VS Code se BILKUL alag kar deta hai: har PC login par Task Scheduler
+  `start-servers.ps1` (hidden) chalata hai. Ab (a) VS Code band karne par servers
+  zinda rehte hain (unke parent Task Scheduler hai, VS Code nahi), (b) PC restart ke
+  baad login hote hi servers khud start ho jaate hain, (c) localhost:5173 link
+  hamesha chalega. Dobara install karna ho to `.\install-autostart.ps1` chalao.
+  Verify kiya: Frontend HTTP 200, `/api/healthz` → `{"status":"ok"}`, task state Ready.

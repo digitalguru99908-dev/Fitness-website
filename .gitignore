@@ -56,3 +56,6 @@ Thumbs.db
 attached_assets/VID_*.mp4
 
 zipFile.zip
+
+# Dev server logs
+logs/
