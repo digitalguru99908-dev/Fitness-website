@@ -206,3 +206,7 @@
   baad login hote hi servers khud start ho jaate hain, (c) localhost:5173 link
   hamesha chalega. Dobara install karna ho to `.\install-autostart.ps1` chalao.
   Verify kiya: Frontend HTTP 200, `/api/healthz` → `{"status":"ok"}`, task state Ready.
+- [.gitignore] — `logs/` folder ignore list me add kiya aur dono log files git
+  tracking se nikal di (disk par abhi bhi hain) — dev logs repo me nahi jaane chahiye.
+- [git] — Saare pending commits (2 purane + aaj ka autostart fix) GitHub par push kiye.
+  `master` ab `origin/master` ke saath fully synced hai.
