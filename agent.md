@@ -290,3 +290,57 @@
   `@assets/generated_images/about-1..4.jpg` imports + poora bottom Photo Grid section +
   ab-unused `photoRevealItem` variant remove kiye. Page ab Core Values grid par end
   hota hai. Typecheck pass.
+- [git investigation session] — User ka confusion clear kiya: GitHub par sirf `main`
+  branch hai (master consolidation ke baad se), saare 29 commits + files verified
+  fresh clone se (temp folder me, repo me kuch add nahi hua). Confusion root: shayari
+  commit messages (b835b02, 42f7bc0) me sirf logs/agent.md changes the isliye diff
+  khali lagta tha; asli code changes 40b71f7/1e113f5/debf012 me hain.
+- [artifacts/infinity-fitness/src/components/ui/WhatsAppButton.tsx] — **UX UPGRADE**
+  (user request: site user-friendly + premium banao): floating WhatsApp button ab
+  pre-filled message ke saath khulta hai ("Hi! Mujhe Infinity Fitness Gym join karna
+  hai...") + desktop hover par "Chat with us" label slide-out hota hai (mobile par
+  circle hi rehta hai). Ping effect preserved.
+- [artifacts/infinity-fitness/src/pages/Membership.tsx] — **"Join in 3 Easy Steps"**
+  naya section (pricing ke baad, FAQ se pehle): Free Trial → Plan Choose → Workout
+  Shuru. Numbered cards, existing design tokens (bg-card/border-white/10/icon circle),
+  stagger animation, hover lift + border glow. Koi naya fact nahi — sab confirmed
+  info pehle se site par thi.
+- [artifacts/infinity-fitness/src/pages/Home.tsx] — Final CTA section me teesra button:
+  **WhatsApp Us** (black/85 bg, green WhatsApp icon, pre-filled message) — Join Now +
+  Call Now ke saath.
+- [artifacts/infinity-fitness/src/pages/Testimonials.tsx] — Ambient blurred backdrop
+  video (client-review.mp4 ki blur-3xl opacity-35 copy) ka autoPlay/loop hata diya,
+  `preload="metadata"` — dikhne me koi farak nahi (static first frame blurred) par
+  mobile par ek poora video-decode stream bachta hai = faster page.
+- [artifacts/infinity-fitness/src/components/layout/Navbar.tsx] — Mobile menu drawer
+  me Call button ke neeche **WhatsApp Karein** button (#25D366 outline style).
+- [artifacts/infinity-fitness/src/index.css] — Premium slim scrollbar (10px, subtle
+  white thumb, dark track, hover bright) WebKit + Firefox dono ke liye.
+- [VERIFY] — typecheck 0 errors (`tsc --noEmit` via hoisted workspace typescript;
+  note: `pnpm --filter` Windows par preinstall `sh` hook fail hota hai, direct tsc/vite
+  node se chalao), vite build pass (30s), dev servers 200 OK (5173 + healthz).
+- [PHONE NUMBER SWAP — TEMPORARY] (user request: client sell hone tak naya number):
+  **07206333820 → 8168828832** site-bhar me — tel: links + wa.me/918168828832 +
+  display "81688 28832". Files: Navbar, Footer, Home, About, Owner, Contact,
+  sections/Hero, sections/LocationContact, sections/Plans, ui/WhatsAppButton,
+  api-server inquiry.ts constants (+ chat.ts system-prompt comment). Grep se verify:
+  purana number kahin nahi bacha. NOTE: jab client ka final number mile to ye sab
+  wapas/final number par badalna.
+- [ChatBot.tsx] — **GHOST-CLICK BUG FIX** (user report: WhatsApp button click par
+  chatbot khul raha tha): ChatBot FAB ke decorative ping rings/glow (`absolute
+  -inset-6/-inset-4/-inset-3`) invisible hit-area bana rahe the jo WhatsApp button ke
+  top ko cover karte the. Fix: un teeno decorative layers par `pointer-events-none`.
+  Plus FAB ko bottom-24 → **bottom-32** upar shift kiya (WhatsApp se ab ~48px gap) aur
+  chat panel bottom-40 → bottom-52 (FAB ke upar overlap na ho).
+- [api-server/src/routes/inquiry.ts] — **FORM SPEED FIX** (user: "inquiry form fast
+  karo"): root cause `await transporter.sendMail(ownerMail)` — Gmail SMTP ke 2–6s
+  response ko rok dete the. Ab (1) module-level **pooled transporter**
+  (`pool: true`) connection reuse karta hai, (2) validation ke turant baad client ko
+  `res.json({success:true})` milta hai (~instant), owner notification + customer
+  auto-reply dono background me fire-and-forget jaate hain (errors logs me).
+  API rebuild + restart kiya; validation test (missing name → 400) pass.
+- [index.css + Home/Membership CTAs] — **PREMIUM `.btn-shine` SHEEN EFFECT**: gold CTA
+  buttons (Home hero Join Now, Membership Claim Offer) par hover karne se light ka
+  reflection sweep hota hai (skewed gradient ::after, 0.65s). Subtle premium feel.
+- [VERIFY round 2] — frontend tsc 0 errors, API build pass, API restarted (healthz ok),
+  frontend 5173 OK. Changes local par hain — push user ki permission ke baad hi.

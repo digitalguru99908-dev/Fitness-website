@@ -53,7 +53,7 @@ export const Hero = () => {
               Join Now
             </a>
             <a 
-              href="tel:07206333820" 
+              href="tel:8168828832" 
               className="bg-transparent text-white border-2 border-white px-8 py-4 rounded-sm font-display font-bold uppercase tracking-wider text-lg hover:bg-white hover:text-black transition-all text-center transform hover:-translate-y-1"
             >
               Call Now

@@ -215,7 +215,7 @@ export function About() {
 
               <div className="flex flex-wrap gap-4 pt-2">
                 <motion.a
-                  href="tel:07206333820"
+                  href="tel:8168828832"
                   whileHover={prefersReduced ? {} : { scale: 1.04, transition: { duration: 0.2 } }}
                   whileTap={prefersReduced ? {} : { scale: 0.97, transition: { duration: 0.1 } }}
                   className="flex items-center gap-2 bg-primary text-black font-display font-bold uppercase tracking-wider px-6 py-3 hover:bg-primary/90 transition-colors"
@@ -224,7 +224,7 @@ export function About() {
                   Call Us
                 </motion.a>
                 <motion.a
-                  href="https://wa.me/917206333820"
+                  href="https://wa.me/918168828832"
                   target="_blank"
                   rel="noreferrer"
                   whileHover={prefersReduced ? {} : { scale: 1.04, transition: { duration: 0.2 } }}

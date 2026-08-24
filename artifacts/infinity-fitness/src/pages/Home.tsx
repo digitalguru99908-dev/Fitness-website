@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'wouter';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Phone, Dumbbell, HeartPulse, TrendingUp, Flame, Leaf, Zap } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 import { HeroVideoCarousel } from '@/components/HeroVideoCarousel';
 import { HeroPhotoStrip } from '@/components/HeroPhotoStrip';
 import { Reviews } from '@/components/sections/Reviews';
@@ -65,7 +66,7 @@ export function Home() {
                 >
                   <Link
                     href="/membership"
-                    className="inline-flex items-center justify-center bg-gold text-gold-foreground px-8 py-4 font-display font-bold text-xl uppercase tracking-wider skew-x-[-10deg] hover:bg-gold/90 transition-colors group"
+                    className="btn-shine inline-flex items-center justify-center bg-gold text-gold-foreground px-8 py-4 font-display font-bold text-xl uppercase tracking-wider skew-x-[-10deg] hover:bg-gold/90 transition-colors group"
                     style={{ boxShadow: '0 0 30px hsl(38 91% 55% / 0.3)' }}
                   >
                     <span className="skew-x-[10deg] flex items-center gap-2">
@@ -78,7 +79,7 @@ export function Home() {
                   whileTap={prefersReduced ? {} : { scale: 0.95, transition: { duration: 0.1 } }}
                 >
                   <a
-                    href="tel:07206333820"
+                    href="tel:8168828832"
                     className="inline-flex items-center justify-center bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-4 font-display font-bold text-xl uppercase tracking-wider skew-x-[-10deg] hover:bg-white/20 transition-colors group"
                   >
                     <span className="skew-x-[10deg] flex items-center gap-2">
@@ -217,11 +218,26 @@ export function Home() {
               whileTap={prefersReduced ? {} : { scale: 0.95, transition: { duration: 0.1 } }}
             >
               <a
-                href="tel:07206333820"
+                href="tel:8168828832"
                 className="inline-flex items-center justify-center bg-transparent border-2 border-black text-black px-8 py-4 font-display font-bold text-xl uppercase tracking-wider skew-x-[-10deg] hover:bg-black/10 transition-colors group"
               >
                 <span className="skew-x-[10deg] flex items-center gap-2">
                   <Phone className="w-5 h-5" /> Call Now
+                </span>
+              </a>
+            </motion.div>
+            <motion.div
+              whileHover={prefersReduced ? {} : { scale: 1.05, transition: { duration: 0.2 } }}
+              whileTap={prefersReduced ? {} : { scale: 0.95, transition: { duration: 0.1 } }}
+            >
+              <a
+                href="https://wa.me/918168828832?text=Hi!%20Mujhe%20Infinity%20Fitness%20Gym%20join%20karna%20hai.%20Membership%20ke%20baare%20me%20details%20bhejiye."
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center bg-black/85 text-white px-8 py-4 font-display font-bold text-xl uppercase tracking-wider skew-x-[-10deg] hover:bg-black transition-colors group shadow-xl"
+              >
+                <span className="skew-x-[10deg] flex items-center gap-2">
+                  <FaWhatsapp className="w-5 h-5 text-[#25D366]" /> WhatsApp Us
                 </span>
               </a>
             </motion.div>

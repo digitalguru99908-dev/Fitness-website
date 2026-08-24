@@ -5,9 +5,9 @@ import { logger } from "../lib/logger";
 const router: IRouter = Router();
 
 const GYM_EMAIL = "digitalguru99908@gmail.com";
-const GYM_PHONE_DISPLAY = "072063 33820";
-const GYM_PHONE_TEL = "+917206333820";
-const GYM_WHATSAPP = "https://wa.me/917206333820";
+const GYM_PHONE_DISPLAY = "81688 28832";
+const GYM_PHONE_TEL = "+918168828832";
+const GYM_WHATSAPP = "https://wa.me/918168828832";
 const GYM_ADDRESS =
   "Kaithal - Dhand Rd, Opp. Maharaja Palace, Rishi Nagar, Kaithal, Haryana 136027";
 
@@ -242,8 +242,11 @@ router.post("/inquiry", async (req, res) => {
     return;
   }
 
+  // Pooled transporter — module-level, connection reuse = har email 1-3s pehle se fast
   const transporter = nodemailer.createTransport({
     service: "gmail",
+    pool: true,
+    maxConnections: 1,
     auth: {
       user: GYM_EMAIL,
       pass: appPassword,
@@ -263,18 +266,18 @@ router.post("/inquiry", async (req, res) => {
     }),
   };
 
-  try {
-    await transporter.sendMail(ownerMail);
-    logger.info({ name, phone, email: customerEmail || null, plan }, "Inquiry email sent");
-  } catch (err) {
-    logger.error({ err }, "Failed to send inquiry email");
-    res.status(500).json({ error: "Failed to send email. Please try again." });
-    return;
-  }
-
-  // Owner notification ho gayi — ab client ko turant OK bhejo, customer ka
-  // auto-reply background me seconds me chala jata hai (1 min limit se kahin pehle)
+  // SPEED FIX: client ko TURANT response bhejo — emails background me jaate hain.
+  // Pehle `await sendMail(ownerMail)` SMTP ke 2-6s poore form ko rok deta tha.
   res.json({ success: true });
+
+  transporter
+    .sendMail(ownerMail)
+    .then(() => {
+      logger.info({ name, phone, email: customerEmail || null, plan }, "Inquiry email sent");
+    })
+    .catch((err: unknown) => {
+      logger.error({ err }, "Failed to send inquiry email (background)");
+    });
 
   if (!customerEmail) {
     logger.info({ name }, "No customer email provided — auto-reply skipped");

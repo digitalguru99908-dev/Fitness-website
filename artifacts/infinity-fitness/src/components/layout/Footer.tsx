@@ -23,7 +23,7 @@ export function Footer() {
               Real equipment, real results, real people. Built for the community of Kaithal to grind it out and transform their lives.
             </p>
             <div className="flex gap-4">
-              <a href="https://wa.me/917206333820" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[#25D366] hover:text-white transition-colors">
+              <a href="https://wa.me/918168828832" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[#25D366] hover:text-white transition-colors">
                 <FaWhatsapp size={20} />
               </a>
               <a href="https://instagram.com/infinityfitnessgyms" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-pink-500 hover:to-purple-500 hover:text-white transition-all">
@@ -65,7 +65,7 @@ export function Footer() {
               </li>
               <li className="flex gap-3">
                 <Phone className="w-5 h-5 text-primary shrink-0" />
-                <a href="tel:07206333820" className="text-muted-foreground hover:text-primary transition-colors">072063 33820</a>
+                <a href="tel:8168828832" className="text-muted-foreground hover:text-primary transition-colors">81688 28832</a>
               </li>
             </ul>
           </div>

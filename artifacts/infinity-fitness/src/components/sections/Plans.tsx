@@ -97,7 +97,7 @@ export const Plans = () => {
                 </div>
                 
                 <a 
-                  href={`https://wa.me/917206333820?text=Hi!%20I'm%20interested%20in%20the%20${encodeURIComponent(plan.name)}%20plan%20at%20Infinity%20Fitness.`}
+                  href={`https://wa.me/918168828832?text=Hi!%20I'm%20interested%20in%20the%20${encodeURIComponent(plan.name)}%20plan%20at%20Infinity%20Fitness.`}
                   target="_blank"
                   rel="noreferrer"
                   className={`w-full py-4 text-center font-display font-bold uppercase tracking-wider rounded-sm transition-all block mt-auto

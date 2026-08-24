@@ -35,7 +35,7 @@ KNOWLEDGE YOU CAN ANSWER:
   * Monthly Plan: Rs. 2,000
   * 6-Month Plan: Rs. 6,000
   * 1-Year Plan: Rs. 11,000
-  * Phone: 07206333820
+  * Phone: 8168828832
   * Modern equipment, trained coaches
   * First visit is FREE
 

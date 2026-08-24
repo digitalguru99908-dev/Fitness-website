@@ -110,15 +110,16 @@ export function Testimonials() {
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section — client review reel card + ambient blurred backdrop */}
       <section className="relative pt-32 pb-16 flex items-center justify-center overflow-hidden bg-[#050505]">
-        {/* Ambient backdrop — same video, blurred, sirf vibe ke liye */}
+        {/* Ambient backdrop — same video, blurred, sirf vibe ke liye.
+            Static first-frame (no autoplay) — blur-3xl + opacity-35 me movement
+            dikhta hi nahi, par mobile par ek pura video-decode stream bachta hai. */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <video
             src="/client-review.mp4"
             className="absolute inset-0 w-full h-full object-cover scale-125 blur-3xl opacity-35"
-            autoPlay
-            loop
             muted
             playsInline
+            preload="metadata"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/55 to-[#050505]/80"></div>
         </div>

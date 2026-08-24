@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'wouter';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import { ArrowRight, ChevronDown, ClipboardCheck, Dumbbell, Zap } from 'lucide-react';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
 
@@ -26,6 +26,24 @@ const faqs = [
     q: "Can I upgrade my plan later?",
     a: "Yes, you can upgrade from monthly to 6-month or yearly anytime. We will simply adjust the price difference."
   }
+];
+
+const joinSteps = [
+  {
+    icon: Dumbbell,
+    title: 'Free Trial Lelo',
+    desc: 'Gym pehle dekho, phir decide karo. Koi commitment nahi — first visit bilkul free hai.',
+  },
+  {
+    icon: ClipboardCheck,
+    title: 'Plan Choose Karo',
+    desc: 'Monthly, 6-month ya yearly — apne budget aur goal ke hisaab se jo suit kare.',
+  },
+  {
+    icon: Zap,
+    title: 'Workout Shuru Karo',
+    desc: 'Same day se full access milta hai. Trainer se form samjho aur journey start karo.',
+  },
 ];
 
 export function Membership() {
@@ -136,7 +154,7 @@ export function Membership() {
               </ul>
               <Link
                 href="/contact"
-                className="w-full block text-center bg-gold text-gold-foreground font-display font-bold text-lg uppercase py-5 skew-x-[-10deg] hover:bg-gold/90 transition-colors mt-auto group"
+                className="btn-shine w-full block text-center bg-gold text-gold-foreground font-display font-bold text-lg uppercase py-5 skew-x-[-10deg] hover:bg-gold/90 transition-colors mt-auto group"
                 style={{ boxShadow: '0 0 30px hsl(38 91% 55% / 0.3)' }}
               >
                 <div className="skew-x-[10deg] flex items-center justify-center gap-2">
@@ -190,6 +208,46 @@ export function Membership() {
               On the 1-Year plan you pay just <span className="text-primary text-glow text-3xl mx-2">₹917/month</span>
               <span className="text-muted-foreground text-lg block sm:inline mt-2 sm:mt-0 sm:ml-2">compared to ₹2,000 on monthly</span>
             </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* How to Join — 3 Easy Steps */}
+      <section className="py-24 border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-display font-bold uppercase tracking-wider mb-4">
+              Join in <span className="text-primary">3 Easy Steps</span>
+            </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto text-lg">
+              No paperwork hassle, no waiting period — aaj aao, aaj workout shuru karo.
+            </p>
+          </div>
+
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
+            variants={staggerContainer(0.15)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+          >
+            {joinSteps.map((step, i) => (
+              <motion.div
+                key={step.title}
+                variants={fadeUpItem}
+                whileHover={prefersReduced ? {} : { y: -4, transition: { duration: 0.22 } }}
+                className="relative bg-card border border-white/10 p-8 rounded-sm overflow-hidden group hover:border-primary/40 transition-colors"
+              >
+                <span className="absolute -top-3 right-4 font-display text-8xl font-bold text-primary/10 select-none group-hover:text-primary/20 transition-colors" aria-hidden>
+                  {i + 1}
+                </span>
+                <div className="w-14 h-14 rounded-full bg-background border border-white/10 flex items-center justify-center mb-6 group-hover:bg-primary group-hover:border-primary transition-colors">
+                  <step.icon className="w-7 h-7 text-primary group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="font-display text-xl font-bold uppercase tracking-wide text-white mb-3">{step.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">{step.desc}</p>
+              </motion.div>
+            ))}
           </motion.div>
         </div>
       </section>

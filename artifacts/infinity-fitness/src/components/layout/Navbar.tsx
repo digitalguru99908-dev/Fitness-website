@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Menu, X, Phone } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa';
 import {
   motion,
   AnimatePresence,
@@ -73,7 +74,7 @@ export function Navbar() {
                 </Link>
               ))}
               <a
-                href="tel:07206333820"
+                href="tel:8168828832"
                 className="hidden lg:flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 font-display font-bold uppercase tracking-wider skew-x-[-10deg] hover:bg-primary/90 transition-colors box-glow-hover"
               >
                 <div className="skew-x-[10deg] flex items-center gap-2">
@@ -131,14 +132,23 @@ export function Navbar() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: navLinks.length * 0.1 }}
-                className="mt-8"
+                className="mt-8 space-y-3"
               >
                 <a
-                  href="tel:07206333820"
+                  href="tel:8168828832"
                   className="flex items-center justify-center gap-2 bg-primary text-primary-foreground py-4 w-full font-display font-bold text-xl uppercase tracking-wider box-glow"
                 >
                   <Phone className="w-5 h-5" />
-                  Call 072063 33820
+                  Call 81688 28832
+                </a>
+                <a
+                  href="https://wa.me/918168828832?text=Hi!%20Mujhe%20Infinity%20Fitness%20Gym%20join%20karna%20hai.%20Membership%20ke%20baare%20me%20details%20bhejiye."
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center justify-center gap-2 bg-[#25D366]/10 border border-[#25D366]/40 text-[#25D366] py-4 w-full font-display font-bold text-xl uppercase tracking-wider hover:bg-[#25D366]/20 transition-colors"
+                >
+                  <FaWhatsapp className="w-5 h-5" />
+                  WhatsApp Karein
                 </a>
               </motion.div>
             </div>

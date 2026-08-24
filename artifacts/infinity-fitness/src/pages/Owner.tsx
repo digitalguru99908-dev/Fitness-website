@@ -134,14 +134,14 @@ export function Owner() {
             {/* Contact buttons */}
             <div className="flex flex-wrap gap-4 pt-2">
               <a
-                href="tel:07206333820"
+                href="tel:8168828832"
                 className="flex items-center gap-2 bg-primary text-black font-display font-bold uppercase tracking-wider px-6 py-3 hover:bg-primary/90 transition-colors"
               >
                 <Phone className="w-4 h-4" />
                 Call Us
               </a>
               <a
-                href="https://wa.me/917206333820"
+                href="https://wa.me/918168828832"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-2 border border-[#25D366] text-[#25D366] font-display font-bold uppercase tracking-wider px-6 py-3 hover:bg-[#25D366]/10 transition-colors"
@@ -224,14 +224,14 @@ export function Owner() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
             <a
-              href="tel:07206333820"
+              href="tel:8168828832"
               className="flex items-center justify-center gap-2 bg-primary text-black font-display font-bold uppercase tracking-wider px-8 py-4 hover:bg-primary/90 transition-colors text-lg"
             >
               <Phone className="w-5 h-5" />
               Call Now
             </a>
             <a
-              href="https://wa.me/917206333820"
+              href="https://wa.me/918168828832"
               target="_blank"
               rel="noreferrer"
               className="flex items-center justify-center gap-2 border-2 border-primary/40 text-white font-display font-bold uppercase tracking-wider px-8 py-4 hover:border-primary hover:text-primary transition-colors text-lg"

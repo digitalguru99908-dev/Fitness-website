@@ -15,13 +15,13 @@ export const LocationContact = () => {
               <h2 className="text-4xl md:text-5xl font-display font-bold uppercase text-foreground mb-8">Drop A <span className="text-primary">Line</span></h2>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
-                <a href="tel:07206333820" className="flex items-start gap-4 p-4 rounded-sm border border-border bg-card hover:border-primary/50 transition-colors group">
+                <a href="tel:8168828832" className="flex items-start gap-4 p-4 rounded-sm border border-border bg-card hover:border-primary/50 transition-colors group">
                   <div className="w-10 h-10 rounded-full bg-secondary group-hover:bg-primary flex items-center justify-center shrink-0 transition-colors">
                     <Phone className="text-primary group-hover:text-primary-foreground w-5 h-5 transition-colors" />
                   </div>
                   <div>
                     <h4 className="text-sm font-display uppercase tracking-wider text-muted-foreground mb-1">Call Us</h4>
-                    <p className="text-foreground font-medium">072063 33820</p>
+                    <p className="text-foreground font-medium">81688 28832</p>
                   </div>
                 </a>
                 
@@ -70,7 +70,7 @@ export const LocationContact = () => {
                     Send Message
                   </button>
                   <p className="text-xs text-muted-foreground text-center mt-4">
-                    Or message us directly on <a href="https://wa.me/917206333820" className="text-primary hover:underline">WhatsApp</a>
+                    Or message us directly on <a href="https://wa.me/918168828832" className="text-primary hover:underline">WhatsApp</a>
                   </p>
                 </form>
               </div>

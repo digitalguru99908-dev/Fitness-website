@@ -201,8 +201,50 @@
   box-shadow: 0 4px 20px hsl(var(--primary) / 0.35);
 }
 
+/* Premium sheen sweep — hover par light ka reflection button par se guzarta hai */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  bottom: -50%;
+  left: -85%;
+  width: 55%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.65s ease;
+  pointer-events: none;
+}
+.btn-shine:hover::after {
+  left: 135%;
+}
+
 /* Smooth scrolling for anchor links */
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
+}
+
+/* Premium slim scrollbar — subtle white, hover par bright */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 9999px;
+  border: 2px solid #0a0a0a;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.32);
 }
