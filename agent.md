@@ -220,3 +220,11 @@
   Replit-era history (c385466) safety tag `legacy-replit-history` me preserved.
   GitHub default `main` hi tha, to ab repo khulte hi latest changes dikhenge.
   Verify kiya: ls-remote me sirf `main` + tag, working tree clean, upstream synced.
+- [agent.md] — RULES section me **rule #6** add kiya: STRICT user instruction — site
+  me abhi koi changes nahi, jaisi hai waisi rahe; purana/legacy content (zipFile.zip,
+  attached_assets/VID_2026*.mp4 etc.) kabhi restore/add nahi karna. Verify kiya ki
+  branch consolidation se site files me ZERO change hua (sirf agent.md badla) aur
+  legacy files git-tracked bhi nahi hain.
+- [SESSION END 2026-08-24] — Site state LOCKED hai user ke request par. Agla kaam
+  jab user bole. Premium/user-friendly suggestions sirf baat-cheet me diye gaye,
+  implement NAHI kiye.
