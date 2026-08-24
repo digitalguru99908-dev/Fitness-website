@@ -344,3 +344,40 @@
   reflection sweep hota hai (skewed gradient ::after, 0.65s). Subtle premium feel.
 - [VERIFY round 2] — frontend tsc 0 errors, API build pass, API restarted (healthz ok),
   frontend 5173 OK. Changes local par hain — push user ki permission ke baad hi.
+- [PERF: IMAGE COMPRESSION ~19MB → ~2.5MB] (user request: suggestions local par karke
+  dikhao): Home hero HeroPhotoStrip ki 8 photos 2.3–2.7MB PNG thi (total ~19.2MB).
+  Windows GDI+ (System.Drawing) se 1400px max-side + JPEG q85 me convert kiya — ab
+  253–406KB each (~2.5MB total, **87% kam**). Imports `.png` → `.jpg` update. Purani
+  PNGs attached_assets me untouched padi hain (git me hain, use nahi hoti — repo
+  slimming alag se poochh kar karna). favicon.png 2MB (1024x1536) → 22KB (256x256,
+  transparent canvas pe logo contain). public/og-image.png (2.1MB portrait) DELETE
+  karke nayi branded **og-image.jpg** banayi (1200x630 landscape card: dark bg +
+  INFINITY FITNESS + GYM · KAITHAL gold + services line, 39KB).
+- [index.html] — OG/Twitter meta fix: description me galat "Open 24/7" + CrossFit/
+  Zumba hataya, ab accurate services + "Open all 7 days till 11 PM"; title me
+  "— Kaithal" add; `og:image`/`twitter:image` ab **absolute raw.githubusercontent.com
+  URL** use karte hain (push ke baad WhatsApp/Facebook share par preview card
+  dikhega — localhost relative path kaam hi nahi karta tha); og:site_name add.
+- [Contact.tsx note] — Google Maps embed PEHLE SE tha (dark filter iframe) — is
+  round me skip kiya. Before/After slider user photos ka wait kar raha hai.
+- [VERIFY round 3] — tsc 0 errors; vite build pass; dist me images ab JPG
+  (koi badi PNG nahi); favicon HTTP 200 @22KB; frontend 200. Push pending user
+  approval.
+- [FIX: favicon chhota dikh raha tha] — pehle wale version me logo ko square canvas
+  me 236px me "contain" kiya tha (portrait logo → tab me bahut chhota). Ab original
+  attached_assets source (1024x1536) se **97% height fill** karke banaya (YouTube
+  style full-fill, 24KB). Note: browser favicon cache karta hai — user ko new tab /
+  Ctrl+Shift+R   bolna padega. Push pending.
+- [FIX v2: favicon FULL-BLEED] — 97% contain bhi chhota laga (portrait logo). Ab
+  original source ka **center square crop** (1024x1024 from y=256) poore 256x256
+  canvas ko bharata hai (zero padding, 50KB). Agar crop me logo ka main part kata
+  hai to top/bottom crop variant try karna. User images/screenshot bhej nahi sakta —
+  model image input support nahi karta. Push pending.
+- [FIX v3: favicon ROOT CAUSE mila] — logo PNG (1024x1536) me asli content sirf
+  **564x548** tha, ~80% canvas transparent padding thi! Alpha-scan (LockBits) se
+  bounding box nikala, trim karke center square 548px → full 256x256 edge-to-edge
+  favicon (152KB). Ab YouTube jaisa proper fill hoga. Push pending.
+- [PUSH APPROVED] — user ne favicon confirm kiya ("ek dam mast"), push ki permission
+  di. Commit: image compression (19MB→2.5MB hero photos) + favicon full-bleed fix +
+  og-image branded card + index.html meta fixes. Iske baad pending suggestions:
+  before/after slider (user photos chahiye), hosting (user ne mana kiya abhi).
