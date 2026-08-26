@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Phone, Clock, Instagram, Mail, Send, CheckCircle2, Loader2 } from 'lucide-react';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
+import { API_BASE } from '@/lib/apiBase';
 
 export function Contact() {
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'submitted' | 'error'>('idle');
@@ -23,7 +24,7 @@ export function Contact() {
     };
 
     try {
-      const res = await fetch(`${import.meta.env.BASE_URL}api/inquiry`, {
+      const res = await fetch(`${API_BASE}/api/inquiry`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

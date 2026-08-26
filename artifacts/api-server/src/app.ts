@@ -25,7 +25,11 @@ app.use(
     },
   }),
 );
-app.use(cors());
+const allowedOrigin = process.env["ALLOWED_ORIGIN"];
+const corsOptions: Parameters<typeof cors>[0] = allowedOrigin
+  ? { origin: allowedOrigin.split(",").map((o) => o.trim()) }
+  : {};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

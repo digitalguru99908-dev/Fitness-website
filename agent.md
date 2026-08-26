@@ -14,10 +14,8 @@
 4. Purani entries ko kabhi delete ya edit mat karo — sirf append karo.
 5. User preference (from replit.md): existing project structure ko maintain rakho —
    bina poochhe restructure/migrate mat karo.
-6. **⚠️ STRICT USER INSTRUCTION (2026-08-24):** Site me ABHI KOI CHANGES NAHI karne —
-   jaisi hai waisi hi rehne do. Koi bhi purana/legacy content (purani `main` branch ki
-   cheezein: `zipFile.zip`, `attached_assets/VID_2026*.mp4` waghera) wapas add ya
-   restore NAHI karna. Sirf bug fixes ya jo user khud maange wahi karo.
+6. **User Preference:** Changes karne se PEHLE user se poocho. Agar user ne suggestion
+   maanga ho toh sirf woh implement karo, baaki changes mat karo bina permission ke.
 
 ---
 
@@ -381,3 +379,54 @@
   di. Commit: image compression (19MB→2.5MB hero photos) + favicon full-bleed fix +
   og-image branded card + index.html meta fixes. Iske baad pending suggestions:
   before/after slider (user photos chahiye), hosting (user ne mana kiya abhi).
+
+### 2026-08-26
+
+- [DEPLOY PREP: Vercel (frontend) + Render (backend)] — User ne deployment
+  plan diya: frontend Vercel par, backend Render par. Code ko us hisab se tayar
+  kiya (abhi deploy NAHI kiya, sirf code/config taiyaar ki):
+  - [artifacts/infinity-fitness/src/lib/apiBase.ts] — NAYA helper: `API_BASE`
+    `import.meta.env.VITE_API_URL` se aata hai (trailing slash trim). Local par
+    empty → `/api` calls Vite dev proxy (localhost:8080) use karte hain; Vercel
+    par `VITE_API_URL` set karne se saare `/api` calls Render backend par
+    absolute jaate hain.
+  - [artifacts/infinity-fitness/src/pages/Contact.tsx,
+    src/components/ChatBot.tsx] — `/api/inquiry`, `/api/tts`, `/api/chat` fetch
+    calls ab `API_BASE` use karte hain (`import.meta.env.BASE_URL` ki jagah).
+    Local dev behavior unchanged (proxy abhi bhi kaam karega).
+  - [vercel.json] (repo root) — SPA rewrite: har unknown route `/index.html`
+    par jaata hai (wouter client-side routing ke liye). Vercel dashboard me
+    Root Directory = repo root, Build Command =
+    `pnpm install && pnpm --filter @workspace/infinity-fitness build`,
+    Output Directory = `artifacts/infinity-fitness/dist/public`, env var
+    `VITE_API_URL` = Render URL (build time par chahiye).
+  - [render.yaml] (repo root) — Backend web service config: build =
+    `pnpm install && pnpm --filter @workspace/api-server build`, start =
+    `pnpm --filter @workspace/api-server start`, healthCheckPath `/api/healthz`.
+    Secrets (`GMAIL_APP_PASSWORD`, `SESSION_SECRET`, `GROQ_API_KEY`,
+    `CARTESIA_API_KEY`, `DATABASE_URL`) `sync:false` (dashboard se daalne
+    hain — repo me kabhi nahi). `PORT` Render auto-inject karta hai.
+  - [artifacts/api-server/src/app.ts] — CORS ab configurable: `ALLOWED_ORIGIN`
+    env (comma-separated) set ho to sirf wahi origins allow; nahi to default
+    open (`*`, local + backward compatible). Production me Vercel URL yahan
+    set karo.
+  - [artifacts/infinity-fitness/package.json, artifacts/api-server/package.json]
+    — `engines.node >=20` add kiya (Vite 7 / Node 20+ ke liye).
+  - [.env.example] — Dono apps ke liye sample env files add kiye
+    (frontend: `VITE_API_URL`, backend: secrets + `ALLOWED_ORIGIN`). Real
+    secrets INHOON me nahi hain; `.env` gitignored hai.
+  - [SECURITY/SAFETY] — Koi secret repo me nahi gaya; `.env` gitignore me hai,
+    build artifacts (`dist`) ignored hain. Render secrets dashboard se aayenge.
+    CORS production me `ALLOWED_ORIGIN` set karne ka reminder diya gaya.
+  - [VERIFY] — frontend `tsc --noEmit` 0 errors; api-server `tsc --noEmit`
+    (lib refs build ke baad) 0 errors; frontend `vite build` pass →
+    `dist/public` generate hua. Deploy abhi user ke manual dashboard setup ka
+    wait kar raha hai.
+  - [artifacts/infinity-fitness/src/pages/Gallery.tsx + public/comeback-story-thumb.png]
+    — Comeback Story video (videos[2], `/comeback.mp4`) par custom **thumbnail
+    poster** lagaya: `videos` array mein `poster: '/comeback-story-thumb.png'`
+    add kiya aur grid `<video>` + lightbox `<video>` dono par `poster={...}`
+    attribute diya. Model image input support nahi karta isliye user ne paste
+    ki image disk scan se locate karke (`Downloads/ChatGPT Image Aug 26, 2026,
+    08_25_06 PM.png`) `public/comeback-story-thumb.png` naam se copy kar di
+    (user ne full permission di). Typecheck pass.

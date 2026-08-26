@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, Volume2, VolumeX, Minus } from 'lucide-react';
+import { API_BASE } from '@/lib/apiBase';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -21,6 +22,7 @@ const QUICK_ACTIONS = [
 
 function AvatarSVG({ size = 'normal' }: { size?: 'small' | 'normal' }) {
   const s = size === 'small' ? 32 : 56;
+  const fontSize = size === 'small' ? 20 : 36;
   return (
     <svg viewBox="0 0 100 100" width={s} height={s} xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -28,16 +30,10 @@ function AvatarSVG({ size = 'normal' }: { size?: 'small' | 'normal' }) {
           <stop offset="0%" stopColor="#ff6a00" />
           <stop offset="100%" stopColor="#ff3d00" />
         </linearGradient>
-        <filter id="glow-s"><feGaussianBlur stdDeviation="2" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
       </defs>
       <circle cx="50" cy="50" r="48" fill={`url(#bg-${size})`} />
       <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
-      {/* Dumbbell icon */}
-      <rect x="30" y="46" width="40" height="8" rx="4" fill="white" opacity="0.95" />
-      <rect x="22" y="40" width="12" height="20" rx="4" fill="white" opacity="0.95" />
-      <rect x="66" y="40" width="12" height="20" rx="4" fill="white" opacity="0.95" />
-      {/* Lightning bolt */}
-      <path d="M48 28 L42 50 L50 48 L52 72 L58 48 L50 50 Z" fill="white" opacity="0.15" />
+      <text x="50" y="58" textAnchor="middle" dominantBaseline="central" fontSize={fontSize}>💪</text>
     </svg>
   );
 }
@@ -136,7 +132,7 @@ export function ChatBot() {
     ttsAbortRef.current = controller;
     try {
       setSpeaking(true);
-      const res = await fetch(`${import.meta.env.BASE_URL}api/tts`, {
+      const res = await fetch(`${API_BASE}/api/tts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, lang }),
@@ -173,7 +169,7 @@ export function ChatBot() {
     setInput('');
     setLoading(true);
     try {
-      const res = await fetch(`${import.meta.env.BASE_URL}api/chat`, {
+      const res = await fetch(`${API_BASE}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: updated.map(m => ({ role: m.role, content: m.content })) }),

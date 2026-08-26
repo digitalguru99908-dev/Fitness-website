@@ -13,7 +13,7 @@ import img7 from '@assets/1a4c7a90-e805-426f-a6ee-c310dc609be2_1785141254714.web
 const videos = [
   { src: '/gallery-video-1.mp4', caption: 'Infinity Fitness Gym Reel' },
   { src: '/client-review.mp4', caption: 'Client Review' },
-  { src: '/comeback.mp4', caption: 'Comeback Story' },
+  { src: '/comeback.mp4', caption: 'Comeback Story', poster: '/comeback-story-thumb.png' },
   { src: '/infinity.mp4', caption: 'Infinity Fitness' },
   { src: '/gallery-video-2.mp4', caption: 'Best Gym in Kaithal' },
 ];
@@ -165,6 +165,7 @@ export function Gallery() {
               >
                 <video
                   src={video.src}
+                  poster={video.poster}
                   className="w-full h-full object-cover"
                   muted
                   loop
@@ -253,6 +254,7 @@ export function Gallery() {
                 ref={lightboxVideoRef}
                 key={videoLightbox}
                 src={videos[videoLightbox].src}
+                poster={videos[videoLightbox].poster}
                 className="max-h-[85vh] max-w-[90vw] rounded-sm shadow-2xl"
                 playsInline
                 muted={lbMuted}
