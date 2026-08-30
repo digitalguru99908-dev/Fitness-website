@@ -9,6 +9,7 @@ import { HeroPhotoStrip } from '@/components/HeroPhotoStrip';
 import { Reviews } from '@/components/sections/Reviews';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
 import { FREE_TRIAL_DAYS } from '@/lib/siteConfig';
+import { useFreeTrialModal } from '@/components/free-trial/FreeTrialProvider';
 
 const homeServices = [
   { icon: Dumbbell, title: "Strength Training", desc: "Free weights, machines & powerlifting section — heavy lifting ke liye sab kuch." },
@@ -48,6 +49,7 @@ const faqs = [
 
 export function Home() {
   const prefersReduced = useForceReducedMotion();
+  const { openFreeTrial } = useFreeTrialModal();
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -180,17 +182,39 @@ export function Home() {
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {[
-              { icon: Clock, title: "Open Every Day", desc: "5 AM – 11 PM · Har roz, koi band din nahi." },
-              { icon: BadgeCheck, title: `${FREE_TRIAL_DAYS}-Day Free Trial`, desc: `Pehle ${FREE_TRIAL_DAYS} din free, koi commitment nahi.` },
-              { icon: GraduationCap, title: "Trained Coaches", desc: "Personal training & nutrition guidance, har step par." },
-              { icon: MapPin, title: "Rishi Nagar, Kaithal", desc: "Ghar ke paas — Dhand Rd, Opp. Maharaja Palace." },
-            ].map((item, i) => (
-              <div key={i} className="bg-card border border-white/5 p-6 md:p-8 text-center hover:border-primary/40 transition-colors">
-                <item.icon className="w-10 h-10 text-primary mx-auto mb-4" />
-                <h3 className="font-display font-bold uppercase tracking-wide text-base md:text-lg">{item.title}</h3>
-                <p className="text-sm text-muted-foreground mt-2">{item.desc}</p>
-              </div>
-            ))}
+              { icon: Clock, title: "Open Every Day", desc: "5 AM – 11 PM · Har roz, koi band din nahi.", href: "/contact" },
+              { icon: BadgeCheck, title: `${FREE_TRIAL_DAYS}-Day Free Trial`, desc: `Pehle ${FREE_TRIAL_DAYS} din free, koi commitment nahi.`, modal: true },
+              { icon: GraduationCap, title: "Trained Coaches", desc: "Personal training & nutrition guidance, har step par.", href: "/services" },
+              { icon: MapPin, title: "Rishi Nagar, Kaithal", desc: "Ghar ke paas — Dhand Rd, Opp. Maharaja Palace.", external: "https://www.google.com/maps/search/Infinity+Fitness+Gym,+Rishi+Nagar,+Kaithal" },
+            ].map((item, i) => {
+              const card = (
+                <div className="bg-card border border-white/5 p-6 md:p-8 h-full text-center hover:border-primary/40 transition-colors">
+                  <item.icon className="w-10 h-10 text-primary mx-auto mb-4" />
+                  <h3 className="font-display font-bold uppercase tracking-wide text-base md:text-lg">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground mt-2">{item.desc}</p>
+                </div>
+              );
+              if (item.modal) {
+                return (
+                  <button key={i} onClick={openFreeTrial} className="block w-full h-full text-left cursor-pointer"
+                    aria-label={`${item.title} — free trial ke liye click karein`}>
+                    {card}
+                  </button>
+                );
+              }
+              if (item.external) {
+                return (
+                  <a key={i} href={item.external} target="_blank" rel="noopener noreferrer" className="block h-full">
+                    {card}
+                  </a>
+                );
+              }
+              return (
+                <Link key={i} href={item.href as string} className="block h-full">
+                  {card}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

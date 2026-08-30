@@ -80,6 +80,127 @@ const detectLang = (text: string): string => {
   return hasHinglish ? 'hi' : 'en';
 };
 
+// Play TTS audio progressively via MediaSource MSE so the voice starts hearing
+// the moment the first audio bytes arrive (no full-download wait). Returns the
+// audio element once playback is initiated, or null to signal a full-blob fallback.
+const playStreamingAudio = (
+  response: Response,
+  signal: AbortSignal,
+  onEnd: () => void
+): Promise<HTMLAudioElement | null> => {
+  const body = response.body;
+  if (!body || typeof window === 'undefined' || !('MediaSource' in window) || signal.aborted) {
+    return Promise.resolve(null);
+  }
+
+  return new Promise<HTMLAudioElement | null>((resolve) => {
+    const mime = response.headers.get('Content-Type') || 'audio/mpeg';
+    const mediaSource = new MediaSource();
+    const objectUrl = URL.createObjectURL(mediaSource);
+    const audio = new Audio(objectUrl);
+    let settled = false;
+    let playbackInitiated = false;
+    let completed = false;
+    let urlRevoked = false;
+
+    const revokeUrl = () => {
+      if (!urlRevoked) {
+        urlRevoked = true;
+        try { URL.revokeObjectURL(objectUrl); } catch { /* noop */ }
+      }
+    };
+    const resolveOnce = (val: HTMLAudioElement | null, cleanupUrl: boolean) => {
+      if (settled) return;
+      settled = true;
+      if (cleanupUrl) revokeUrl();
+      resolve(val);
+    };
+    const endOnce = () => {
+      if (completed) return;
+      completed = true;
+      onEnd();
+    };
+
+    const openTimeout = window.setTimeout(() => {
+      if (!playbackInitiated) {
+        try { audio.pause(); } catch { /* noop */ }
+        resolveOnce(null, true);
+      }
+    }, 1500);
+
+    mediaSource.addEventListener('sourceopen', () => {
+      window.clearTimeout(openTimeout);
+      if (settled) return;
+      let sourceBuffer: SourceBuffer | null = null;
+      try {
+        sourceBuffer = mediaSource.addSourceBuffer(mime);
+      } catch {
+        resolveOnce(null, true);
+        return;
+      }
+
+      const queue: Uint8Array[] = [];
+      let appending = false;
+
+      const pump = () => {
+        if (!sourceBuffer || appending || queue.length === 0 || completed) return;
+        const chunk = queue.shift()!;
+        appending = true;
+        try {
+          sourceBuffer.appendBuffer(chunk as unknown as Uint8Array<ArrayBuffer>);
+        } catch {
+          appending = false;
+          endOnce();
+          revokeUrl();
+          return;
+        }
+        if (!playbackInitiated) {
+          playbackInitiated = true;
+          resolveOnce(audio, false);
+          audio.play().catch(() => { endOnce(); revokeUrl(); });
+        }
+      };
+
+      sourceBuffer.addEventListener('updateend', () => {
+        appending = false;
+        pump();
+        if (streamEnded && queue.length === 0 && !appending) {
+          try { if (mediaSource.readyState === 'open') mediaSource.endOfStream(); } catch { /* noop */ }
+        }
+      });
+      sourceBuffer.addEventListener('error', () => { endOnce(); revokeUrl(); });
+
+      let streamEnded = false;
+      (async () => {
+        const reader = body.getReader();
+        try {
+          while (!signal.aborted) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            queue.push(value);
+            pump();
+          }
+        } catch {
+          if (signal.aborted) {
+            revokeUrl();
+            return;
+          }
+          endOnce();
+          revokeUrl();
+          return;
+        }
+        streamEnded = true;
+        if (queue.length === 0 && !appending) {
+          try { if (mediaSource.readyState === 'open') mediaSource.endOfStream(); } catch { /* noop */ }
+        }
+      })();
+    });
+
+    audio.addEventListener('ended', () => { endOnce(); revokeUrl(); });
+    audio.addEventListener('error', () => { revokeUrl(); });
+  });
+};
+
 export function ChatBot() {
   const [open, setOpen] = useState(false);
   const [minimized, setMinimized] = useState(false);
@@ -126,10 +247,12 @@ export function ChatBot() {
   const speak = async (text: string, userText?: string) => {
     if (muted || !text) return;
     if (ttsAbortRef.current) ttsAbortRef.current.abort();
-    if (audioRef.current) { audioRef.current.pause(); audioRef.current.currentTime = 0; }
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current.currentTime = 0; audioRef.current = null; }
     const lang = userText ? detectLang(userText) : 'en';
     const controller = new AbortController();
     ttsAbortRef.current = controller;
+    let finished = false;
+    const stopSpeaking = () => { if (!finished) { finished = true; setSpeaking(false); } };
     try {
       setSpeaking(true);
       const res = await fetch(`${API_BASE}/api/tts`, {
@@ -138,7 +261,12 @@ export function ChatBot() {
         body: JSON.stringify({ text, lang }),
         signal: controller.signal,
       });
-      if (!res.ok || !res.body) { setSpeaking(false); return; }
+      if (!res.ok || !res.body) { stopSpeaking(); return; }
+      const streamed = await playStreamingAudio(res, controller.signal, stopSpeaking);
+      if (streamed) {
+        audioRef.current = streamed;
+        return;
+      }
       const reader = res.body.getReader();
       const chunks: Uint8Array[] = [];
       while (true) {
@@ -147,15 +275,21 @@ export function ChatBot() {
         chunks.push(value);
       }
       if (controller.signal.aborted) return;
+      if (chunks.length === 0) { stopSpeaking(); return; }
       const blob = new Blob(chunks as BlobPart[], { type: 'audio/mpeg' });
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
       audioRef.current = audio;
-      audio.onended = () => { setSpeaking(false); URL.revokeObjectURL(url); };
-      audio.onerror = () => { setSpeaking(false); URL.revokeObjectURL(url); };
-      await audio.play();
+      audio.onended = () => { stopSpeaking(); URL.revokeObjectURL(url); };
+      audio.onerror = () => { stopSpeaking(); URL.revokeObjectURL(url); };
+      try {
+        await audio.play();
+      } catch {
+        stopSpeaking();
+        URL.revokeObjectURL(url);
+      }
     } catch (err: any) {
-      if (err?.name !== 'AbortError') setSpeaking(false);
+      if (err?.name !== 'AbortError') stopSpeaking();
     }
   };
 
