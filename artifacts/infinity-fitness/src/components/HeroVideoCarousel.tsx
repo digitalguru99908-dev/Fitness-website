@@ -1,7 +1,10 @@
 import React, { useEffect, useRef } from 'react';
+import { useVideoPauseOnHidden } from '@/lib/useVideoPauseOnHidden';
 
 export function HeroVideoCarousel() {
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  useVideoPauseOnHidden(videoRef);
 
   useEffect(() => {
     const vid = videoRef.current;
@@ -19,6 +22,24 @@ export function HeroVideoCarousel() {
     } else {
       vid.addEventListener('canplay', tryPlay, { once: true });
     }
+
+    // Perf: video hero scroll se bahar jaate hi pause (decode loop tabhi chale
+    // jab user use dekh raha ho), wapas dikhe to resume.
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          vid.play().catch(() => {});
+        } else {
+          vid.pause();
+        }
+      },
+      { threshold: 0.05 }
+    );
+    io.observe(vid);
+    return () => {
+      io.disconnect();
+      vid.pause();
+    };
   }, []);
 
   return (

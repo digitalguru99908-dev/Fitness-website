@@ -1,5 +1,6 @@
 import React from 'react';
-import { motion, useReducedMotion, type Variants } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
+import { useForceReducedMotion } from '@/lib/motion';
 import { ShieldCheck, Dumbbell, Sparkles, Users, Phone, Instagram, Award, Heart } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
@@ -43,7 +44,7 @@ const ownerValues = [
 ];
 
 export function About() {
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = useForceReducedMotion();
 
   return (
     <div className="flex flex-col min-h-screen bg-background">

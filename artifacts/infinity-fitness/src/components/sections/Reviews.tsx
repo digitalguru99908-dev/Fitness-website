@@ -1,52 +1,14 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Star, Quote } from 'lucide-react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { useInView } from 'framer-motion';
 import { Reveal } from '../ui/reveal';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
-
-const reviews = [
-  {
-    name: "Vikram S.",
-    role: "Member for 2 years",
-    content: "Best gym in Rishi Nagar area. The equipment is always clean, the trainers actually pay attention, and the vibe is perfect for serious lifting. Worth every rupee.",
-    rating: 5
-  },
-  {
-    name: "Rahul Verma",
-    role: "Member for 6 months",
-    content: "Joined for weight loss and already down 8kg. The community here pushes you to do better. Not overcrowded during morning hours which I love.",
-    rating: 5
-  },
-  {
-    name: "Amit Kumar",
-    role: "Member for 1 year",
-    content: "Affordable fee structure and great machines. The evening energy is insane, exactly what you need after a long day at work to get fired up.",
-    rating: 4
-  },
-  {
-    name: "Priya Sharma",
-    role: "Member for 8 months",
-    content: "Finally found a gym where trainers actually care. My posture has improved so much. The environment is very motivating and clean.",
-    rating: 5
-  },
-  {
-    name: "Deepak Singh",
-    role: "Member for 1.5 years",
-    content: "Best investment I've made for my health. The coaches here know their stuff. Gained 6kg of lean muscle in 6 months.",
-    rating: 5
-  },
-  {
-    name: "Rohit Mehta",
-    role: "Member for 3 months",
-    content: "Just started my fitness journey and the trainers made it so easy. Great atmosphere, modern equipment, very professional.",
-    rating: 5
-  }
-];
+import { homeReviews, AVG_RATING, REVIEW_COUNT } from '@/lib/reviews';
 
 export const Reviews = () => {
-  const prefersReduced = useReducedMotion();
-
-  const doubledReviews = [...reviews, ...reviews];
+  const doubledReviews = [...homeReviews, ...homeReviews];
+  const trackRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(trackRef, { margin: '80px 0px' });
 
   return (
     <section id="reviews" className="py-24 bg-background relative overflow-hidden">
@@ -67,7 +29,7 @@ export const Reviews = () => {
 
               <div className="flex items-center gap-4 mb-8 bg-card border border-border p-6 rounded-sm w-fit">
                 <div className="text-5xl font-display font-bold text-foreground">
-                  <AnimatedCounter to={4.2} decimals={1} duration={1.4} />
+                  <AnimatedCounter to={AVG_RATING} decimals={1} duration={1.4} />
                 </div>
                 <div>
                   <div className="flex gap-1 mb-1 text-primary">
@@ -78,7 +40,7 @@ export const Reviews = () => {
                     <Star size={20} />
                   </div>
                   <div className="text-sm text-muted-foreground uppercase tracking-wider font-medium">
-                    <AnimatedCounter to={40} suffix="+ Google Reviews" duration={1.2} />
+                    <AnimatedCounter to={REVIEW_COUNT} suffix="+ Google Reviews" duration={1.2} />
                   </div>
                 </div>
               </div>
@@ -102,11 +64,12 @@ export const Reviews = () => {
           <div className="lg:col-span-8">
             <div className="relative overflow-hidden"
               style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}>
-              
+
               {/* Scroll track */}
-              <div className="flex gap-6 w-max"
+              <div ref={trackRef} className="flex gap-6 w-max"
                 style={{
-                  animation: prefersReduced ? 'none' : 'reviewScroll 25s linear infinite',
+                  animation: 'reviewScroll 25s linear infinite',
+                  animationPlayState: inView ? 'running' : 'paused',
                 }}>
                 {doubledReviews.map((review, index) => (
                   <div key={index} className="w-[340px] flex-shrink-0">
@@ -121,7 +84,7 @@ export const Reviews = () => {
                       </div>
 
                       <p className="text-muted-foreground mb-8 relative z-10 italic">
-                        "{review.content}"
+                        "{review.review}"
                       </p>
 
                       <div className="flex items-center gap-4">
@@ -130,7 +93,9 @@ export const Reviews = () => {
                         </div>
                         <div>
                           <h4 className="text-foreground font-display uppercase tracking-wide font-bold">{review.name}</h4>
-                          <span className="text-xs text-muted-foreground">{review.role}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {review.tag === 'Google Review' ? `Google Review · ${review.date}` : review.date}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -142,7 +107,7 @@ export const Reviews = () => {
             <style>{`
               @keyframes reviewScroll {
                 0% { transform: translateX(0); }
-                100% { transform: translateX(calc(-340px * ${reviews.length} - 24px * ${reviews.length})); }
+                100% { transform: translateX(calc(-340px * ${homeReviews.length} - 24px * ${homeReviews.length})); }
               }
             `}</style>
           </div>

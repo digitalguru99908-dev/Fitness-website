@@ -43,9 +43,19 @@ export function HeroPhotoStrip() {
   const [split, setSplit]   = useState(false);
   const stripCtrl           = useAnimation();
   const mounted             = useRef(true);
+  // Perf: strip viewport se bahar ho to spin cycle ruk jaye (weak devices par
+  // GPU/CPU ka continuous 3D load na ho). Wapas dikhe to khud resume.
+  const visible             = useRef(true);
+  const rootRef             = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     mounted.current = true;
+
+    const io = new IntersectionObserver(
+      ([entry]) => { visible.current = entry.isIntersecting; },
+      { threshold: 0.15 }
+    );
+    if (rootRef.current) io.observe(rootRef.current);
 
     const go = async () => {
       // ── Spin the current group in from 90° (edge-on) to 0° ──────────────
@@ -54,6 +64,12 @@ export function HeroPhotoStrip() {
       let g = 0;
 
       while (mounted.current) {
+        // Offscreen ho to sirf wait karo — cycle aage tabhi bade jab dikha rahe
+        if (!visible.current) {
+          await sleep(250);
+          continue;
+        }
+
         // 1. Switch to this group (photos appear at x=0, strip at rotateY=90)
         setGroup(g);
         setSplit(false);
@@ -115,6 +131,7 @@ export function HeroPhotoStrip() {
 
     return () => {
       mounted.current = false;
+      io.disconnect();
       stripCtrl.stop();
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -122,7 +139,7 @@ export function HeroPhotoStrip() {
   const photos = GROUPS[group];
 
   return (
-    <div className="flex flex-col items-center select-none">
+    <div ref={rootRef} className="flex flex-col items-center select-none">
       {/* Perspective parent — required for 3-D rotateY to look correct */}
       <div style={{ perspective: '1100px' }}>
         <motion.div
@@ -130,7 +147,6 @@ export function HeroPhotoStrip() {
           style={{
             display:        'flex',
             transformStyle: 'preserve-3d',
-            willChange:     'transform',
           }}
         >
           {photos.map((src, i) => (
@@ -141,7 +157,7 @@ export function HeroPhotoStrip() {
                 duration: 0.55,
                 ease:     split ? [0.15, 0, 0, 1] : [0.6, 0, 0.2, 1],
               }}
-              style={{ flexShrink: 0, willChange: 'transform' }}
+              style={{ flexShrink: 0 }}
             >
               <div
                 className="overflow-hidden border-[3px] border-white"

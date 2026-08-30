@@ -1,16 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Menu, X, Phone } from 'lucide-react';
+import { Menu, X, Phone, CalendarCheck } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useTransform,
-  useMotionTemplate,
-  useReducedMotion,
-} from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import gymLogo from '@assets/7_1785143551141.webp';
+import { useFreeTrialModal } from '@/components/free-trial/FreeTrialProvider';
+import { OpenStatus } from '@/components/ui/OpenStatus';
 
 const navLinks = [
   { name: 'Home', href: '/' },
@@ -25,26 +20,29 @@ const navLinks = [
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [location] = useLocation();
-  const prefersReduced = useReducedMotion();
+  const { openFreeTrial } = useFreeTrialModal();
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
-  // Scroll-driven nav shrink: height 80 → 60px, shadow fades in
-  const { scrollY } = useScroll();
-  const navHeight = useTransform(scrollY, [0, 80], [80, 60]);
-  const shadowOpacity = useTransform(scrollY, [0, 80], [0, 0.45]);
-  const boxShadow = useMotionTemplate`0 4px 30px rgba(0,0,0,${shadowOpacity})`;
-
-  const motionStyle = prefersReduced
-    ? {}
-    : { height: navHeight, boxShadow };
+  // Perf: scroll-driven navbar pehle useScroll/useTransform se har scroll frame
+  // par height+shadow layout recompute karta tha (jank ka sabse bada source).
+  // Ab cheap scroll listener boolean toggle karta hai + CSS transition — same
+  // visual (80→60px + shadow), per-frame layout cost zero.
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
     <>
       <motion.nav
-        style={motionStyle}
-        className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b border-border"
+        className={`fixed top-0 left-0 right-0 z-50 bg-background/95 border-b border-border transition-all duration-300 ${
+          scrolled ? 'h-16 shadow-[0_4px_30px_rgba(0,0,0,0.45)]' : 'h-20'
+        }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
           <div className="flex items-center justify-between h-full">
@@ -73,6 +71,16 @@ export function Navbar() {
                   {link.name}
                 </Link>
               ))}
+              <div className="hidden lg:flex flex-col text-right mr-1 leading-tight">
+                <OpenStatus />
+                <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Daily · till 11 PM</span>
+              </div>
+              <button
+                onClick={openFreeTrial}
+                className="hidden lg:inline-flex items-center gap-2 bg-gold text-gold-foreground px-5 py-2.5 font-display font-bold uppercase tracking-wider skew-x-[-10deg] hover:bg-gold/90 transition-colors box-glow-hover"
+              >
+                <div className="skew-x-[10deg]">Join Now</div>
+              </button>
               <a
                 href="tel:8168828832"
                 className="hidden lg:flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 font-display font-bold uppercase tracking-wider skew-x-[-10deg] hover:bg-primary/90 transition-colors box-glow-hover"
@@ -106,7 +114,7 @@ export function Navbar() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'tween', duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-xl md:hidden pt-20 flex flex-col"
+            className="fixed inset-0 z-40 bg-background/95 md:hidden pt-20 flex flex-col"
           >
             <div className="flex-1 overflow-y-auto px-6 py-8 flex flex-col gap-6">
               {navLinks.map((link, i) => (
@@ -134,6 +142,16 @@ export function Navbar() {
                 transition={{ delay: navLinks.length * 0.1 }}
                 className="mt-8 space-y-3"
               >
+                <button
+                  onClick={() => {
+                    closeMenu();
+                    openFreeTrial();
+                  }}
+                  className="flex items-center justify-center gap-2 bg-gold text-gold-foreground py-4 w-full font-display font-bold text-xl uppercase tracking-wider box-glow"
+                >
+                  <CalendarCheck className="w-5 h-5" />
+                  Join Now · Free Trial
+                </button>
                 <a
                   href="tel:8168828832"
                   className="flex items-center justify-center gap-2 bg-primary text-primary-foreground py-4 w-full font-display font-bold text-xl uppercase tracking-wider box-glow"

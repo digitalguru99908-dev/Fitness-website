@@ -1,24 +1,53 @@
 import React from 'react';
 import { Link } from 'wouter';
-import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight, Phone, Dumbbell, HeartPulse, TrendingUp, Flame, Leaf, Zap } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useForceReducedMotion } from '@/lib/motion';
+import { ArrowRight, Phone, Dumbbell, HeartPulse, TrendingUp, Flame, Leaf, Zap, Clock, BadgeCheck, GraduationCap, MapPin, ChevronDown } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { HeroVideoCarousel } from '@/components/HeroVideoCarousel';
 import { HeroPhotoStrip } from '@/components/HeroPhotoStrip';
 import { Reviews } from '@/components/sections/Reviews';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
+import { FREE_TRIAL_DAYS } from '@/lib/siteConfig';
 
 const homeServices = [
-  { icon: Dumbbell, title: "Strength Training" },
-  { icon: HeartPulse, title: "Cardio" },
-  { icon: TrendingUp, title: "Weight Gain" },
-  { icon: Flame, title: "Weight Loss" },
-  { icon: Leaf, title: "Yoga" },
-  { icon: Zap, title: "Modern Equipment" },
+  { icon: Dumbbell, title: "Strength Training", desc: "Free weights, machines & powerlifting section — heavy lifting ke liye sab kuch." },
+  { icon: HeartPulse, title: "Cardio", desc: "Treadmills, cycles & functional zone for endurance and stamina building." },
+  { icon: TrendingUp, title: "Weight Gain", desc: "Lean muscle gain programs with guided nutrition & trainer support." },
+  { icon: Flame, title: "Weight Loss", desc: "Fat-loss plans with HIIT, diet guidance aur regular progress tracking." },
+  { icon: Leaf, title: "Yoga", desc: "Morning yoga sessions for flexibility, posture aur peaceful mind." },
+  { icon: Zap, title: "Modern Equipment", desc: "New imported machines — kaithal ke best gym equipment." },
+];
+
+const faqs = [
+  {
+    q: "Is Infinity Fitness the best gym in Kaithal?",
+    a: "Kaithal ke top-rated gyms me se ek. 40+ Google reviews ke saath 4.2-star rating, modern equipment, trained coaches aur ek serious workout crowd — Rishi Nagar area me best gym options me se."
+  },
+  {
+    q: "Gym fees kya hai — Kaithal me monthly gym charge kitna hai?",
+    a: `₹2,000/month, ₹6,000/6 months, ₹11,000/year. Koi joining fee nahi, koi hidden charge nahi — transparent pricing. Upgrade bhi kabhi bhi kar sakte ho.`
+  },
+  {
+    q: "Kya free trial milta hai?",
+    a: `Haan — pehle ${FREE_TRIAL_DAYS} din bilkul free, koi commitment nahi. Pehle gym dekh lo, workout try karo, phir decide karo.`
+  },
+  {
+    q: "Gym kahan hai — location & address?",
+    a: "Infinity Fitness Gym — Kaithal–Dhand Rd, Opp. Maharaja Palace, Rishi Nagar, Kaithal, Haryana 136027. Google Maps par 'Infinity Fitness Gym Kaithal' search karke easily aa sakte ho."
+  },
+  {
+    q: "Timings kya hain?",
+    a: "Har din khula — subah 5 AM se raat 11 PM tak, 7 din. Morning hours (5–8 AM) relatively kam bheed hoti hai."
+  },
+  {
+    q: "Kaunse programs milte hain?",
+    a: "Strength training, cardio, weight loss, weight gain, yoga aur personal training — beginners se advanced tak, personal trainer guidance ke saath."
+  },
 ];
 
 export function Home() {
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = useForceReducedMotion();
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -31,33 +60,38 @@ export function Home() {
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-0">
           <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
 
-            {/* ── LEFT: Text + CTAs ── */}
+            {/* ── LEFT: SEO heading + CTAs ── */}
             <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
+              {/* SEO: primary keyword (gym name + city) h1 me, secondary keywords subtitle me */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
               >
-                <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl font-display font-bold uppercase tracking-tight text-white mb-6 leading-tight">
-                  Transform Your Body,<br />
-                  <span className="text-primary text-glow">Transform Your Life</span>
+                <h1 className="text-4xl sm:text-6xl md:text-7xl font-display font-bold uppercase tracking-tight text-white mb-5 leading-tight">
+                  Infinity Fitness Gym Kaithal
+                  <span className="block mt-2 text-2xl sm:text-3xl md:text-4xl text-gold text-glow normal-case tracking-[0.15em]">
+                    Transform Your Body
+                  </span>
                 </h1>
               </motion.div>
 
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                transition={{ duration: 0.8, delay: 0.15, ease: "easeOut" }}
               >
-                <p className="text-lg md:text-xl text-muted-foreground max-w-xl mb-10 font-medium">
-                  Kaithal's premier community gym — real equipment, real results, real people.
+                <p className="text-lg md:text-xl text-muted-foreground max-w-xl mb-8 font-medium">
+                  Kaithal's best gym for strength training, cardio, weight loss, weight
+                  gain, yoga &amp; personal training — real equipment, real results,
+                  real people. Open 7 days till 11 PM.
                 </p>
               </motion.div>
 
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+                transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
                 className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
               >
                 <motion.div
@@ -88,15 +122,6 @@ export function Home() {
                   </a>
                 </motion.div>
               </motion.div>
-
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="mt-5 text-sm text-muted-foreground tracking-wide"
-              >
-                <span className="text-gold font-bold">✓</span> First visit free — no commitment
-              </motion.p>
             </div>
 
             {/* ── RIGHT: Photo collage strip ── */}
@@ -116,7 +141,7 @@ export function Home() {
       {/* About Snippet */}
       <section className="py-24 bg-background relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-50"></div>
-        <div className="absolute -left-40 top-20 w-80 h-80 bg-primary/5 rounded-full blur-[100px]"></div>
+        <div className="absolute -left-40 top-20 w-80 h-80 bg-primary/5 rounded-full blur-2xl"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div
@@ -138,6 +163,35 @@ export function Home() {
               </Link>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Why Choose Us — confirmed facts strip */}
+      <section className="py-16 border-b border-white/5 overflow-hidden relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-5xl font-display font-bold uppercase tracking-wider">
+              Why Members <span className="text-primary">Choose Us</span>
+            </h2>
+            <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
+              Kaithal ka community gym jo apne members ke results ke liye jaana jata hai.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            {[
+              { icon: Clock, title: "Open Every Day", desc: "5 AM – 11 PM · Har roz, koi band din nahi." },
+              { icon: BadgeCheck, title: `${FREE_TRIAL_DAYS}-Day Free Trial`, desc: `Pehle ${FREE_TRIAL_DAYS} din free, koi commitment nahi.` },
+              { icon: GraduationCap, title: "Trained Coaches", desc: "Personal training & nutrition guidance, har step par." },
+              { icon: MapPin, title: "Rishi Nagar, Kaithal", desc: "Ghar ke paas — Dhand Rd, Opp. Maharaja Palace." },
+            ].map((item, i) => (
+              <div key={i} className="bg-card border border-white/5 p-6 md:p-8 text-center hover:border-primary/40 transition-colors">
+                <item.icon className="w-10 h-10 text-primary mx-auto mb-4" />
+                <h3 className="font-display font-bold uppercase tracking-wide text-base md:text-lg">{item.title}</h3>
+                <p className="text-sm text-muted-foreground mt-2">{item.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -181,6 +235,7 @@ export function Home() {
                     <service.icon className="w-8 h-8 text-primary group-hover:text-white transition-colors" />
                   </div>
                   <h3 className="font-display font-bold uppercase tracking-wide text-lg md:text-xl">{service.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{service.desc}</p>
                 </motion.div>
               </motion.div>
             ))}
@@ -190,6 +245,34 @@ export function Home() {
 
       {/* Member Reviews */}
       <Reviews />
+
+      {/* FAQ — SEO long-tail keywords */}
+      <section className="py-24 bg-[#080808] border-t border-white/5">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <p className="text-primary font-semibold uppercase tracking-[0.3em] text-sm mb-4">
+              Kaithal Gym &middot; Popular Questions
+            </p>
+            <h2 className="text-3xl md:text-5xl font-display font-bold uppercase tracking-wider">
+              Frequently Asked <span className="text-primary">Questions</span>
+            </h2>
+          </div>
+
+          <div className="space-y-4">
+            {faqs.map((faq, i) => (
+              <details key={i} className="group bg-card border border-white/5 [&_summary::-webkit-details-marker]:hidden">
+                <summary className="flex items-center justify-between p-6 cursor-pointer text-base md:text-lg font-bold uppercase font-display tracking-wide text-white group-hover:text-primary transition-colors">
+                  {faq.q}
+                  <ChevronDown className="w-5 h-5 text-muted-foreground group-open:rotate-180 transition-transform shrink-0 ml-4" />
+                </summary>
+                <div className="px-6 pb-6 text-gray-400 leading-relaxed">
+                  <p>{faq.a}</p>
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Final CTA */}
       <section className="py-24 bg-gradient-to-br from-primary/20 via-primary to-accent relative overflow-hidden text-center">

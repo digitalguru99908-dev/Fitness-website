@@ -1,5 +1,6 @@
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { useForceReducedMotion } from '@/lib/motion';
 import { Dumbbell, HeartPulse, TrendingUp, Flame, Leaf, Zap, CheckCircle2 } from 'lucide-react';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
@@ -50,7 +51,7 @@ const programs = [
 ];
 
 export function Services() {
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = useForceReducedMotion();
 
   return (
     <div className="flex flex-col min-h-screen bg-background">

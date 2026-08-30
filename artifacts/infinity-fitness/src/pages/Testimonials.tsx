@@ -1,55 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
+import { useForceReducedMotion } from '@/lib/motion';
+import { useVideoPauseOnHidden } from '@/lib/useVideoPauseOnHidden';
 import { Star, MessageSquare, Volume2, VolumeX } from 'lucide-react';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
+import {
+  allReviews,
+  featuredReviews,
+  pageMarqueeReviews,
+  AVG_RATING,
+  REVIEW_COUNT,
+  type Review,
+} from '@/lib/reviews';
 
-const reviews = [
-  {
-    name: "Rahul Sharma",
-    review: "Best gym in Kaithal. The trainers really care about your progress. The equipment is modern and the atmosphere makes you want to lift heavy.",
-    rating: 5,
-    date: "2 months ago"
-  },
-  {
-    name: "Priya Singh",
-    review: "Lost 8 kg in 3 months here. The weight loss program is excellent and they really guide you on nutrition too. Highly recommended for beginners.",
-    rating: 5,
-    date: "1 month ago"
-  },
-  {
-    name: "Amit Verma",
-    review: "Modern equipment and very clean. Value for money is great compared to other places in Rishi Nagar. The crowd is good and serious about fitness.",
-    rating: 4,
-    date: "3 weeks ago"
-  },
-  {
-    name: "Sunita Devi",
-    review: "Started yoga here and now I feel amazing. Very welcoming community for women. The trainers make sure you do every exercise with proper form.",
-    rating: 5,
-    date: "4 months ago"
-  },
-  {
-    name: "Vikas Yadav",
-    review: "Annual plan is a steal. Can't imagine going anywhere else. The heavy lifting section has everything a powerlifter needs.",
-    rating: 5,
-    date: "1 week ago"
-  },
-  {
-    name: "Neha Gupta",
-    review: "The trainers pushed me beyond what I thought was possible. Love this place. Very safe and encouraging environment.",
-    rating: 5,
-    date: "5 months ago"
-  }
-];
-
-type Review = (typeof reviews)[number];
-
-// 3D cube ke 4 faces par dikhne wale featured reviews
-const featuredReviews = [reviews[0], reviews[1], reviews[3], reviews[5]];
+// 3D cube ke 4 faces par dikhne wale top featured reviews
 const facePositions = ['front', 'right', 'back', 'left'] as const;
 
 // Seamless infinite marquee ke liye list ek baar double
-const marqueeReviews = [...reviews, ...reviews];
+const marqueeReviews = [...pageMarqueeReviews, ...pageMarqueeReviews];
 
 function Stars({ count }: { count: number }) {
   return (
@@ -73,16 +41,27 @@ function CubeFace({ item, position }: { item: Review; position: (typeof facePosi
         <span className="font-display font-bold uppercase tracking-wider text-white text-sm">
           {item.name}
         </span>
-        <span className="text-xs text-muted-foreground">{item.date}</span>
+        <span className="text-xs text-muted-foreground">
+          {item.tag === 'Google Review' ? `Google · ${item.date}` : item.date}
+        </span>
       </div>
     </div>
   );
 }
 
 export function Testimonials() {
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = useForceReducedMotion();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
+
+  // Perf: cube/marquee viewport se bahar ho to animation ruk jaye (weak GPU
+  // par har frame ka GPU kaam tabhi chalega jab user section dekh raha ho).
+  const cubeRef = useRef<HTMLDivElement>(null);
+  const marqueeRef = useRef<HTMLDivElement>(null);
+  const cubeInView = useInView(cubeRef, { margin: '100px 0px' });
+  const marqueeInView = useInView(marqueeRef, { margin: '100px 0px' });
+
+  useVideoPauseOnHidden(videoRef);
 
   useEffect(() => {
     const vid = videoRef.current;
@@ -97,6 +76,23 @@ export function Testimonials() {
     } else {
       vid.addEventListener('canplay', tryPlay, { once: true });
     }
+
+    // Perf: reel card viewport se bahar ho to decode loop pause ho jaye
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          vid.play().catch(() => {});
+        } else {
+          vid.pause();
+        }
+      },
+      { threshold: 0.05 }
+    );
+    io.observe(vid);
+    return () => {
+      io.disconnect();
+      vid.pause();
+    };
   }, []);
 
   const toggleMute = () => {
@@ -110,17 +106,11 @@ export function Testimonials() {
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section — client review reel card + ambient blurred backdrop */}
       <section className="relative pt-32 pb-16 flex items-center justify-center overflow-hidden bg-[#050505]">
-        {/* Ambient backdrop — same video, blurred, sirf vibe ke liye.
-            Static first-frame (no autoplay) — blur-3xl + opacity-35 me movement
-            dikhta hi nahi, par mobile par ek pura video-decode stream bachta hai. */}
+        {/* Ambient backdrop — full-screen blur-3xl video + blur-xl glow ne GPU
+            ko har frame par bhaari recomposite karta tha (perf fix). Ab static
+            subtle radial glow + gradient — dikhne me same vibe, near-zero cost. */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <video
-            src="/client-review.mp4"
-            className="absolute inset-0 w-full h-full object-cover scale-125 blur-3xl opacity-35"
-            muted
-            playsInline
-            preload="metadata"
-          />
+          <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] rounded-full bg-primary/10 blur-2xl"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/55 to-[#050505]/80"></div>
         </div>
 
@@ -153,7 +143,7 @@ export function Testimonials() {
               whileHover={prefersReduced ? {} : { scale: 1.02, transition: { duration: 0.25 } }}
               className="relative w-64 md:w-72 shrink-0"
             >
-              <div className="absolute -inset-3 bg-gradient-to-b from-primary/25 to-transparent rounded-3xl blur-xl opacity-70"></div>
+              <div className="absolute -inset-2 bg-gradient-to-b from-primary/20 to-transparent rounded-3xl blur-lg opacity-50"></div>
               <div className="relative aspect-[9/16] overflow-hidden rounded-2xl border border-white/15 shadow-2xl ring-1 ring-white/10 bg-black">
                 <video
                   ref={videoRef}
@@ -193,7 +183,7 @@ export function Testimonials() {
             className="flex flex-col items-center justify-center text-center mb-20 bg-card border border-white/5 py-12 px-6 max-w-3xl mx-auto"
           >
             <div className="text-7xl font-display font-bold text-white mb-4 tracking-tighter">
-              <AnimatedCounter to={4.2} decimals={1} duration={1.4} />
+              <AnimatedCounter to={AVG_RATING} decimals={1} duration={1.4} />
               <span className="text-4xl text-muted-foreground">/5.0</span>
             </div>
             <div className="flex gap-2 mb-4">
@@ -202,7 +192,7 @@ export function Testimonials() {
               ))}
             </div>
             <p className="text-xl text-gray-300 font-medium">
-              Based on <AnimatedCounter to={40} suffix="+ Google Reviews" duration={1.2} />
+              Based on <AnimatedCounter to={REVIEW_COUNT} suffix="+ Google Reviews" duration={1.2} />
             </p>
           </motion.div>
 
@@ -232,11 +222,12 @@ export function Testimonials() {
             transition={{ duration: 0.7, ease: 'easeOut' }}
             className="relative flex justify-center mb-20"
           >
-            {/* Ambient glow behind the cube */}
-            <div aria-hidden="true" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
+            {/* Ambient glow behind the cube — chhota + kam blur (perf: rotating cube
+                ke peeche bada blur har frame recomposite karta tha) */}
+            <div aria-hidden="true" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 sm:w-72 sm:h-72 rounded-full bg-primary/10 blur-2xl pointer-events-none"></div>
 
-            <div className="cube-scene relative">
-              <div className={`cube ${prefersReduced ? '' : 'cube-spin'}`}>
+            <div className="cube-scene relative" ref={cubeRef}>
+              <div className={`cube cube-spin ${cubeInView ? '' : 'cube-spin-offscreen'}`}>
                 {featuredReviews.map((item, i) => (
                   <CubeFace key={i} item={item} position={facePositions[i]} />
                 ))}
@@ -247,11 +238,11 @@ export function Testimonials() {
           {/* Reviews Marquee — infinite loop, hover par pause */}
           <div className="relative mb-20">
             <div className="overflow-hidden py-2">
-              <div className={`flex items-stretch gap-6 w-max pr-6 ${prefersReduced ? '' : 'animate-marquee'}`}>
+              <div ref={marqueeRef} className={`flex items-stretch gap-6 w-max pr-6 animate-marquee ${marqueeInView ? '' : 'animate-marquee-offscreen'}`}>
                 {marqueeReviews.map((item, i) => (
                   <div
                     key={i}
-                    aria-hidden={i >= reviews.length}
+                    aria-hidden={i >= pageMarqueeReviews.length}
                     className="w-[300px] sm:w-[380px] shrink-0 bg-[#080808] border border-white/5 p-6 sm:p-7 relative flex flex-col"
                   >
                     <MessageSquare className="absolute top-6 right-6 w-7 h-7 text-primary/10" />
@@ -263,7 +254,9 @@ export function Testimonials() {
                       <span className="font-display font-bold uppercase tracking-wider text-white">
                         {item.name}
                       </span>
-                      <span className="text-xs text-muted-foreground whitespace-nowrap ml-3">{item.date}</span>
+                      <span className="text-xs text-muted-foreground whitespace-nowrap ml-3">
+                        {item.tag === 'Google Review' ? `Google · ${item.date}` : item.date}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -272,6 +265,52 @@ export function Testimonials() {
             {/* Dono taraf edge fade — cards smooth fade-out hoke loop me wapas aate hain */}
             <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-28 bg-gradient-to-r from-background to-transparent"></div>
             <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-28 bg-gradient-to-l from-background to-transparent"></div>
+          </div>
+
+          {/* All Reviews — static grid (saare reviews readable + SEO indexable) */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-14"
+          >
+            <p className="text-primary font-semibold uppercase tracking-[0.3em] text-sm mb-4">
+              &middot; Real Google Reviews &middot;
+            </p>
+            <h2 className="text-4xl md:text-6xl font-display font-bold uppercase tracking-tight text-white">
+              Every Review <span className="text-primary text-glow">Counts</span>
+            </h2>
+            <p className="text-muted-foreground mt-4 font-medium">
+              {allReviews.length} reviews inspo liye hain — seedha Google business listing se.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+            {allReviews.map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.4, delay: (i % 3) * 0.08 }}
+                className="bg-[#080808] border border-white/5 p-6 sm:p-7 relative flex flex-col hover:border-primary/40 transition-colors group"
+              >
+                <MessageSquare className="absolute top-6 right-6 w-7 h-7 text-primary/10 group-hover:text-primary/20 transition-colors" />
+                <Stars count={item.rating} />
+                <p className="text-gray-300 italic mt-4 mb-6 flex-grow leading-relaxed text-[15px]">
+                  "{item.review}"
+                </p>
+                <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
+                  <span className="font-display font-bold uppercase tracking-wider text-white text-sm">
+                    {item.name}
+                  </span>
+                  <span className="text-xs text-muted-foreground whitespace-nowrap ml-3">
+                    {item.tag === 'Google Review' ? `Google · ${item.date}` : item.date}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
           </div>
 
           {/* CTA */}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dumbbell, Activity, Scale, TrendingDown, Flower2, Settings2 } from 'lucide-react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { useForceReducedMotion } from '@/lib/motion';
 import { Reveal } from '../ui/reveal';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
 
@@ -38,7 +39,7 @@ const services = [
 ];
 
 export const Services = () => {
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = useForceReducedMotion();
 
   return (
     <section id="services" className="py-24 bg-secondary relative border-t border-b border-border">

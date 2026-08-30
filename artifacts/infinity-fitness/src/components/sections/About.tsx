@@ -39,7 +39,7 @@ export const About = () => {
             </Reveal>
             
             {/* Decorative background elements */}
-            <div className="absolute top-10 -right-10 w-64 h-64 bg-primary/10 rounded-full blur-3xl -z-10" />
+            <div className="absolute top-10 -right-10 w-64 h-64 bg-primary/10 rounded-full blur-2xl -z-10" />
           </div>
           
           <div className="order-1 lg:order-2">
@@ -58,7 +58,7 @@ export const About = () => {
                 
                 {/* Accent box behind */}
                 <div className="absolute -bottom-6 -left-6 w-full h-full border-2 border-primary/30 z-0 rounded-sm" />
-                <div className="absolute top-8 -right-8 w-32 h-32 bg-primary/20 backdrop-blur-xl z-20 rounded-full flex items-center justify-center animate-[spin_10s_linear_infinite]">
+                <div className="absolute top-8 -right-8 w-32 h-32 bg-primary/20 backdrop-blur-sm z-20 rounded-full flex items-center justify-center animate-[spin_10s_linear_infinite]">
                   <svg viewBox="0 0 100 100" className="w-full h-full p-2">
                     <path id="curve" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="transparent" />
                     <text className="font-display uppercase tracking-[0.2em] text-[11px] fill-primary font-bold">

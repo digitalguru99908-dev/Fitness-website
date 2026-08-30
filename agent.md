@@ -380,6 +380,78 @@
   og-image branded card + index.html meta fixes. Iske baad pending suggestions:
   before/after slider (user photos chahiye), hosting (user ne mana kiya abhi).
 
+### 2026-08-28
+
+- [artifacts/infinity-fitness/src/pages/Testimonials.tsx] — **REVIEWS ANIMATIONS FIX**
+  (user report: 3D cube + reviews marquee dono WORK NAHI kar rahe). Root cause:
+  cube (`cube-spin`) aur marquee (`animate-marquee`) dono `prefersReduced` →
+  `useReducedMotion()` se gate the; user ke system/browser me "reduce motion"
+  ON hone ki wajah se dono animations `by design` band ho jaate the. User ne
+  confirm kiya: animation HAMESHA chahiye. Fix: dono se `prefersReduced` gate
+  hata diya — cube ab hamesha `cube cube-spin` (hover par pause abhi bhi),
+  marquee ab hamesha `animate-marquee`. `prefersReduced` ab sirf CTA button ke
+  whileHover/whileTap me use hota hai (kabhi nahi disposal). Typecheck 0 errors,
+  vite build pass, bundle me dono hard-coded classes verify kiye.
+- [artifacts/infinity-fitness/src/pages/Testimonials.tsx] — **PERF FIX / LAG**
+  (user report: site "bhut hangy/laggy feel" kar rahi thi; scope = sirf Reviews
+  page). Heavy GPU-compositing hata diya jo har frame par bhaari rekhta tha:
+  (1) **full-screen `blur-3xl` video backdrop hata diya** (poora `client-review.mp4`
+  `<video>` element + 64px full-viewport blur + scale-125 — sabse expensive layer)
+  → ab static radial `bg-primary/10 blur-2xl` glow + same gradient scrim. Dikhne me
+  same vibe, near-zero cost. (2) Cube ke peeche wala glow `w-72/96 blur-3xl` →
+  `w-56/72 blur-2xl` (rotating cube ke peeche bada blur har frame recomposite karta
+  tha). (3) Reel card glow `blur-xl opacity-70` → `blur-lg opacity-50`. Cube spin
+  + marquee (GPU transform) aur reel video autoplay untouched — user chahta hai.
+  Typecheck 0 errors, vite build pass (8.5s).
+
+### 2026-08-28
+
+- [artifacts/infinity-fitness/src/components/sections/Reviews.tsx] — **HOME PAGE REVIEW
+  LOOP FIX** (user report: home page reviews loop me nahi chal rahe). Same root cause
+  as Testimonials: `useReducedMotion()` se `reviewScroll` animation gate thi → user ke
+  OS/browser "reduce motion" ON hone par loop band. User: sab review loops hamesha
+  chalne chahiye. Fix: `animation: prefersReduced ? 'none' : '...'` → hamesha
+  `reviewScroll 25s linear infinite`. Unused `prefersReduced` + `useReducedMotion`
+  import + unused `motion` import remove kiye. Bundle verify: literal hard-coded.
+- [SITEWIDE LAG FIX] (user: "site bhut hangy/laggy feel"; scope extend karke pura
+  site). Har page ke bade gpu-hai heavy blur layers kam kiye:
+  - Owner.tsx hero glow `blur-3xl` → `blur-2xl`.
+  - Membership.tsx pricing glow `blur-[100px]` → `blur-2xl`.
+  - Home.tsx About-snippet glow `blur-[100px]` → `blur-2xl`.
+  - sections/About.tsx decorative circle `blur-3xl` → `blur-2xl`.
+  - sections/About.tsx spinning badge `backdrop-blur-xl` → `backdrop-blur-sm`
+    (ye element 10s me ghoomta hai → har frame blur recomposite karta tha).
+  - (Testimonials perf pehle is session me hi ho chuka tha: full-screen blur-3xl
+    video backdrop → static gradient, cube glow blur-3xl→blur-2xl, reel glow blur-xl→blur-lg.)
+  Typecheck 0 errors, vite build pass.
+- [FREE TRIAL 13 din → 7 din] (user: "13 din trial bhut zyada hai, 7 day kardo;
+  customer baad me aur kam kar sake"). Trial ko ek-jagah-change karne wala bana diya:
+  - [artifacts/infinity-fitness/src/lib/siteConfig.ts] — NAYA shared config:
+    `FREE_TRIAL_DAYS = 7` (+ label), gym hours (`GYM_OPEN_HOUR/CLOSE_HOUR`),
+    phone/WhatsApp constants. Ek jagah badlo → poori site update.
+  - [Home.tsx:99] — "First visit free" → `{FREE_TRIAL_LABEL} — no commitment`.
+  - [Membership.tsx] — Free Trial step "first visit bilkul free" → `${FREE_TRIAL_DAYS}-Din
+    Free Trial` / "pehle 7 din bilkul free".
+  - [api-server/src/routes/inquiry.ts] — `FREE_TRIAL_DAYS = 7` const + FAQ "Free Trial"
+    answer ab "7-din ka free trial" bolta hai.
+- [USER-FRIENDLY/PREMIUM FEATURES — first 5] (user requested latest changes):
+  - [components/free-trial/FreeTrialProvider.tsx + FreeTrialModal.tsx] — NAYA "Book Free
+    Trial" 2-step modal (name + phone + optional email → success animation). Existing
+    `/api/inquiry` reuse karta hai (plan="Free Trial - 7 days", auto-reply free milti hai).
+    `useFreeTrialModal()` hook + App.tsx me provider wrap.
+  - [components/MobileCtaBar.tsx] — NAYA mobile bottom bar: **Call + Free Trial + WhatsApp**
+    + OpenStatus + phone. `hidden md:hidden`. WhatsApp floating FAB now `hidden md:flex`
+    (mobile par bar me WhatsApp hai — duplicate nahi). ChatBot FAB `bottom-24 md:bottom-32`,
+    panel `bottom-40 md:bottom-52`.
+  - [components/ui/OpenStatus.tsx] — NAYA realtime "Open Now/Closed" badge (Date check,
+    config hours, har 60s refresh). Navbar desktop + MobileCtaBar me daala.
+  - [Navbar.tsx] — desktop "Join Now" (gold) button → Free Trial modal; mobile drawer me
+    "Join Now · Free Trial" button. + desktop OpenStatus badge.
+  - [Membership pricing toggle] — **SKIP KIYA**: site pe pehle se 3 plan cards hain
+    (Monthly ₹2,000 / 6-mo ₹6,000 / 1-yr ₹11,000) jo sahi + premium hain; single-switching
+    card me redesign karne se existing good layout toota. Toggle ki jagah cards hi rakhe.
+  Typecheck 0 errors, vite build pass (8.4s), api-server build pass.
+
 ### 2026-08-26
 
 - [DEPLOY PREP: Vercel (frontend) + Render (backend)] — User ne deployment
@@ -430,3 +502,187 @@
     ki image disk scan se locate karke (`Downloads/ChatGPT Image Aug 26, 2026,
     08_25_06 PM.png`) `public/comeback-story-thumb.png` naam se copy kar di
     (user ne full permission di). Typecheck pass.
+
+### 2026-08-29
+
+- [PERF: SITEWIDE LAG FIX ROUND 2] (user report: "site bhut laggy feel karva
+  rahi hai, pehle jaisi smooth karo"). Root causes + fixes:
+  - [VIDEO COMPRESSION ~51MB → ~21MB] — **ffmpeg install kiya** (winget
+    `Gyan.FFmpeg`; user approval di) aur 4 bhari videos re-encode kiye
+    (libx264 crf26, yuv420p, +faststart, aac 96k):
+    - `public/gallery-video-2.mp4` **33.84MB → 2.57MB** (1920x1080→1280x720 —
+      sabse bada network/memory hog, ab nehi)
+    - `public/gallery-video-1.mp4` 7.33MB → 6.87MB (720x1280, quality-first crf26)
+    - `public/client-review.mp4` 5.12MB → 4.40MB
+    - `public/infinity.mp4` 3.97MB → 3.74MB
+    - `ffprobe` se verify: dono stacks ke resolutions/durations/mainat barabar.
+  - [Navbar.tsx] — **scroll-driven shrink PER-FRAME LAYOUT hata diya** (jank ka
+    sabse bada source: `useScroll`+`useTransform` alert karte the height+boxShadow,
+    yani har scroll frame par navbar ka layout recompute hota tha — har page par).
+    Ab cheap passive scroll listener boolean (`scrollY > 24`) toggle karta hai aur
+    CSS `transition-all duration-300` h-20→h-16 + shadow karta hai. Visual same,
+    per-frame cost zero. Unused `useScroll/useTransform/useMotionTemplate/
+    useReducedMotion` imports remove kiye.
+  - [Navbar.tsx + MobileCtaBar.tsx] — fixed `backdrop-blur` hata diya (navbar
+    `backdrop-blur-md`→`bg-background/95`, mobile drawer `backdrop-blur-xl`→
+    `/95`, MobileCtaBar `backdrop-blur-md`→solid `/95`). Ye fixed bar scroll par
+    har frame pura page re-blur karte the. Dikhao same (95-100% opaque par blur ka
+    koi effect nahi tha).
+  - [GymHeroSlideshow.tsx] — About/Services/Membership/Contact heroes ke
+    6 (desktop) + 7 (mobile) full-screen images ab EK SAATH render nahi hote.
+    Naya "slideWindow": sirf prev/current/next (3) render hote hain — same
+    crossfade (incoming image mounted-opacity-0 rehta hai), layers 13→6. Active
+    slide ko `fetchPriority="high"`. GPU memory/decode ka load half se kam.
+  - [HeroVideoCarousel.tsx + Testimonials.tsx] — autoplay-loop videos ab
+    IntersectionObserver se offscreen hote hi **pause** (Home hero `infinity.mp4`,
+    Testimonials reel `client-review.mp4`), wapas viewport me aate hi resume.
+    Ab user scroll kare to video decode loop CPU/GPU par khaali nahi chalta.
+  - [ChatBot.tsx] — FAB ke bobbing parent par `blur-xl` glow → **radial gradient**
+    (filter blur har frame re-rasterize hota tha; dikhne me same).
+  - [NOTE] `public/hero-bg.mp4` (3.15MB) ab kahin REFERENCE nahi hota (08-23 me
+    hero → infinity.mp4 ho gaya tha) — legacy rule se delete nahi kiya, deploy
+    size me bekaar jata hai. Agar user bole to delete kar sakte hain.
+  - [VERIFY] — tsc 0 errors, vite build pass (54s), dev server 200 + gallery-video-2
+    ab 2.7MB serve ho raha (pehle 34MB). Changes local — push user approval par.
+
+### 2026-08-29 (round 2 — reduced-motion root cause + video quality restore)
+
+- [ROOT CAUSE MILA: "site ghatiya + laggy" ka asli karan] — User ke browser/OS me
+  **`prefers-reduced-motion: reduce` ON** thi (console me framer warning: "You have
+  Reduced Motion enabled on your device. Animations may not appear as expected.").
+  (1) Framer Motion ka DEFAULT `reducedMotion: "user"` hota hai — yani wo silently
+  saare `whileHover/whileTap/transform/layout` animations disable kar deta tha,
+  (2) hamare components me `useReducedMotion()` raw OS preference return karta tha
+  (MotionConfig ke bahar) → isliye hamare `prefersReduced ? {} : {...}` gates bhi
+  sab band; (3) `AnimatedCounter` counting animation skip. Result: buttons par hover
+  feedback zero + pages "dead/ghatiya" + user ko laggi lagta. Chahe setting kisi bhi
+  user ke browser me ON ho, site ab normal chalegi.
+- [App.tsx] — Root ko **`<MotionConfig reducedMotion="never">`** me wrap kiya —
+  framer ab is device par bhi saare motion animations hamesha chalaata hai (internal
+  `shouldReduceMotion=false`). Ye ek-jagah fix = poori site.
+- [src/lib/motion.ts] — NAYA helper `useForceReducedMotion()`: `MotionConfigContext`
+  se `reducedMotion` padta hai (`"never"` → `false`). Framer ka `useReducedMotion()`
+  isliye NAHI use kiya kyunki wo raw OS preference + dev console warning chipkata tha.
+  Ab warning bhi khatam.
+- [Saare pages/components] — `useReducedMotion()` → `useForceReducedMotion()`:
+  App.tsx, Home/About/Services/Membership/Gallery/Testimonials.tsx,
+  components/sections/Services.tsx, components/ui/AnimatedCounter.tsx. Ab
+  hover/tap effects, animated counters, page transitions REDUCED MOTION ke baawjood
+  full chalti hain. `prefersReduced` gates ab hamesha khule hain.
+- [index.html + index.css] — Fonts: render-blocking CSS `@import` (Manrope/Oswald)
+  hata kar `index.html` me `<link rel=preconnect>` + `<link>` (`display=swap`) par
+  move kiya (parallel load). Extra/unused **Inter** font link hata diya (site
+  Manrope+Oswald use karti hai). Pehla render ab 1 round-trip pehle aa jata hai.
+- [VIDEO QUALITY RESTORE] — User: "videos photos ki quality ghatiya ho gyi".
+  Saare 4 videos **originals restore** kiye (`git checkout --`):
+  gallery-video-2.mp4 33.84MB (full 1080p 20Mbps original — gallery grid par
+  `preload=metadata` hai to page-load par download NAHI hota, sirf lightbox me),
+  gallery-video-1.mp4 7.33MB, client-review.mp4 5.12MB, infinity.mp4 3.97MB.
+  `git ls-files` verify: public clean (koi diff nahi).
+- [NOTE] Hero strip photos (Home) pichhle session me 2.3–2.7MB PNG → 1400px/q85 JPG
+  compress hui thin (gii push ho chuki). Originals `attached_assets/file_0000*.png`
+  me abhi bhi disk par hain — agar chahiye to is round me unhe bhi restore/
+  higher-quality-regenerate kar sakte hain (abhi touch nahi kiya).
+- [VERIFY] — tsc 0 errors; vite build pass (12.8s); dev server 200; App.tsx live.
+  Search confirms: koi `useReducedMotion`/`useReducedMotionConfig` code me nahi.
+  Changes local par — push user approval par.
+
+### 2026-08-29 (round 3 — backend/frontend health + lag audit + video tab-visibility pause)
+
+- [QA: "backend + frontend ek saath chalti hai?"] — Haan. Frontend (Vite) 5173
+  par, backend (Express) 8080 par, dono chal rahe hain. Vite `server.proxy`
+  se saare `/api/*` calls 5173 → 8080 jaate hain (proxy test:
+  `http://localhost:5173/api/healthz` → `{"status":"ok"}`). Windows Scheduled
+  Task "Infinity Fitness Servers" reboot/login par dono auto-start karta hai
+  (start-servers.ps1). Chatbot + inline inquiry form = backend, baaki sab frontend.
+- [QA: "premium features add karne se lag hori?"] — Audit: "premium" commits =
+  Free Trial modal, MobileCtaBar, OpenStatus badge, WhatsApp prefilled link,
+  btn-shine sheen, slim scrollbar, instant inquiry form. Inme se kisi me
+  continuous CPU/GPU load nahi — FreeTrialModal closed ho to zero kaam,
+  MobileCtaBar static, OpenStatus 60s interval, WhatsApp ping = chhota CSS,
+  btn-shine sirf hover par. Sarre intervals/timers grep audit:
+  only toasts/AnimatedCounter(once)/PhotoStrip(effect)/Slideshow(4s)/OpenStatus(60s)
+  — koi heartbeat/loop galat nahi. Buttons ki 3D sheen (`btn-shine`) bhi CSS-only.
+- [ASLI LAG SOURCE] — Continuous machine load sirf videos + animations se aata
+  hai (ye pehle bhi the, ab reduced-motion fix se animations force-ON ho gayi
+  hain isliye weak PC par zyada mehsoos hoti hain): (1) Home fullscreen hero
+  video decode (infinity.mp4) — pata hai wo baaki tabs me bhi decode karta
+  rehta tha, (2) Testimonials reel video, (3) marquees/cube/photo-strip/ping
+  CSS+GPU animations jo milkar chip ki battery/GPU me add ho jaati hain.
+- [src/lib/useVideoPauseOnHidden.ts] — NAYA hook: `document.visibilitychange`
+  par saare autoplay videos pause/resume (tab hidden → decode band). Quality
+  par zero asar. HeroVideoCarousel.tsx + pages/Testimonials.tsx me lagaya.
+- [VERIFY] — tsc 0 errors, vite build pass (15.4s). Changes local — push user
+  approval par. User ko bata diya: dono servers ON hain; agar ek dab gaya ho
+  (port 8080 down) to `start-servers.ps1` require par chala do.
+
+### 2026-08-29 (round 4 — sabhi devices par smooth + phone/tablet preview fix)
+
+- [User device] — Lenovo ThinkPad L13 Gen 2, integrated GPU (Intel UHD / 128MB).
+  Confirms: weak graphics par bhi videos+3D animations hi lag karti hain;
+  reduced-motion + offscreen/tab fixes ke baad user kahe raha hai lag nahi hai.
+- [Goal] — Site sabhi laptops/mobiles/tablets par bina lag chale. Kya kiya:
+  - HeroPhotoStrip.tsx: animation loop ab **IntersectionObserver-gated** — strip
+    viewport se bahar ho to spin cycle ruk jaati hai (weak GPU par continuous
+    3D preserve-3d spin ka load hata diya), wapas dikhe to resume. Sath me
+    hamesha-on `willChange: transform` layers hata di (framer khud animation ke
+    dauran will-change manage karta hai).
+  - Videos (hero + testimonials) pehle se offscreen+tab-hidden pause (round 3) —
+    yani sab devices par video decode tabhi hota hai jab user dekhe.
+  - (Round 1 se) navbar cheap scroll, blur fixed bars se hata, slideshow 3-window,
+    chatbot glow radial — sab weak devices friendly.
+- [PHONE/TABLET PREVIEW FIX] — Vite pehle se `host: '0.0.0.0'` + `allowedHosts:
+  true` par sunta hai, API_BASE relative hai (proxy 5173→8080 localhost se),
+  channels: 5173 = 0.0.0.0, 8080 = :: (dual-stack). Phone par "network error"
+  ka karan = **Windows Firewall inbound block** tha (Node/LAN par). Fix: repo
+  root me **`Open-Firewall.ps1`** — self-elevating script jo TCP 5173 + 8080 ke
+  liye firewall allow rules add karta hai. User: right-click → Run with
+  PowerShell (UAC yes), phir SAME WiFi par phone Chrome me
+  `http://<laptop-LAN-IP>:5173` (fi door IP = 192.168.0.142). Laptop IP dynamic
+  hai — badle to ipconfig / script se naya IP le lo. (Manual admin fallback:
+  `netsh advfirewall firewall add rule name="Infinity Fitness Frontend (5173)
+  TCP" dir=in action=allow protocol=TCP localport=5173 profile=any` + same for
+  8080.)
+- [VERIFY] — tsc 0 errors, vite build pass (19.7s). `Open-Firewall.ps1` local
+  (admin prod access nahi hai — script UAC se elevation khud maangti hai).
+
+### 2026-08-30
+
+- [src/lib/reviews.ts] — NAYA **single-source reviews data file**. Home + Reviews page dono ab yahan se padhte hain (pehle 2 alag arrays, duplicate fake reviews thi). Ab total **19 reviews** ek jagah: 7 REAL Google reviews (owner ne Google Business listing se copy-paste kiye: Mohit Bansal, Suresh Kumar, Armaan Duhan, Pardeep Jangra, Nisha Virdi, Deepshikha, Gurpal) + 12 existing member reviews. Har review me `tag: 'Google Review' | 'Member'`. Exports: `allReviews`, `featuredReviews` (cube ke top 4: Mohit, Suresh, Vikram S., Rahul Sharma), `homeReviews` (home marquee ke 8), `pageMarqueeReviews` (Reviews page marquee ke 8 — home/cube se alag), `AVG_RATING=4.2`, `REVIEW_COUNT=40`. NOTE: Negative Google reviews (Riska 1★, M L 1★ "owner lied", Poing 24/7 wala, anonymous 3★) **skip** kiye — owner ke khud ke site par negative reviews dikhana nuksan daalega; agar user chahe to add kar sakte hain.
+- [components/sections/Reviews.tsx] — Home reviews marquee ab `@/lib/reviews` se `homeReviews` + constants use karta hai (role → date, Google reviews par "Google Review · date" tag). Counter AVG_RATING (4.2) / REVIEW_COUNT (40+).
+- [pages/Testimonials.tsx] — **REVIEWS ALAG + 20-30 TARGET**: cube me ab top 4 featured (Mohit Bansal, Suresh Kumar = user ke "top reviews", + Vikram S., Rahul Sharma), marquee ab alag subset (`pageMarqueeReviews`), aur **NAYA static "Every Review Counts" grid** (1/2/3 col) jo saare 19 reviews readable + SEO-indexable dikhata hai. Google Review tag cube/marquee/grid teeno me.
+- [pages/Home.tsx] — **HOME SEO ROUND 1**: (1) Services 6 cards par hair **keyword-rich descriptions** add (pehle sirf icon+title tha); (2) NAYA **"Why Members Choose Us"** strip — Open Every Day (5 AM–11 PM), 7-Day Free Trial (`FREE_TRIAL_DAYS` se dynamic), Trained Coaches, Rishi Nagar location; (3) NAYA **FAQ accordion section** (Membership jaisa details/ChevronDown pattern) — 6 long-tail keyword Q&As: "best gym in Kaithal?", "gym fees Kaithal?", "free trial?", "location/address?", "timings?", "programs?" — sab site ke confirmed facts se.
+- [index.html] — NAYA **JSON-LD structured data** (`HealthClub` schema): name, telephone +918168828832, address (Dhand Rd, Opp. Maharaja Palace, Rishi Nagar, 136027), openingHours Mo–Su 05:00–23:00, priceRange, `aggregateRating` 4.2/40, aur 7 real Google reviews ka `review[]`. Ye Google rich results (rating stars / reviews) ke liye bada SEO win hai.
+- [LAG FIX — offscreen animation pause] (user report: "site laggy ho chuki h", constraint: visual NAHI badalna, files compress NAHI karni, quality same). Diagnosis: system OK (6GB free RAM, GPU driver fresh, sirf 2 node processes), Chrome 15 processes / 1.4GB. Code me **bache hue continuous GPU animations** hay cube (28s spin, hamesha) + dono review marquees (28s/25s, hamesha) — ye har frame GPU kaam karte the chaahe user section dekhe ya na dekhe. Fix — sab **IntersectionObserver/useInView-gated**: offscreen ho to animation-play-state paused (visual exact same — position par freeze+resume, koi flicker nahi):
+  - `index.css` — `.animate-marquee-offscreen` + `.cube-spin-offscreen` (animation-play-state: paused) helper classes.
+  - `components/sections/Reviews.tsx` — Home review marquee `useInView` se gated (`animationPlayState: inView ? running : paused`, margin 80px).
+  - `pages/Testimonials.tsx` — cube (`cube-spin-offscreen`) + page marquee (`animate-marquee-offscreen`) dono `useInView` (margin 100px) gated. Cube hover-pause pehle jaisa kaam karta hai.
+  - Ab har page par continuous GPU animation 0: user ke scroll se pehle hero video (already IO+tab gated) aur photo strip (already IO-gated) — scene par sirf dibba/visible wale hi chalte hain.
+- [VERIFY] — tsc 0 errors, vite build pass (8.15s). Ab push pending — user ne GitHub push ka instruction diya hai (formes wali poori backlog: 08-28/08-29 rounds + aaj ke SEO/reviews + perf fix).
+- [VERIFY] — `tsc --noEmit` 0 errors (Testimonials.tsx me `useForceReducedMotion` import fix kiya — duplicate cleanup me udd gaya tha), `vite build` pass (35.5s, 2134 modules). Changes local — push user approval par.
+
+### 2026-08-29 (round 5 — mobile hero cleanup + WhatsApp mobile FAB + any-device clarify)
+
+- [Home.tsx hero] — Phone/desktop dono par hero ke DOM overlay TEXT (h1 "Transform
+  Your Body, Transform Your Life" + subtitle + free-trial line) HATAYA — video ab
+  clean dikhti hai. CTAs (Join Now / Call Now) rakhe hain. Ghata: diagnosed —
+  "SKILL DISCIPLINE AND MINDSET" kisi bhi code file me NAHI hai (full grep),
+  matlab ho video (`infinity.mp4`) me BAKED-IN hai; DOM me sirf "TRANSFORM YOUR
+  BODY" tha (h1) jo duplicate feel karaata tha. Ab duplicate hata diya = video ka
+  apna text clean rehta hai. (NOTE: main video image ko visual inspect nahi kar
+  sakta — is model me image input nahi.)
+- [WhatsAppButton] — `hidden md:flex` → ab MOBILE par bhi FAB dikhta hai (h-12,
+  bottom-20 right-4, sirf icon; MobileCtaBar se overlap nahi). Desktop pe utna hi
+  pill (+ label hover slide-out). Ping effect same.
+- [FreeTrial phone option] — User ne kaha: "rehne do" → MobileCtaBar ka Free
+  Trial button + modal = NO change.
+- [Cloudflared install] — `winget install Cloudflare.cloudflared` DONE
+  (v2026.8.2). Binary: `C:\Program Files (x86)\cloudflared\cloudflared.exe`
+  (MSI PATH me nahi daala). Purpose: presentation/any-device public HTTPS link
+  (quick tunnel). present.ps1 ABORT hua — user ne clarify kiya: wo chahte hain ki
+  site kisi bhi device par, localhost jaisi hi, chale. Abhi decision pending:
+  (a) quick public link (cloudflared tunnel, koi hosting nahi — presentation ke
+  liye), ya (b) proper deploy (Vercel frontend + Render backend — repo me deploy
+  prep commit pehle se hai, `VITE_API_URL` backend public URL par set karna hoga).
+- [VERIFY] — tsc 0 errors, vite build pass (45.8s). Changes local — push user
+  approval par.

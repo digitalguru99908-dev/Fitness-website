@@ -53,7 +53,7 @@ export function Owner() {
           }}
         />
         {/* Orange glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/10 blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/10 blur-2xl pointer-events-none" />
 
         <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
           <motion.p

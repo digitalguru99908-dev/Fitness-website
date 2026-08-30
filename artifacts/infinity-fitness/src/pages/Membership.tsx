@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'wouter';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { useForceReducedMotion } from '@/lib/motion';
 import { ArrowRight, ChevronDown, ClipboardCheck, Dumbbell, Zap } from 'lucide-react';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
+import { FREE_TRIAL_DAYS } from '@/lib/siteConfig';
 
 const faqs = [
   {
@@ -31,8 +33,8 @@ const faqs = [
 const joinSteps = [
   {
     icon: Dumbbell,
-    title: 'Free Trial Lelo',
-    desc: 'Gym pehle dekho, phir decide karo. Koi commitment nahi — first visit bilkul free hai.',
+    title: `${FREE_TRIAL_DAYS}-Din Free Trial`,
+    desc: `Gym pehle dekho, phir decide karo. Koi commitment nahi — pehle ${FREE_TRIAL_DAYS} din bilkul free.`,
   },
   {
     icon: ClipboardCheck,
@@ -47,7 +49,7 @@ const joinSteps = [
 ];
 
 export function Membership() {
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = useForceReducedMotion();
 
   // Shared hover/tap for plan cards
   const cardHover = prefersReduced ? {} : {
@@ -81,7 +83,7 @@ export function Membership() {
 
       {/* Pricing Section — stagger the 3 cards */}
       <section className="py-24 relative">
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-primary/5 rounded-full blur-2xl pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div

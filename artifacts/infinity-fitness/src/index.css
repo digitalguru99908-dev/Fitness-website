@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap');
-
 @keyframes marquee-scroll {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
@@ -11,6 +9,11 @@
 
 .animate-marquee:hover,
 .pause-marquee .animate-marquee {
+  animation-play-state: paused;
+}
+
+/* Offscreen paused (view ke bahar ho to GPU ka kaam band — weak devices ke liye) */
+.animate-marquee-offscreen {
   animation-play-state: paused;
 }
 
@@ -48,6 +51,11 @@
 
 /* Cube ke upar hover karne par spin ruk jata hai — padhna easy */
 .cube-scene:hover .cube-spin {
+  animation-play-state: paused;
+}
+
+/* Cube viewport se bahar ho to spin ruk jaye (GPU load kam — weak devices) */
+.cube-spin-offscreen {
   animation-play-state: paused;
 }
 

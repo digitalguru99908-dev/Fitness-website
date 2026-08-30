@@ -44,29 +44,42 @@ export function GymHeroSlideshow({ startIndex = 0 }: GymHeroSlideshowProps) {
   const dCurrent = ((startIndex % landscapeSlides.length) + tick) % landscapeSlides.length;
   const mCurrent = ((startIndex % gymSlides.length) + tick) % gymSlides.length;
 
+  // Perf: poore 6/7 full-screen images ek saath layered render nahi karte —
+  // sirf current + uske aage/piche (3) render hote hain, bakiyon ki jagah same
+  // crossfade dikhta hai (incoming element pehle se mounted-opacity-0 rehta hai).
+  const slideWindow = (current: number, total: number) => [
+    (current - 1 + total) % total,
+    current,
+    (current + 1) % total,
+  ];
+  const dWindow = slideWindow(dCurrent, landscapeSlides.length);
+  const mWindow = slideWindow(mCurrent, gymSlides.length);
+
   return (
     <div className="absolute inset-0 z-0">
       {/* Desktop/tablet — landscape slides */}
       <div className="hidden md:block absolute inset-0">
-        {landscapeSlides.map((slide, i) => (
+        {dWindow.map((i) => (
           <img
             key={i}
-            src={slide.src}
+            src={landscapeSlides[i].src}
             alt={`Infinity Fitness Gym ${i + 1}`}
             className="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000"
             style={{ opacity: i === dCurrent ? 1 : 0 }}
+            fetchPriority={i === dCurrent ? 'high' : 'auto'}
           />
         ))}
       </div>
-      {/* Mobile — saari slides (portrait yahan poori dikhti hai) */}
+      {/* Mobile — portrait slide yahan poori dikhti hai */}
       <div className="md:hidden absolute inset-0">
-        {gymSlides.map((slide, i) => (
+        {mWindow.map((i) => (
           <img
             key={i}
-            src={slide.src}
+            src={gymSlides[i].src}
             alt={`Infinity Fitness Gym ${i + 1}`}
             className="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000"
             style={{ opacity: i === mCurrent ? 1 : 0 }}
+            fetchPriority={i === mCurrent ? 'high' : 'auto'}
           />
         ))}
       </div>

@@ -11,6 +11,9 @@ const GYM_WHATSAPP = "https://wa.me/918168828832";
 const GYM_ADDRESS =
   "Kaithal - Dhand Rd, Opp. Maharaja Palace, Rishi Nagar, Kaithal, Haryana 136027";
 
+// Free trial kitne din ka hai — owner/customer kam kare to bas yahan badlo (ek jagah).
+const FREE_TRIAL_DAYS = 7;
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const escapeHtml = (value: string): string =>
@@ -67,7 +70,7 @@ const TOPICS: Topic[] = [
   {
     keywords: ["trial", "demo", "tour", "visit", "first visit", "pehli baar"],
     title: "Free Trial",
-    html: `<p style="margin:4px 0; color:#ddd;">Aapki <b style="color:#FF3C00;">first visit bilkul FREE</b> hai — koi commitment nahi. Kisi bhi off-peak time par aa jao, hum gym ka pura tour karwayenge.</p>`,
+    html: `<p style="margin:4px 0; color:#ddd;">Aapka <b style="color:#FF3C00;">${FREE_TRIAL_DAYS}-din ka free trial</b> hai — koi commitment nahi. Kisi bhi off-peak time par aa jao, hum gym ka pura tour karwayenge.</p>`,
   },
   {
     keywords: [

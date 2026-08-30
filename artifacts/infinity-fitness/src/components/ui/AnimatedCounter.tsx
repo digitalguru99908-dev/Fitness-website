@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useInView, useReducedMotion } from 'framer-motion';
+import { useInView } from 'framer-motion';
+import { useForceReducedMotion } from '@/lib/motion';
 
 interface AnimatedCounterProps {
   to: number;
@@ -24,7 +25,7 @@ export function AnimatedCounter({
 }: AnimatedCounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true });
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = useForceReducedMotion();
   const [value, setValue] = useState(prefersReduced ? to : 0);
 
   useEffect(() => {

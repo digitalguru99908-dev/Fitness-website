@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useForceReducedMotion } from '@/lib/motion';
 import { X, ChevronLeft, ChevronRight, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
 import img1 from '@assets/1_1785140838620.webp';
@@ -34,7 +35,7 @@ export function Gallery() {
   const [lbPlaying, setLbPlaying] = useState(false);
   const [lbMuted, setLbMuted] = useState(false);
   const lightboxVideoRef = useRef<HTMLVideoElement>(null);
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = useForceReducedMotion();
 
   // Video lightbox controls
   const openVideoLightbox = useCallback((i: number) => {

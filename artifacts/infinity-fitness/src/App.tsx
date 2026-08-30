@@ -1,11 +1,14 @@
 import React from 'react';
 import { Switch, Route, Router, useLocation } from 'wouter';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { WhatsAppButton } from '@/components/ui/WhatsAppButton';
 import { ChatBot } from '@/components/ChatBot';
 import { ScrollToTop } from '@/components/ScrollToTop';
+import { FreeTrialModalProvider } from '@/components/free-trial/FreeTrialProvider';
+import { MobileCtaBar } from '@/components/MobileCtaBar';
+import { useForceReducedMotion } from '@/lib/motion';
 
 import { Home } from '@/pages/Home';
 import { About } from '@/pages/About';
@@ -19,7 +22,7 @@ import { Owner } from '@/pages/Owner';
 /** Wraps the route Switch in AnimatePresence so page changes fade + slide */
 function AnimatedRoutes() {
   const [location] = useLocation();
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = useForceReducedMotion();
 
   return (
     <AnimatePresence mode="wait" initial={false}>
@@ -55,18 +58,27 @@ function AnimatedRoutes() {
 function App() {
   return (
     <Router base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
-      <div className="min-h-[100dvh] flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-white overflow-x-hidden">
-        <ScrollToTop />
-        <Navbar />
+      {/* Reduced motion par bhi site NORMAL chale — framer khud transform/hover
+          animations disable kar deta hai jab user ke browser me
+          prefers-reduced-motion ON ho. Isliye reducedMotion="never": setting
+          kisi bhi user me ho, saare animations hamesha on. */}
+      <MotionConfig reducedMotion="never">
+        <FreeTrialModalProvider>
+          <div className="min-h-[100dvh] flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-white overflow-x-hidden">
+            <ScrollToTop />
+            <Navbar />
 
-        <main className="flex-grow flex flex-col">
-          <AnimatedRoutes />
-        </main>
+            <main className="flex-grow flex flex-col">
+              <AnimatedRoutes />
+            </main>
 
-        <Footer />
-        <WhatsAppButton />
-        <ChatBot />
-      </div>
+            <Footer />
+            <WhatsAppButton />
+            <ChatBot />
+            <MobileCtaBar />
+          </div>
+        </FreeTrialModalProvider>
+      </MotionConfig>
     </Router>
   );
 }
