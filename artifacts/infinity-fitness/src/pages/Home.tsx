@@ -188,11 +188,21 @@ export function Home() {
               { icon: MapPin, title: "Rishi Nagar, Kaithal", desc: "Ghar ke paas — Dhand Rd, Opp. Maharaja Palace.", external: "https://www.google.com/maps/search/Infinity+Fitness+Gym,+Rishi+Nagar,+Kaithal" },
             ].map((item, i) => {
               const card = (
-                <div className="bg-card border border-white/5 p-6 md:p-8 h-full text-center hover:border-primary/40 transition-colors">
-                  <item.icon className="w-10 h-10 text-primary mx-auto mb-4" />
+                <motion.div
+                  className="group bg-card border border-white/5 p-6 md:p-8 h-full flex flex-col items-center text-center gap-4 hover:border-primary/50 transition-colors"
+                  whileHover={prefersReduced ? {} : {
+                    y: -4,
+                    boxShadow: '0 6px 24px rgba(255,106,0,0.14)',
+                    transition: { duration: 0.22 },
+                  }}
+                  whileTap={prefersReduced ? {} : { scale: 0.98, transition: { duration: 0.1 } }}
+                >
+                  <div className="w-16 h-16 rounded-full bg-background border border-white/10 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-colors group-hover:box-glow">
+                    <item.icon className="w-8 h-8 text-primary group-hover:text-white transition-colors" />
+                  </div>
                   <h3 className="font-display font-bold uppercase tracking-wide text-base md:text-lg">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground mt-2">{item.desc}</p>
-                </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                </motion.div>
               );
               if (item.modal) {
                 return (
