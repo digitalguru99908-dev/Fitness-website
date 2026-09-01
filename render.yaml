@@ -13,7 +13,7 @@ services:
         value: production
       - key: ALLOWED_ORIGIN
         sync: false
-      - key: BREVO_API_KEY
+      - key: RESEND_API_KEY
         sync: false
       - key: SESSION_SECRET
         sync: false

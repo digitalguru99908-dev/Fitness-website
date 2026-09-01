@@ -13,34 +13,33 @@ const GYM_ADDRESS =
 // Free trial kitne din ka hai — owner/customer kam kare to bas yahan badlo (ek jagah).
 const FREE_TRIAL_DAYS = 7;
 
-const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
+const RESEND_API_URL = "https://api.resend.com/emails";
 
-const brevoSend = async (options: {
-  to: { email: string; name?: string };
+const resendSend = async (options: {
+  to: string;
   subject: string;
   html: string;
 }): Promise<void> => {
-  const apiKey = process.env["BREVO_API_KEY"];
+  const apiKey = process.env["RESEND_API_KEY"];
   if (!apiKey) {
-    throw new Error("BREVO_API_KEY secret is not set");
+    throw new Error("RESEND_API_KEY secret is not set");
   }
-  const response = await fetch(BREVO_API_URL, {
+  const response = await fetch(RESEND_API_URL, {
     method: "POST",
     headers: {
-      "api-key": apiKey,
+      Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
-      Accept: "application/json",
     },
     body: JSON.stringify({
-      sender: { name: "Infinity Fitness Gym", email: GYM_EMAIL },
+      from: "Infinity Fitness Gym <onboarding@resend.dev>",
       to: [options.to],
       subject: options.subject,
-      htmlContent: options.html,
+      html: options.html,
     }),
   });
+  const text = await response.text();
   if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Brevo API error ${response.status}: ${text}`);
+    throw new Error(`Resend API error ${response.status}: ${text}`);
   }
 };
 
@@ -267,14 +266,14 @@ router.post("/inquiry", async (req, res) => {
     return;
   }
 
-  if (!process.env["BREVO_API_KEY"]) {
-    logger.error("BREVO_API_KEY secret is not set");
+  if (!process.env["RESEND_API_KEY"]) {
+    logger.error("RESEND_API_KEY secret is not set");
     res.status(500).json({ error: "Email service not configured." });
     return;
   }
 
   const ownerMailOptions = {
-    to: { email: GYM_EMAIL, name: "Infinity Fitness Gym" },
+    to: GYM_EMAIL,
     subject: `New Inquiry from ${name}`,
     html: buildOwnerEmailHtml({
       name,
@@ -288,7 +287,7 @@ router.post("/inquiry", async (req, res) => {
   // SPEED FIX: client ko TURANT response bhejo — emails background me jaate hain.
   res.json({ success: true });
 
-  brevoSend(ownerMailOptions)
+  resendSend(ownerMailOptions)
     .then(() => {
       logger.info({ name, phone, email: customerEmail || null, plan }, "Inquiry email sent");
     })
@@ -303,12 +302,12 @@ router.post("/inquiry", async (req, res) => {
 
   const topics = detectTopics(message || "");
   const autoReplyOptions = {
-    to: { email: customerEmail, name },
+    to: customerEmail,
     subject: `Thanks for your inquiry, ${name.split(/\s+/)[0]}! — Infinity Fitness Gym Kaithal`,
     html: buildAutoReplyHtml(name, topics),
   };
 
-  brevoSend(autoReplyOptions)
+  resendSend(autoReplyOptions)
     .then(() => {
       logger.info(
         { to: customerEmail, topics: topics.map((t) => t.title) },
