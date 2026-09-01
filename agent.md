@@ -846,3 +846,53 @@
   account hai). Backup keep-alive (UptimeRobot ya Windows Task Scheduler) optional.
   Remote URL me abhi bhi GitHub PAT embedded hai (agent.md round 2 note) — push kaam
   karta hai, par clean URL switch consider karna.
+
+### 2026-09-01 (round 5 — FULL ARCHITECTURE: BACKEND↔FRONTEND KAISE JUDA AUR SAB ERRORS KAISE FIX HUE)
+
+**Stack samjho:** pnpm monorepo (`artifacts/infinity-fitness` = frontend, `artifacts/api-server` = backend).
+Pehle sab localhost par 1 machine par chalta tha. Goal tha: frontend ko world-wide host
+karo + backend ko alag server par, aur frontend backend se baat kare.
+
+**1. Frontend kaise deploy hua (Vercel):**
+- `vercel.json` me build command + static output dir `artifacts/infinity-fitness/dist/public` set kiya.
+- `pnpm run build` pass karke Vercel build confirm kiya. Vercel CLI se GitHub repo `Fitness-website`
+  connect ki, project `infinity-fitness-gym` bana. → **Live: `https://infinity-fitness-gym-woad.vercel.app`**
+- Vercel ab frontend ko serve karta hai (HTML/JS/CSS/images). **Frontend backend ka URL kahan se jaanta hai?**
+  → `artifacts/infinity-fitness/src/lib/apiBase.ts` me `API_BASE` `VITE_API_URL` env se padhta hai
+  (fallback localhost). Vercel project env me `VITE_API_URL=https://infinity-fitness-api-oregon-test.onrender.com`
+  set kiya → build ke time Vite is URL ko JS bundle me **bake** kar deta hai. Browser me devtools →
+  Network → API calls me Render URL dikhta hai (confirmed).
+
+**2. Backend kaise deploy hua (Render):**
+- Round 2 me CLI `services create` se service `infinity-fitness-api` (region **singapore**) banayi —
+  build `pnpm install && pnpm --filter @workspace/api-server build`, start
+  `pnpm --filter @workspace/api-server start`.
+- Naye oregon region ki service `infinity-fitness-api-oregon-test` bhi (kyunki old SMTP issue,
+  round 3 detail). Backend ke ports Render par HTTP se access: `/api/healthz`, `/api/chat`,
+  `/api/tts`, `/api/inquiry`. Render logs web dashboard par milti hain.
+
+**3. FRONTEND↔BACKEND LINK (CORS + env):**
+- Browser ki JS alag origin (vercel.app) se backend (onrender.com) par call karti hai → browser
+  protocol next. Backend CORS allowlist enforce karta hai:
+  `Access-Control-Allow-Origin` sirf allowed origin (ALLOWED_ORIGIN env) ko deta hai.
+- Pehle `ALLOWED_ORIGIN` set nahi thi → preflight me `*` milta tha. Ab
+  `ALLOWED_ORIGIN=https://infinity-fitness-gym-woad.vercel.app` set → preflight **OPTIONS 204**
+  + origin-specific header (**CORS working**, confirmed via curl).
+
+**4. SAB ERRORS KAISE FIX HUE (chronological):**
+
+| Error | Root cause | Fix |
+|---|---|---|
+| Chatbot `405` on Vercel | Purana browser bundle relative `/api/chat` Vercel domain par bhej raha tha; `vercel.json` rewrite sab paths ko `index.html` bhejta hai, POST 405 deta hai | Code/backend sahi tha — fix = browser **hard refresh** (Ctrl+Shift+R/incognito). Deployed bundle me sahi oregon URL bake hua hai |
+| Email `500 Email service not configured` | Star code `inquiry.ts` ab **Resend** (`RESEND_API_KEY`) use karta hai, par kisi bhi Render service par key set nahi thi | `PUT /services/{id}/env-vars` (bare JSON array format) se `RESEND_API_KEY` + `ALLOWED_ORIGIN` set; phir deploy trigger. Log me `Inquiry email sent` + `Customer auto-reply email sent` → **email WORKING** |
+| Old Singapore SMTP fail | Gmail SMTP port 465 par **ENETUNREACH** (IPv6) — free Render instance IPV6 nahi pakadta | Email ko Resend HTTP API par shift kiya (Brevo try hua, phir Resend final) — pure outbound HTTP, Render par chal jata hai |
+| Render sleep (slow site ~20s) | Free plan 15 min inactivity → spin-down | cron-job.org keep-alive har 5 min `/api/healthz` ping (user ne run karna hai) |
+
+**5. Secrets handling:** Render env vars dashboard se set hote hain (repo me kabhi nahi). `.env*`
+gitignored. `agent.md` me se RESEND key value bhi remove ki. GitHub remote me PAT embedded
+hai — kaam karta hai, par clean URL switch better.
+
+**6. Final working URLs:**
+- Frontend (users): `https://infinity-fitness-gym-woad.vercel.app`
+- Backend (API): `https://infinity-fitness-api-oregon-test.onrender.com`
+- Health check: `.../api/healthz` → `{"status":"ok"}`
