@@ -247,9 +247,13 @@ router.post("/inquiry", async (req, res) => {
 
   // Pooled transporter — module-level, connection reuse = har email 1-3s pehle se fast
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
     pool: true,
     maxConnections: 1,
+    connectionTimeout: 15000,
+    socketTimeout: 30000,
     auth: {
       user: GYM_EMAIL,
       pass: appPassword,
