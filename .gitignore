@@ -59,3 +59,5 @@ zipFile.zip
 
 # Dev server logs
 logs/
+
+.vercel

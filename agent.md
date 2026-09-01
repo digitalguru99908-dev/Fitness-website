@@ -660,6 +660,37 @@
   - Ab har page par continuous GPU animation 0: user ke scroll se pehle hero video (already IO+tab gated) aur photo strip (already IO-gated) — scene par sirf dibba/visible wale hi chalte hain.
 - [VERIFY] — tsc 0 errors, vite build pass (8.15s). Ab push pending — user ne GitHub push ka instruction diya hai (formes wali poori backlog: 08-28/08-29 rounds + aaj ke SEO/reviews + perf fix).
 - [VERIFY] — `tsc --noEmit` 0 errors (Testimonials.tsx me `useForceReducedMotion` import fix kiya — duplicate cleanup me udd gaya tha), `vite build` pass (35.5s, 2134 modules). Changes local — push user approval par.
+
+### 2026-08-30 (HOSTING PLANNING SESSION — user requirements recorded)
+
+> Strawman plan + user requirements, KHALI PLANNING — kuch deploy/push NAHI kiya gaya.
+> Next kaam tab karna jab user "start" bole.
+
+- [USER SITUATION / GOALS] — Site abhi SELL NAHI hui (confirm nahi ki client lega ya nahi).
+  User abhi sirf CHAHTA hai: (a) sirf wo / kuch authorized log site dekh saken — HAR KOI
+  NAHI, (b) "bheek bhariya site ready karni hai" jo har device par user-friendly +
+  attractive + SEO + rank kare. Ek institute ka ladka bhi "Infinity" ki alag site banayi hai —
+  istne bhi chahiye usse behter site. Ye poora plan/user-requirements yahan record kiya
+  taaki user bhule to agent exact bata saken.
+- [CONFIDENTIALITY — IMPORTANT] — Hosting me sirf confidential/preview mode: site ko
+  PUBLIC/Google-indexable NAHI karna, kyunki confirm nahi hai. Options: (a) Vercel Preview
+  URL (production promote NAHI karna) — sirf link wale dekh sakenge; (b) Render private/
+  protected; ya (c) abhi bahot hosting nahi — bas localhost. Darna nahi — jab confirm hoga
+  tab public karenge.
+- [HOSTING PLAN (user chahun) — "frontend Vercel + backend Render (confidential)"] —
+  - Frontend = Vercel (static), Backend = Render (Express API).
+  - Dono ko ek "link" se connect karne ka mechanism = **Render ka backend URL**, Verceel
+    ke env var `VITE_API_URL` me set. Yehi link frontend↔backend connect karta hai.
+  - Env vars Render par: `GMAIL_APP_PASSWORD`, `SESSION_SECRET`, `GROQ_API_KEY`,
+    `CARTESIA_API_KEY`, `DATABASE_URL` + `ALLOWED_ORIGIN` (Vercel URL).
+  - Repo me deploy prep pehle se hai (08-26): `vercel.json`, `render.yaml`, `apiBase.ts`,
+    `.env.example`. Abhi bas user ke dashboard setup + `VITE_API_URL` ka wait hai.
+- [NEXT ACTION] — User ko step-by-step hi guide chahiye (Vercel + Render account kaise
+  banao). Pehle user ke GitHub par jo bhi hai wo confirm karna hoga (account kaun sa hai).
+  Agar tumne ye note likha hai, to next step: user ko Vercel/Render visual walkthrough dena +
+  poochhna ki GitHub client ka hai ya uska.
+- [PENDING] — 08-28/08-29/08-30 poori backlog abhi bhi LOCAL hai — GitHub push pending
+  (user approval par). Audio baad me karenge jb user "push" bole.
 - [ChatBot.tsx] — **INSTANT VOICE REPLY** (user: "chatbot instantly reply nahi deta — jaise he text reply kare uske sath turant bolkar reply kare"). Root cause: client `speak()` poora TTS audio download hone tak rukta tha (saare chunks collect karke tab play) — voice text aane ke baad 1.5-3s delay par aati thi; text aur voice ke beech ka gap wahi late start tha. Fix: **client-side MediaSource (MSE) streaming playback** — response body ke bytes aate hi SourceBuffer me append hote hain aur pehle buffer par hi `play()` call hota hai (voice text ke saath hi shuru; server `/api/tts` pehle se chunk-stream karta tha). Abort (nayi speech / mute / close) par read cancel + audio pause + object URL revoke, stream khatam par `endOfStream()`; MSE unavailable ho to purana full-download fallback. tsc 0 errors.
 - [Home.tsx] — **"Why Members Choose Us" cards CLICKABLE** (user request): 4 cards ab actionable — Open Every Day → `/contact` (wouter Link), **7-Day Free Trial → Free Trial modal** (`useFreeTrialModal()` hook, click par "Book Free Trial" khulta hai), Trained Coaches → `/services`, Rishi Nagar, Kaithal → **Google Maps (naya tab)**. Baad me (user feedback "programs jaise clickable bnane h") cards ko **Our Programs jaisa premium interactive look** diya: circular icon badge (`w-16 h-16 rounded-full` group-hover primary fill + `box-glow`), hover par lift (`y:-4` + orange glow shadow), whileTap scale 0.98 — flows vaise hi hain (modal/nav). tsc 0 errors, vite build pass (18.92s).
 - [VERIFY] — `/api/tts` live test: HTTP 200 `audio/mpeg` (57,645 bytes, ~1.4s total incl. Cartesia synthesis). `tsc --noEmit` 0 errors, `vite build` pass (21.98s, 2134 modules). Changed files: ChatBot.tsx, Home.tsx, agent.md. Push pending.
@@ -689,3 +720,67 @@
   prep commit pehle se hai, `VITE_API_URL` backend public URL par set karna hoga).
 - [VERIFY] — tsc 0 errors, vite build pass (45.8s). Changes local — push user
   approval par.
+
+### 2026-09-01
+
+- [Vercel production build] — `mockup-sandbox` ke `PORT` aur `BASE_PATH` checks ko
+  defaults (`5173`, `/`) diya. Root `build` ab sirf production Infinity Fitness frontend
+  aur uske required typechecks chalata hai; test sandbox Vercel build graph se exclude hai.
+- [package.json, pnpm-workspace.yaml] — Windows-compatible `preinstall` script add kiya
+  aur existing approved `esbuild` package build ko explicit allow kiya, taaki local pnpm
+  verification bhi Vercel ke Linux build ke saath consistent rahe.
+- [vercel.json] — Vercel build command aur frontend static output directory
+  `artifacts/infinity-fitness/dist/public` explicitly configured.
+- [VERIFY] — `pnpm run build` successfully passed: library/API/frontend typechecks pass;
+  Vite production build completed (2134 modules, 37.66s). Vercel CLI 59.10.0 installed.
+- [Vercel authentication] — CLI `whoami` check me active session nahi mili (`Logged out`),
+  isliye deployment pending hai. User ko `vercel login` complete karna hoga; successful
+  login ke turant baad frontend production deployment chalaya ja sakta hai.
+- [Vercel deployment] — User ki device-flow approval ke baad CLI `digitalguru99908-4928`
+  account / `team-infinity5` team se authenticated hua. Naya project
+  `infinity-fitness-gym` create hua aur GitHub repository connect hui.
+- [Vercel production] — Remote Vercel build successfully completed (pnpm 10.28.0,
+  typechecks + Vite bundle pass). Live frontend URL:
+  `https://infinity-fitness-gym-woad.vercel.app`.
+- [.gitignore] — Vercel-generated local `.vercel/` project-link directory ignore ki,
+  taaki organization/project IDs repository me commit na hon.
+
+### 2026-09-01 (round 2 — BACKEND DEPLOYED ON RENDER)
+
+- [Render CLI] — Official Render CLI (`render v2.25.0`, Go binary) installed ka
+  `C:\Program Files (x86)` nahi — custom path `%LOCALAPPDATA%\render-cli\render.exe`
+  (GitHub release `cli_2.25.0_windows_amd64.zip` se download kiya) aur PATH me add
+  kiya. `render login` se pata chala CLI already authenticated tha (Codex ka token)
+  — workspace: `digitalguru99908@gmail.com` / "My Workspace"
+  (`tea-da19rdrl550s73f689eg`), koi services nahi thin (clean slate).
+- [Render build issue #1] — Pa.hli deploy `npm install -g pnpm@10.28.0 && pnpm install
+  ...` se fail hui: Render ka build environment EROFS (`/usr/lib/node_modules`
+  read-only) — global npm install allowed nahi. Fix: build command ko plain
+  `pnpm install && pnpm --filter @workspace/api-server build` kar diya (Render
+  corepack se pnpm khud provide karta hai). Deploy dep-dab8portqb8s73f5os00 → **live**.
+- [Render service] — `infinity-fitness-api` web service created (CLI `services create`):
+  **`https://infinity-fitness-api.onrender.com`**, plan **free**, region **singapore**,
+  Node runtime, branch `main`, autoDeploy ON (commit), healthCheckPath `/api/healthz`,
+  1 instance. Build: `pnpm install && pnpm --filter @workspace/api-server build`,
+  start: `pnpm --filter @workspace/api-server start`. Env vars set: `NODE_ENV=production`,
+  `ALLOWED_ORIGIN=https://infinity-fitness-gym-woad.vercel.app`, `GMAIL_APP_PASSWORD`,
+  `SESSION_SECRET`, `GROQ_API_KEY`, `CARTESIA_API_KEY` (secrets `.env` se, kabhi repo
+  me nahi). `DATABASE_URL` skip (schema empty, runtime me db use nahi hota).
+  Dashboard: https://dashboard.render.com/web/srv-dab8nc710e5c73a793v0
+- [VERIFY backend] — `/api/healthz` → 200 `{"status":"ok"}`; `POST /api/chat`
+  (Hinglish) → 200 with real AI reply (GROQ key works); `POST /api/tts` (Hindi) →
+  200 `audio/mpeg` 41KB (Cartesia key works); CORS preflight actual call with
+  `Origin: https://infinity-fitness-gym-woad.vercel.app` → `Access-Control-Allow-Origin`
+  = Vercel URL (ALLOWED_ORIGIN working).
+- [Vercel env] — `VITE_API_URL=https://infinity-fitness-api.onrender.com` production
+  env Vercel project par **set** kiya (pehle koi env vars nahi the) aur frontend
+  redeploy kiya. Live JS bundle me Render URL **confirm** (index JS me
+  `infinity-fitness-api.onrender.com` found). Frontend ab browser se direct Render
+  backend par calls karta hai.
+- [PENDING] — Inquiry form ka email (GMAIL_APP_PASSWORD) ka end-to-end test abhi nahi
+  kiya (real email bhejta hai — user ki permission par). Uncommitted working-tree
+  changes abhi bhi local (vercel.json/render.yaml/package.json/pnpm-workspace.yaml/
+  agent.md/.gitignore/mockup-sandbox vite config) — push user approval par. NOTE:
+  `git remote -v` me GitHub PAT token embedded hai remote URL me — future push to
+  interfere nahi karegi, par security ke liye clean remote URL par switch karna
+  consider karna.
