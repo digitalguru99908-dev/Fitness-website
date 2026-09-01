@@ -784,3 +784,42 @@
   `git remote -v` me GitHub PAT token embedded hai remote URL me — future push to
   interfere nahi karegi, par security ke liye clean remote URL par switch karna
   consider karna.
+
+### 2026-09-01 (round 3 — CHAT 405 + ENV FIX + RESEND EMAIL WORKING)
+
+- [Backend oregon-test] — Istemal me naya Render service
+  `infinity-fitness-api-oregon-test` (region oregon, kyunki singapore port 465 /
+  IPv6 ENETUNREACH error de raha tha gmail smtp ke liye): **`https://infinity-fitness-api-oregon-test.onrender.com`**
+  (service ID `srv-dab96mv10e5c73a8lpug`).
+- [Chatbot 405 root cause — diagnosis] — Browser relative `/api/chat` call Vercel
+  domain par ja rahi thi (stale bundle). `vercel.json` rewrite `/(.*) → /index.html`
+  relative POST /api/* path par **405** deta hai. Live bundle me oregon-test URL bake
+  hai; fix browser hard refresh (Ctrl+Shift+R / incognito) hai.
+- [Email root cause] — `artifacts/api-server/src/routes/inquiry.ts` ab Resend use
+  karta hai (line ~269 `RESEND_API_KEY` check → 500 `Email service not configured`).
+  Kisi bhi Render service par `RESEND_API_KEY` set nahi thi. Purana singapore service
+  Gmail SMTP (port 465) se **ENETUNREACH** (IPv6) fail ho raha tha.
+- [Render env-var API format] — `PUT /services/{id}/env-vars` body **bare JSON array**
+  chahiye (`[{"key":"...","value":"..."}]`), `{"envVars":[...]}` wrapper se
+  `400 invalid JSON` milta hai. `POST` → 405. Success: `[{"envVar":{...},"cursor":...}]`
+  (HTTP 200).
+- [Render deploy API] — `POST /services/{id}/deploys` body `{"clearCache":"do_not_clear"}`
+  file se (inline `-d` quoting 400 deta hai). Deploy live hone par naye env vars load
+  hote hain (env-var update auto-redeploy nahi karta; restart se env nahi utha — deploy
+  trigger karna padega).
+- [Env vars set] — oregon-test service par sab set: `CARTESIA_API_KEY`, `GROQ_API_KEY`,
+  `SESSION_SECRET`, `NODE_ENV=production`, **`RESEND_API_KEY`** (value secret, Render ke
+  andar set kiya),
+  **`ALLOWED_ORIGIN=https://infinity-fitness-gym-woad.vercel.app`** (naya). Verify:
+  `GET /services/{id}/env-vars` → 200 list.
+- [VERIFY email (WORKING)] — `POST /api/inquiry` valid data → **200 `{"success":true}`**.
+  Render logs me **"Inquiry email sent"** + **"Customer auto-reply email sent"** to
+  `digitalguru99908@gmail.com` (Resend). NOTE: Resend free plan `onboarding@resend.dev`
+  from-address sirf owner email ko bhej sakta hai; customer auto-reply ke liye custom
+  domain verify karna padega.
+- [VERIFY chat + CORS] — `ALLOWED_ORIGIN` set hone ke baad CORS ab origin-specific:
+  `access-control-allow-origin: https://infinity-fitness-gym-woad.vercel.app` (pehle
+  `*` tha). OPTIONS preflight 204. `POST /api/chat` `{"messages":[{...}]}` → 200 (file
+  body se; PowerShell inline quoting me 400 dene wali dikkat).
+- [NOTE — user frustration] — User "dubara st kar, ab koi dikkat aayi to..." bol raha
+  tha (urgent). Chatbot 405 user browser cache hai; backend sab working.
