@@ -823,3 +823,26 @@
   body se; PowerShell inline quoting me 400 dene wali dikkat).
 - [NOTE — user frustration] — User "dubara st kar, ab koi dikkat aayi to..." bol raha
   tha (urgent). Chatbot 405 user browser cache hai; backend sab working.
+
+### 2026-09-01 (round 4 — GIT PUSH + KEEP-ALIVE + LIVE URL)
+
+- [User question] — "apna project kaise dekhu bina local host" → bataya: website
+  **`https://infinity-fitness-gym-woad.vercel.app`** (frontend), backend
+  `https://infinity-fitness-api-oregon-test.onrender.com` (ab user ko READ-ONLY, bas
+  kaam karta hai). Live world-wide, localhost ki zarurat nahi.
+- [Render sleep issue] — Render free plan 15 min inactivity par service spin-down
+  karta hai → site slow (~20s first load). Fix guidance: **cron-job.org** (user ne
+  choose kiya) — free, 1-min interval, job URL =
+  `https://infinity-fitness-api-oregon-test.onrender.com/api/healthz`, schedule
+  **every 5 min**. User abhi tak job create nahi kiya (setup steps usko diye gaye).
+- [UPDATE] — `agent.md` me **RESEND_API_KEY ka actual value remove** kiya (secret
+  repo me record nahi hona chahiye) — ab `**RESEND_API_KEY** (value secret, Render ke
+  andar set kiya)` likha hai.
+- [GIT] — Uncommitted changes finally **commit + push** kiya: commit `2654a9e`
+  "chore: gitignore .env files + changelog for Render/Resend email + keep-alive
+  setup" (.gitignore: `.env*` add, agent.md changelog). `git push origin main` →
+  `38d515f..2654a9e` remote par. Render par auto-deploy trigger huyi (naye commit se).
+- [PENDING] — cron-job.org job user ko khud banani hai (email verification inka
+  account hai). Backup keep-alive (UptimeRobot ya Windows Task Scheduler) optional.
+  Remote URL me abhi bhi GitHub PAT embedded hai (agent.md round 2 note) — push kaam
+  karta hai, par clean URL switch consider karna.
