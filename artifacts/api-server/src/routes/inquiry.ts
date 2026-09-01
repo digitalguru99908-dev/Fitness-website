@@ -1,5 +1,4 @@
 import { Router, type IRouter } from "express";
-import nodemailer from "nodemailer";
 import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
@@ -13,6 +12,37 @@ const GYM_ADDRESS =
 
 // Free trial kitne din ka hai — owner/customer kam kare to bas yahan badlo (ek jagah).
 const FREE_TRIAL_DAYS = 7;
+
+const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
+
+const brevoSend = async (options: {
+  to: { email: string; name?: string };
+  subject: string;
+  html: string;
+}): Promise<void> => {
+  const apiKey = process.env["BREVO_API_KEY"];
+  if (!apiKey) {
+    throw new Error("BREVO_API_KEY secret is not set");
+  }
+  const response = await fetch(BREVO_API_URL, {
+    method: "POST",
+    headers: {
+      "api-key": apiKey,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      sender: { name: "Infinity Fitness Gym", email: GYM_EMAIL },
+      to: [options.to],
+      subject: options.subject,
+      htmlContent: options.html,
+    }),
+  });
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Brevo API error ${response.status}: ${text}`);
+  }
+};
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -237,32 +267,14 @@ router.post("/inquiry", async (req, res) => {
     return;
   }
 
-  const appPassword = process.env["GMAIL_APP_PASSWORD"];
-
-  if (!appPassword) {
-    logger.error("GMAIL_APP_PASSWORD secret is not set");
+  if (!process.env["BREVO_API_KEY"]) {
+    logger.error("BREVO_API_KEY secret is not set");
     res.status(500).json({ error: "Email service not configured." });
     return;
   }
 
-  // Pooled transporter — module-level, connection reuse = har email 1-3s pehle se fast
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    pool: true,
-    maxConnections: 1,
-    connectionTimeout: 15000,
-    socketTimeout: 30000,
-    auth: {
-      user: GYM_EMAIL,
-      pass: appPassword,
-    },
-  });
-
-  const ownerMail = {
-    from: `"Infinity Fitness Gym Website" <${GYM_EMAIL}>`,
-    to: GYM_EMAIL,
+  const ownerMailOptions = {
+    to: { email: GYM_EMAIL, name: "Infinity Fitness Gym" },
     subject: `New Inquiry from ${name}`,
     html: buildOwnerEmailHtml({
       name,
@@ -274,11 +286,9 @@ router.post("/inquiry", async (req, res) => {
   };
 
   // SPEED FIX: client ko TURANT response bhejo — emails background me jaate hain.
-  // Pehle `await sendMail(ownerMail)` SMTP ke 2-6s poore form ko rok deta tha.
   res.json({ success: true });
 
-  transporter
-    .sendMail(ownerMail)
+  brevoSend(ownerMailOptions)
     .then(() => {
       logger.info({ name, phone, email: customerEmail || null, plan }, "Inquiry email sent");
     })
@@ -292,15 +302,13 @@ router.post("/inquiry", async (req, res) => {
   }
 
   const topics = detectTopics(message || "");
-  const autoReply = {
-    from: `"Infinity Fitness Gym Kaithal" <${GYM_EMAIL}>`,
-    to: customerEmail,
+  const autoReplyOptions = {
+    to: { email: customerEmail, name },
     subject: `Thanks for your inquiry, ${name.split(/\s+/)[0]}! — Infinity Fitness Gym Kaithal`,
     html: buildAutoReplyHtml(name, topics),
   };
 
-  transporter
-    .sendMail(autoReply)
+  brevoSend(autoReplyOptions)
     .then(() => {
       logger.info(
         { to: customerEmail, topics: topics.map((t) => t.title) },
