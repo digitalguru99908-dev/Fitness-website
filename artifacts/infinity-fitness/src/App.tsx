@@ -19,9 +19,9 @@ import { Contact } from '@/pages/Contact';
 import { Testimonials } from '@/pages/Testimonials';
 import { Owner } from '@/pages/Owner';
 
-/** Wraps the route Switch in AnimatePresence so page changes fade + slide */
-function AnimatedRoutes() {
-  const [location] = useLocation();
+/**
+ * Wraps the route Switch in AnimatePresence so page changes fade + slide */
+function AnimatedRoutes() {  const [location] = useLocation();
   const prefersReduced = useForceReducedMotion();
 
   return (

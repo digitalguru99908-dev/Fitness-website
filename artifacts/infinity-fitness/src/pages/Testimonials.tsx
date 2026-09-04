@@ -211,7 +211,7 @@ export function Testimonials() {
               Hear It From <span className="text-primary text-glow">Every Angle</span>
             </h2>
             <p className="text-muted-foreground mt-4 font-medium">
-              Cube ko hover karo — ghumna ruk jayega, review padho.
+              Hover over the cube to pause it and read the reviews.
             </p>
           </motion.div>
 
@@ -282,7 +282,7 @@ export function Testimonials() {
               Every Review <span className="text-primary text-glow">Counts</span>
             </h2>
             <p className="text-muted-foreground mt-4 font-medium">
-              {allReviews.length} reviews inspo liye hain — seedha Google business listing se.
+              {allReviews.length} reviews taken directly from our Google business listing.
             </p>
           </motion.div>
 

@@ -141,7 +141,7 @@ const TOPICS: Topic[] = [
         <tr><td style="padding:6px 0; color:#ccc;">6-Month Package</td><td style="padding:6px 0; color:#FF3C00; font-weight:bold; text-align:right;">&#8377;6,000 total <span style="color:#25D366;">(save &#8377;6,000)</span></td></tr>
         <tr><td style="padding:6px 0; color:#ccc;">1-Year Package</td><td style="padding:6px 0; color:#FF3C00; font-weight:bold; text-align:right;">&#8377;11,000 total <span style="color:#25D366;">(~&#8377;917/month)</span></td></tr>
       </table>
-      <p style="margin:4px 0 0; color:#aaa; font-size:13px;">Koi joining fee nahi hai — jo membership amount hai bas wahi. Kabhi bhi upgrade kar sakte ho, sirf difference pay karna hota hai.</p>
+      <p style="margin:4px 0 0; color:#aaa; font-size:13px;">No joining fee — you pay only the membership amount. You can upgrade anytime and just pay the difference.</p>
     `,
   },
   {
@@ -151,7 +151,7 @@ const TOPICS: Topic[] = [
       "evening", "night", "schedule", "sunday",
     ],
     title: "Gym Timings",
-    html: `<p style="margin:4px 0; color:#ddd;">Gym saatono 7 din khulta hai — subah se raat <b style="color:#FF3C00;">11:00 PM</b> tak. Shaam 6–9 PM sabse busy hours hote hain, off-peak time zyada peaceful rehta hai.</p>`,
+    html: `<p style="margin:4px 0; color:#ddd;">The gym is open all 7 days — from morning until <b style="color:#FF3C00;">11:00 PM</b>. Evenings 6–9 PM are the busiest hours; off-peak times are much more peaceful.</p>`,
   },
   {
     keywords: [
@@ -159,12 +159,12 @@ const TOPICS: Topic[] = [
       "directions", "reach", "map", "pata", "place", "kidhar",
     ],
     title: "Location",
-    html: `<p style="margin:4px 0; color:#ddd;">${GYM_ADDRESS}</p><p style="margin:4px 0; color:#aaa; font-size:13px;">Google Maps par &quot;Infinity Fitness Gym Kaithal&quot; search karke easily aa sakte ho.</p>`,
+    html: `<p style="margin:4px 0; color:#ddd;">${GYM_ADDRESS}</p><p style="margin:4px 0; color:#aaa; font-size:13px;">Search &quot;Infinity Fitness Gym Kaithal&quot; on Google Maps and you can reach us easily.</p>`,
   },
   {
     keywords: ["trial", "demo", "tour", "visit", "first visit", "pehli baar"],
     title: "Free Trial",
-    html: `<p style="margin:4px 0; color:#ddd;">Aapka <b style="color:#FF3C00;">${FREE_TRIAL_DAYS}-din ka free trial</b> hai — koi commitment nahi. Kisi bhi off-peak time par aa jao, hum gym ka pura tour karwayenge.</p>`,
+    html: `<p style="margin:4px 0; color:#ddd;">Aapka <b style="color:#FF3C00;">${FREE_TRIAL_DAYS}-din ka free trial</b> ready hai — kisi bhi off-peak time par aa jao, hum gym ka pura tour karwayenge.</p>`,
   },
   {
     keywords: [
@@ -172,12 +172,12 @@ const TOPICS: Topic[] = [
       "bank", "transfer", "cash", "card", "emi",
     ],
     title: "Payment Options",
-    html: `<p style="margin:4px 0; color:#ddd;">Cash, UPI (Google Pay, PhonePe, Paytm) aur direct bank transfer — sab accept karte hain.</p>`,
+    html: `<p style="margin:4px 0; color:#ddd;">We accept cash, UPI (Google Pay, PhonePe, Paytm) and direct bank transfer.</p>`,
   },
   {
     keywords: ["freeze", "pause", "hold", "break"],
     title: "Membership Freeze",
-    html: `<p style="margin:4px 0; color:#ddd;">Membership ek term me ek baar tak <b style="color:#FF3C00;">30 days</b> ke liye freeze kar sakte ho (medical reason, travel ya emergency par).</p>`,
+    html: `<p style="margin:4px 0; color:#ddd;">You can freeze your membership for up to <b style="color:#FF3C00;">30 days</b> once per term (for medical reasons, travel or an emergency).</p>`,
   },
   {
     keywords: [
@@ -185,7 +185,7 @@ const TOPICS: Topic[] = [
       "personal training", "personal trainer",
     ],
     title: "Trainers",
-    html: `<p style="margin:4px 0; color:#ddd;">Certified trainers roz gym floor par hote hain — form, progress aur goals sab personally dekhte hain. Personal guidance membership me included hai.</p>`,
+    html: `<p style="margin:4px 0; color:#ddd;">Certified trainers are on the gym floor every day — they personally look after your form, progress and goals. Personal guidance is included with membership.</p>`,
   },
   {
     keywords: [
@@ -193,7 +193,7 @@ const TOPICS: Topic[] = [
       "workout", "program", "programs", "diet",
     ],
     title: "Programs",
-    html: `<p style="margin:4px 0; color:#ddd;">Strength Training, Cardio, Weight Gain, Weight Loss, Yoga aur Modern Equipment zones — har goal ke liye targeted programs milte hain.</p>`,
+    html: `<p style="margin:4px 0; color:#ddd;">Strength Training, Cardio, Weight Gain, Weight Loss, Yoga and Modern Equipment zones — targeted programs for every goal.</p>`,
   },
 ];
 
@@ -244,7 +244,7 @@ const buildOwnerEmailHtml = (data: {
       }
     </table>
     <hr style="border-color: #333; margin: 16px 0;" />
-    <p style="color: #666; font-size: 12px;">Sent from Infinity Fitness Gym website contact form. Is customer ko auto-reply email already chala gaya hai.</p>
+    <p style="color: #666; font-size: 12px;">Sent from Infinity Fitness Gym website contact form.</p>
   </div>
 `;
 
@@ -265,8 +265,8 @@ const buildAutoReplyHtml = (name: string, topics: Topic[]): string => {
     : "";
 
   const specificLine = topics.length
-    ? `Aapke sawaal ka jawab upar &quot;Quick Answers&quot; me hai. Agar kuch aur poochna ho to seedha is email ko reply kar do.`
-    : `Aapka sawaal humari team ko mil gaya hai — hum 1–2 din ke andar sahi jawab ke saath contact karenge.`;
+    ? `The answer to your question is in the &quot;Quick Answers&quot; section above. If you need anything else, just reply to this email directly.`
+    : `Your question has been sent to our team — we will contact you with the right answer within 1–2 days.`;
 
   return `
   <div style="font-family: Arial, sans-serif; background:#f4f4f5; padding:24px 12px;">
@@ -277,11 +277,11 @@ const buildAutoReplyHtml = (name: string, topics: Topic[]): string => {
       </div>
 
       <div style="padding:28px;">
-        <p style="margin:0 0 14px; color:#ffffff; font-size:18px; font-weight:bold;">Namaste ${escapeHtml(firstName)}! 🙏</p>
+        <p style="margin:0 0 14px; color:#ffffff; font-size:18px; font-weight:bold;">Hello ${escapeHtml(firstName)}! 🙏</p>
 
         <p style="margin:0 0 12px; color:#dddddd; line-height:1.6;">
-          Aapki inquiry receive ho gayi hai — <b style="color:#FF3C00;">thanks for reaching out!</b>
-          Humari team aapse <b style="color:#ffffff;">24 ghante ke andar</b> call karegi aapki details discuss karne ke liye.
+          We received your inquiry — <b style="color:#FF3C00;">thank you for reaching out!</b>
+          Our team will call you within <b style="color:#ffffff;">24 hours</b> to discuss the details.
         </p>
 
         ${quickAnswers}
@@ -289,11 +289,11 @@ const buildAutoReplyHtml = (name: string, topics: Topic[]): string => {
         <p style="margin:0 0 12px; color:#dddddd; line-height:1.6;">${specificLine}</p>
 
         <p style="margin:0 0 18px; color:#dddddd; line-height:1.6;">
-          Agar turant jawab chahiye to seedha call ya WhatsApp karo:
+          If you need an instant answer, call or WhatsApp us directly:
           <a href="tel:${GYM_PHONE_TEL}" style="color:#FF3C00; font-weight:bold; text-decoration:none;">${GYM_PHONE_DISPLAY}</a>
         </p>
 
-        <a href="${GYM_WHATSAPP}" style="display:inline-block; background:#25D366; color:#06301a; font-weight:bold; padding:12px 26px; border-radius:6px; text-decoration:none; letter-spacing:1px;">WhatsApp Par Message Karein</a>
+        <a href="${GYM_WHATSAPP}" style="display:inline-block; background:#25D366; color:#06301a; font-weight:bold; padding:12px 26px; border-radius:6px; text-decoration:none; letter-spacing:1px;">Message Us on WhatsApp</a>
 
         <hr style="border:none; border-top:1px solid #262626; margin:24px 0;" />
 
@@ -303,7 +303,7 @@ const buildAutoReplyHtml = (name: string, topics: Topic[]): string => {
           📞 ${GYM_PHONE_DISPLAY} &nbsp;|&nbsp; ✉️ ${GYM_EMAIL}
         </p>
         <p style="margin:14px 0 0; color:#666666; font-size:11px;">
-          Ye ek automatic confirmation email hai — aapne Infinity Fitness Gym website par inquiry fill ki thi. Thanks for your query, we will try to contact you as soon as possible!
+          You filled in your inquiry on the Infinity Fitness Gym website. Thanks for your query — we will try to contact you as soon as possible!
         </p>
       </div>
     </div>
@@ -331,8 +331,8 @@ router.post("/inquiry", async (req, res) => {
     return;
   }
 
-  if (!process.env["RESEND_API_KEY"] && !process.env["GMAIL_APP_PASSWORD"]) {
-    logger.error("No email provider configured (need RESEND_API_KEY or GMAIL_APP_PASSWORD)");
+  if (!process.env["BREVO_API_KEY"] && !process.env["RESEND_API_KEY"]) {
+    logger.error("No email provider configured (need BREVO_API_KEY or RESEND_API_KEY)");
     res.status(500).json({ error: "Email service not configured." });
     return;
   }

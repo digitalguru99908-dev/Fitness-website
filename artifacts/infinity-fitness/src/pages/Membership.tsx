@@ -33,18 +33,18 @@ const faqs = [
 const joinSteps = [
   {
     icon: Dumbbell,
-    title: `${FREE_TRIAL_DAYS}-Din Free Trial`,
-    desc: `Gym pehle dekho, phir decide karo. Koi commitment nahi — pehle ${FREE_TRIAL_DAYS} din bilkul free.`,
+    title: `${FREE_TRIAL_DAYS}-Day Free Trial`,
+    desc: `Visit the gym first, then decide. The first ${FREE_TRIAL_DAYS} days are absolutely free.`,
   },
   {
     icon: ClipboardCheck,
-    title: 'Plan Choose Karo',
-    desc: 'Monthly, 6-month ya yearly — apne budget aur goal ke hisaab se jo suit kare.',
+    title: 'Choose Your Plan',
+    desc: 'Monthly, 6-month or yearly — pick whatever suits your budget and goals.',
   },
   {
     icon: Zap,
-    title: 'Workout Shuru Karo',
-    desc: 'Same day se full access milta hai. Trainer se form samjho aur journey start karo.',
+    title: 'Start Working Out',
+    desc: 'Get full access from day one. Learn the right form from a trainer and begin your journey.',
   },
 ];
 
@@ -111,7 +111,6 @@ export function Membership() {
                 <li className="flex gap-3">✓ Full gym access</li>
                 <li className="flex gap-3">✓ Modern equipment</li>
                 <li className="flex gap-3">✓ Locker room access</li>
-                <li className="flex gap-3 text-muted-foreground">× No long-term commitment</li>
               </ul>
               <Link href="/contact" className="w-full block text-center bg-gold text-gold-foreground font-display font-bold uppercase py-4 skew-x-[-10deg] hover:bg-gold/90 transition-colors mt-auto group">
                 <div className="skew-x-[10deg] flex items-center justify-center gap-2">
@@ -222,7 +221,7 @@ export function Membership() {
               Join in <span className="text-primary">3 Easy Steps</span>
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto text-lg">
-              No paperwork hassle, no waiting period — aaj aao, aaj workout shuru karo.
+              No paperwork hassle, no waiting period — come today, start your workout today.
             </p>
           </div>
 

@@ -12,38 +12,38 @@ import { FREE_TRIAL_DAYS } from '@/lib/siteConfig';
 import { useFreeTrialModal } from '@/components/free-trial/FreeTrialProvider';
 
 const homeServices = [
-  { icon: Dumbbell, title: "Strength Training", desc: "Free weights, machines & powerlifting section — heavy lifting ke liye sab kuch." },
-  { icon: HeartPulse, title: "Cardio", desc: "Treadmills, cycles & functional zone for endurance and stamina building." },
+  { icon: Dumbbell, title: "Strength Training", desc: "Free weights, machines & powerlifting section — everything for heavy lifting." },
+  { icon: HeartPulse, title: "Cardio", desc: "Treadmills, cycles & a functional zone for endurance and stamina building." },
   { icon: TrendingUp, title: "Weight Gain", desc: "Lean muscle gain programs with guided nutrition & trainer support." },
-  { icon: Flame, title: "Weight Loss", desc: "Fat-loss plans with HIIT, diet guidance aur regular progress tracking." },
-  { icon: Leaf, title: "Yoga", desc: "Morning yoga sessions for flexibility, posture aur peaceful mind." },
-  { icon: Zap, title: "Modern Equipment", desc: "New imported machines — kaithal ke best gym equipment." },
+  { icon: Flame, title: "Weight Loss", desc: "Fat-loss plans with HIIT, diet guidance and regular progress tracking." },
+  { icon: Leaf, title: "Yoga", desc: "Morning yoga sessions for flexibility, posture and a peaceful mind." },
+  { icon: Zap, title: "Modern Equipment", desc: "New imported machines — the best gym equipment in Kaithal." },
 ];
 
 const faqs = [
   {
     q: "Is Infinity Fitness the best gym in Kaithal?",
-    a: "Kaithal ke top-rated gyms me se ek. 40+ Google reviews ke saath 4.2-star rating, modern equipment, trained coaches aur ek serious workout crowd — Rishi Nagar area me best gym options me se."
+    a: "One of the top-rated gyms in Kaithal. With a 4.2-star rating from 40+ Google reviews, modern equipment, trained coaches and a serious workout crowd — it is one of the best gym options in the Rishi Nagar area."
   },
   {
-    q: "Gym fees kya hai — Kaithal me monthly gym charge kitna hai?",
-    a: `₹2,000/month, ₹6,000/6 months, ₹11,000/year. Koi joining fee nahi, koi hidden charge nahi — transparent pricing. Upgrade bhi kabhi bhi kar sakte ho.`
+    q: "How much are the gym fees — monthly charges in Kaithal?",
+    a: `₹2,000/month, ₹6,000 for 6 months, ₹11,000/year. No joining fee, no hidden charges — completely transparent pricing. You can also upgrade anytime.`
   },
   {
-    q: "Kya free trial milta hai?",
-    a: `Haan — pehle ${FREE_TRIAL_DAYS} din bilkul free, koi commitment nahi. Pehle gym dekh lo, workout try karo, phir decide karo.`
+    q: "Is there a free trial?",
+    a: `Yes — the first ${FREE_TRIAL_DAYS} days are completely free. Visit the gym, try a workout and then decide.`
   },
   {
-    q: "Gym kahan hai — location & address?",
-    a: "Infinity Fitness Gym — Kaithal–Dhand Rd, Opp. Maharaja Palace, Rishi Nagar, Kaithal, Haryana 136027. Google Maps par 'Infinity Fitness Gym Kaithal' search karke easily aa sakte ho."
+    q: "Where is the gym located — address?",
+    a: "Infinity Fitness Gym — Kaithal–Dhand Rd, Opp. Maharaja Palace, Rishi Nagar, Kaithal, Haryana 136027. Search 'Infinity Fitness Gym Kaithal' on Google Maps and you can reach us easily."
   },
   {
-    q: "Timings kya hain?",
-    a: "Har din khula — subah 5 AM se raat 11 PM tak, 7 din. Morning hours (5–8 AM) relatively kam bheed hoti hai."
+    q: "What are the timings?",
+    a: "Open every day — from 5 AM to 11 PM, all 7 days. Morning hours (5–8 AM) have relatively less crowd."
   },
   {
-    q: "Kaunse programs milte hain?",
-    a: "Strength training, cardio, weight loss, weight gain, yoga aur personal training — beginners se advanced tak, personal trainer guidance ke saath."
+    q: "What programs are available?",
+    a: "Strength training, cardio, weight loss, weight gain, yoga and personal training — for beginners to advanced, with personal trainer guidance."
   },
 ];
 
@@ -176,16 +176,16 @@ export function Home() {
               Why Members <span className="text-primary">Choose Us</span>
             </h2>
             <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
-              Kaithal ka community gym jo apne members ke results ke liye jaana jata hai.
+              The community gym in Kaithal known for delivering results to its members.
             </p>
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {[
-              { icon: Clock, title: "Open Every Day", desc: "5 AM – 11 PM · Har roz, koi band din nahi.", href: "/contact" },
-              { icon: BadgeCheck, title: `${FREE_TRIAL_DAYS}-Day Free Trial`, desc: `Pehle ${FREE_TRIAL_DAYS} din free, koi commitment nahi.`, modal: true },
-              { icon: GraduationCap, title: "Trained Coaches", desc: "Personal training & nutrition guidance, har step par.", href: "/services" },
-              { icon: MapPin, title: "Rishi Nagar, Kaithal", desc: "Ghar ke paas — Dhand Rd, Opp. Maharaja Palace.", external: "https://www.google.com/maps/search/Infinity+Fitness+Gym,+Rishi+Nagar,+Kaithal" },
+              { icon: Clock, title: "Open Every Day", desc: "5 AM – 11 PM · Open 7 days a week.", href: "/contact" },
+              { icon: BadgeCheck, title: `${FREE_TRIAL_DAYS}-Day Free Trial`, desc: `First ${FREE_TRIAL_DAYS} days absolutely free.`, modal: true },
+              { icon: GraduationCap, title: "Trained Coaches", desc: "Personal training & nutrition guidance at every step.", href: "/services" },
+              { icon: MapPin, title: "Rishi Nagar, Kaithal", desc: "Close to home — Dhand Rd, Opp. Maharaja Palace.", external: "https://www.google.com/maps/search/Infinity+Fitness+Gym,+Rishi+Nagar,+Kaithal" },
             ].map((item, i) => {
               const card = (
                 <motion.div
@@ -207,7 +207,7 @@ export function Home() {
               if (item.modal) {
                 return (
                   <button key={i} onClick={openFreeTrial} className="block w-full h-full text-left cursor-pointer"
-                    aria-label={`${item.title} — free trial ke liye click karein`}>
+                    aria-label={`${item.title} — click to book a free trial`}>
                     {card}
                   </button>
                 );
@@ -348,7 +348,7 @@ export function Home() {
               whileTap={prefersReduced ? {} : { scale: 0.95, transition: { duration: 0.1 } }}
             >
               <a
-                href="https://wa.me/918168828832?text=Hi!%20Mujhe%20Infinity%20Fitness%20Gym%20join%20karna%20hai.%20Membership%20ke%20baare%20me%20details%20bhejiye."
+                href="https://wa.me/918168828832?text=Hi!%20I%20want%20to%20join%20Infinity%20Fitness%20Gym.%20Please%20send%20me%20the%20membership%20details."
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center justify-center bg-black/85 text-white px-8 py-4 font-display font-bold text-xl uppercase tracking-wider skew-x-[-10deg] hover:bg-black transition-colors group shadow-xl"

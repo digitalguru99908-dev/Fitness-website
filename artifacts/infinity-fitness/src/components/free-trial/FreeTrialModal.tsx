@@ -44,7 +44,7 @@ export function FreeTrialModal({ open, onClose }: { open: boolean; onClose: () =
           email,
           phone,
           plan: `Free Trial - ${FREE_TRIAL_DAYS} days`,
-          message: `Free trial booking request (${FREE_TRIAL_DAYS} din). Customer ne free trial ke liye interest dikhaya.`,
+          message: `Free trial booking request (${FREE_TRIAL_DAYS} days). Customer showed interest in the free trial.`,
         }),
       });
 
@@ -112,7 +112,7 @@ export function FreeTrialModal({ open, onClose }: { open: boolean; onClose: () =
                     Thanks{name ? `, ${name.split(/\s+/)[0]}` : ''}!
                   </p>
                   <p className="text-muted-foreground text-sm">
-                    Aapka {FREE_TRIAL_LABEL} confirm ho gaya. Hum within 24 hours call karenge.
+                    Your {FREE_TRIAL_LABEL} is confirmed. We will call you within 24 hours.
                   </p>
                   <button
                     onClick={handleClose}
@@ -135,9 +135,9 @@ export function FreeTrialModal({ open, onClose }: { open: boolean; onClose: () =
                     </div>
                     <div>
                       <h3 className="text-xl font-display font-bold uppercase text-white leading-tight">
-                        Free Trial Book Karein
+                        Book Your Free Trial
                       </h3>
-                      <p className="text-xs text-muted-foreground">{FREE_TRIAL_LABEL} — koi commitment nahi.</p>
+                      <p className="text-xs text-muted-foreground">{FREE_TRIAL_LABEL}</p>
                     </div>
                   </div>
 
@@ -151,7 +151,7 @@ export function FreeTrialModal({ open, onClose }: { open: boolean; onClose: () =
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="w-full bg-background border border-white/10 px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors rounded-sm"
-                        placeholder="Aapka naam"
+                        placeholder="Your name"
                       />
                     </div>
                     <div>
@@ -201,7 +201,7 @@ export function FreeTrialModal({ open, onClose }: { open: boolean; onClose: () =
                     )}
                   </button>
                   <p className="text-center text-xs text-muted-foreground mt-3">
-                    Form submit karte hi aapko auto-reply mil jayegi.
+                    We will confirm your booking right away.
                   </p>
                 </motion.form>
               )}

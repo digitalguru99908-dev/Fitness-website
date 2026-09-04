@@ -899,14 +899,46 @@ hai â€” kaam karta hai, par clean URL switch better.
 
 ### 2026-09-04 (mobile overlap + reviews loop + email auto-reply fix)
 
-- [src/components/ui/WhatsAppButton.tsx] — MOBILE OVERLAP FIX (user report: WhatsApp + ChatBot icons ek dusre ke upar dikh rahe the). WhatsApp mobile FAB `bottom-20` ? `bottom-16` (neeche shift).
-- [src/components/ChatBot.tsx] — ChatBot FAB mobile `bottom-24` ? `bottom-32`, chat panel mobile `bottom-40` ? `bottom-44`. Ab mobile par WhatsApp (bottom-16) aur ChatBot (bottom-32) ke beech ~96px gap hai — overlap khatam. Desktop unchanged.
-- [src/components/sections/Reviews.tsx] — HOME REVIEWS LOOP FIX (user report: "reviews wale section me reviews add kiye the, vo loop me hone chahiye"). Pehle custom inline `@keyframes reviewScroll` use hota tha jo 340px cards + 24px gap ka translation nahi match kar pata tha (loop me cards jump/odd ho rahe the). Ab proper global `.animate-marquee` (marquee-scroll 28s linear infinite, -50% translate) use karta hai — doubled array ke saath perfect seamless loop. Animation abhi bhi IntersectionObserver (useInView) se offscreen pause hota hai.
-- [artifacts/api-server/src/routes/inquiry.ts] — EMAIL AUTO-REPLY FIX (user report: hosted site par auto-reply work nahi kar raha). Root cause: Resend free plan ka `onboarding@resend.dev` from-address sirf owner email (digitalguru99908@gmail.com) ko bhej sakta hai — customer ko bhejne par Resend error+milta hai. Fix: naya `sendEmail()` hybrid — **Gmail SMTP (nodemailer) primary** (kisi bhi recipient ko bhej sakta hai) + **Resend fallback**. Configure guard ab dono me se koi ek (GMAIL_APP_PASSWORD ya RESEND_API_KEY) kaafi hai. Owner + customer auto-reply dono sendEmail se jaate hain (via = gmail/resend log me).
-- [artifacts/api-server/package.json] — `nodemailer@^6.9.15` dependency + `@types/nodemailer@^6.4.16` devDependency add.
-- [.env] — `RESEND_API_KEY=re_Gah...P228mr` add kiya (user ki nayi key). GMAIL_APP_PASSWORD pehle se tha. (.env gitignored hai — secrets repo me nahi jayenge.)
-- [VERIFY] — frontend tsc 0 errors, vite build pass (25.7s); api-server tsc 0 errors, build pass; Gmail SMTP local test pass (real email bheja: messageId OK). Render deploy + production email test pending push ke baad.
-- [UPDATED artifacts/api-server/src/routes/inquiry.ts] — Render par email test ke baad pata chala Gmail SMTP port 465 (SSL) par **Connection timeout** (Render outbound 465 block karta hai). gmailTransporter ko **port 587 STARTTLS** (secure:false, requireTLS:true) par switch kiya + connectionTimeout 15s/socketTimeout 20s. Locally port 587 test pass (real email). Render env vars: GMAIL_APP_PASSWORD + RESEND_API_KEY dono set kiye.
-- [UPDATED artifacts/api-server/src/routes/inquiry.ts] — Render par Gmail SMTP 587 STARTTLS **bhi Connection timeout** (marked: Render free plan **complete outbound SMTP block** — na 465 na 587). Isliye email ab **pure HTTP API**: **Brevo primary** (300/day, kisi bhi recipient ko, sender verify chahiye) + **Resend fallback**. Gmail (nodemailer) completely removed.
-- [UPDATED artifacts/api-server/package.json] — removed nodemailer + @types/nodemailer (ab unused). pnpm install ok.
+- [src/components/ui/WhatsAppButton.tsx] ï¿½ MOBILE OVERLAP FIX (user report: WhatsApp + ChatBot icons ek dusre ke upar dikh rahe the). WhatsApp mobile FAB `bottom-20` ? `bottom-16` (neeche shift).
+- [src/components/ChatBot.tsx] ï¿½ ChatBot FAB mobile `bottom-24` ? `bottom-32`, chat panel mobile `bottom-40` ? `bottom-44`. Ab mobile par WhatsApp (bottom-16) aur ChatBot (bottom-32) ke beech ~96px gap hai ï¿½ overlap khatam. Desktop unchanged.
+- [src/components/sections/Reviews.tsx] ï¿½ HOME REVIEWS LOOP FIX (user report: "reviews wale section me reviews add kiye the, vo loop me hone chahiye"). Pehle custom inline `@keyframes reviewScroll` use hota tha jo 340px cards + 24px gap ka translation nahi match kar pata tha (loop me cards jump/odd ho rahe the). Ab proper global `.animate-marquee` (marquee-scroll 28s linear infinite, -50% translate) use karta hai ï¿½ doubled array ke saath perfect seamless loop. Animation abhi bhi IntersectionObserver (useInView) se offscreen pause hota hai.
+- [artifacts/api-server/src/routes/inquiry.ts] ï¿½ EMAIL AUTO-REPLY FIX (user report: hosted site par auto-reply work nahi kar raha). Root cause: Resend free plan ka `onboarding@resend.dev` from-address sirf owner email (digitalguru99908@gmail.com) ko bhej sakta hai ï¿½ customer ko bhejne par Resend error+milta hai. Fix: naya `sendEmail()` hybrid ï¿½ **Gmail SMTP (nodemailer) primary** (kisi bhi recipient ko bhej sakta hai) + **Resend fallback**. Configure guard ab dono me se koi ek (GMAIL_APP_PASSWORD ya RESEND_API_KEY) kaafi hai. Owner + customer auto-reply dono sendEmail se jaate hain (via = gmail/resend log me).
+- [artifacts/api-server/package.json] ï¿½ `nodemailer@^6.9.15` dependency + `@types/nodemailer@^6.4.16` devDependency add.
+- [.env] ï¿½ `RESEND_API_KEY=re_Gah...P228mr` add kiya (user ki nayi key). GMAIL_APP_PASSWORD pehle se tha. (.env gitignored hai ï¿½ secrets repo me nahi jayenge.)
+- [VERIFY] ï¿½ frontend tsc 0 errors, vite build pass (25.7s); api-server tsc 0 errors, build pass; Gmail SMTP local test pass (real email bheja: messageId OK). Render deploy + production email test pending push ke baad.
+- [UPDATED artifacts/api-server/src/routes/inquiry.ts] ï¿½ Render par email test ke baad pata chala Gmail SMTP port 465 (SSL) par **Connection timeout** (Render outbound 465 block karta hai). gmailTransporter ko **port 587 STARTTLS** (secure:false, requireTLS:true) par switch kiya + connectionTimeout 15s/socketTimeout 20s. Locally port 587 test pass (real email). Render env vars: GMAIL_APP_PASSWORD + RESEND_API_KEY dono set kiye.
+- [UPDATED artifacts/api-server/src/routes/inquiry.ts] ï¿½ Render par Gmail SMTP 587 STARTTLS **bhi Connection timeout** (marked: Render free plan **complete outbound SMTP block** ï¿½ na 465 na 587). Isliye email ab **pure HTTP API**: **Brevo primary** (300/day, kisi bhi recipient ko, sender verify chahiye) + **Resend fallback**. Gmail (nodemailer) completely removed.
+- [UPDATED artifacts/api-server/package.json] ï¿½ removed nodemailer + @types/nodemailer (ab unused). pnpm install ok.
 - [TO-DO] Brevo me digitalguru99908@gmail.com sender verify + API key xkeysib-... lo. Phir BREVO_API_KEY Render env-vars me set karke deploy + email test karo.
+
+### 2026-09-04 (round 2 â€” cleanup: Hindi text, commitment, auto-reply text)
+
+- [artifacts/api-server/src/routes/inquiry.ts] â€” Owner notification email footer me
+  "Is customer ko auto-reply email already chala gaya hai" Hindi line hatayi â€” ab sirf
+  "Sent from Infinity Fitness Gym website contact form." English footer hai. Customer
+  auto-reply email template pehle se clean thi (koi "auto reply mail" text nahi tha).
+- [artifacts/infinity-fitness/src/pages/Membership.tsx] â€” Monthly plan card se
+  "Ã— No long-term commitment" feature line hata di (user request: free trial section
+  me ye nahi likhna).
+- [src/components/ui/WhatsAppButton.tsx, src/components/layout/Navbar.tsx] â€”
+  **SAARI HINDI CLICKABLE TEXTS â†’ ENGLISH**: WhatsApp pre-filled message
+  "Hi! Mujhe Infinity Fitness Gym join karna hai..." â†’ "Hi! I want to join Infinity
+  Fitness Gym. Please share the membership details." Navbar mobile drawer me
+  "WhatsApp Karein" â†’ "WhatsApp Us". Ab site par koi bhi Hindi clickable text nahi.
+- [VERIFY] â€” frontend tsc 0 errors, vite build pass (24.9s, 2119 modules);
+  api-server tsc 0 errors + build pass.
+- [App.tsx] â€” **REFRESH REDIRECT FIX REVISED** (user report: refresh karne par home
+  nahi ja raha tha â€” pehle `ForceHomeOnRefresh` wouter ke `useLocation` + `setLocation`
+  use karta tha jo kaam nahi kar raha tha). Ab **`window.location.replace('/')`** use
+  karta hai â€” direct browser-level redirect. Owner page (`/owner`) excepted. Ye pure
+  hard-refresh par chalta hai (SPA navigation par nahi).
+- [src/main.tsx] â€” **REFRESH REDIRECT FINAL (ENTRY-POINT, GUARANTEED)**: user ne
+  report kiya ki App.tsx wala `window.location.replace` bhi kaam nahi kar raha.
+  Root cause possible: React render ke saath timing/hydration race. Fix: redirect ko
+  sabse UPAR `main.tsx` me le gaya â€” React render hone se PEHLE hi chalta hai.
+  Ab `main.tsx` par: agar `window.location.pathname !== '/'` aur `/owner` se shuru
+  NAHI hota to `window.location.replace('/')` karke app render hi nahi hota;
+  otherwise normal `<App />` render hota hai. Ye 100% guaranteed hai kyunki ye
+  execute hote hi browser ko home par bhejta hai. Owner page excepted. App.tsx se
+  redundant `ForceHomeOnRefresh` component remove kar diya. tsc 0 errors, vite build
+  pass.

@@ -3,7 +3,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 
 const WA_URL =
   'https://wa.me/918168828832?text=' +
-  encodeURIComponent('Hi! Mujhe Infinity Fitness Gym join karna hai. Membership ke baare me details bhejiye.');
+  encodeURIComponent('Hi! I want to join Infinity Fitness Gym. Please share the membership details.');
 
 export function WhatsAppButton() {
   return (

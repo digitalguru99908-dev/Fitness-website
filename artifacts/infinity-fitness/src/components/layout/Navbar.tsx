@@ -160,13 +160,13 @@ export function Navbar() {
                   Call 81688 28832
                 </a>
                 <a
-                  href="https://wa.me/918168828832?text=Hi!%20Mujhe%20Infinity%20Fitness%20Gym%20join%20karna%20hai.%20Membership%20ke%20baare%20me%20details%20bhejiye."
+                  href="https://wa.me/918168828832?text=Hi!%20I%20want%20to%20join%20Infinity%20Fitness%20Gym.%20Please%20share%20the%20membership%20details."
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center justify-center gap-2 bg-[#25D366]/10 border border-[#25D366]/40 text-[#25D366] py-4 w-full font-display font-bold text-xl uppercase tracking-wider hover:bg-[#25D366]/20 transition-colors"
                 >
                   <FaWhatsapp className="w-5 h-5" />
-                  WhatsApp Karein
+                  WhatsApp Us
                 </a>
               </motion.div>
             </div>
