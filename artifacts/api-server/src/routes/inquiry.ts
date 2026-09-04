@@ -24,8 +24,11 @@ const RESEND_API_URL = "https://api.resend.com/emails";
 
 const gmailTransporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  port: 587,
+  secure: false,
+  requireTLS: true,
+  connectionTimeout: 15000,
+  socketTimeout: 20000,
   auth: {
     user: GYM_EMAIL,
     pass: process.env["GMAIL_APP_PASSWORD"] || "",
