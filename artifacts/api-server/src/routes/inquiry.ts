@@ -1,5 +1,4 @@
 import { Router, type IRouter } from "express";
-import nodemailer from "nodemailer";
 import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
@@ -15,40 +14,48 @@ const GYM_ADDRESS =
 const FREE_TRIAL_DAYS = 7;
 
 const RESEND_API_URL = "https://api.resend.com/emails";
+const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
 
-// ── Email delivery — try Gmail SMTP pehle, phir Resend fallback ──
-// Gmail SMTP kisi bhi recipient ko bhej sakta hai (Resend ke free plan par
-// onboarding@resend.dev se sirf owner email jaata hai). Isliye hum Gmail ko
-// primary rakhte hain taaki customer ko auto-reply pakka pahunche. Agar
-// Gmail unavailable ho (jaise Render par IPv6 wala issue) to Resend try hota hai.
+// ── Email delivery — Brevo HTTP API (primary) + Resend (fallback) ──
+// Render free plan par SMTP (Gmail 465/587) OUTBOUND BLOCK hai — isliye pure
+// HTTP email APIs hi use hote hain (Render par chalte hain).
+// Brevo: HTTP API, free 300 emails/day, kisi bhi recipient ko bhej sakta hai
+//        (sender email Brevo me verify karna hota hai). Ye customer auto-reply
+//        ke liye MAIN provider hai.
+// Resend: fallback. Free plan par onboarding@resend.dev se SIRF owner email
+//         (digitalguru99908@gmail.com) jaata hai; customer ko nahi. Isliye
+//         sirf owner notification ka backup.
 
-const gmailTransporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  requireTLS: true,
-  connectionTimeout: 15000,
-  socketTimeout: 20000,
-  auth: {
-    user: GYM_EMAIL,
-    pass: process.env["GMAIL_APP_PASSWORD"] || "",
-  },
-});
+const BREVO_SENDER_NAME = "Infinity Fitness Gym";
+// Sender email jo Brevo me verified hai. Free plan par aap yehi verify karte ho.
+const BREVO_SENDER_EMAIL = process.env["BREVO_SENDER_EMAIL"] || GYM_EMAIL;
 
-const gmailSender = async (options: {
+const brevoSender = async (options: {
   to: string;
   subject: string;
   html: string;
 }): Promise<void> => {
-  if (!process.env["GMAIL_APP_PASSWORD"]) {
-    throw new Error("GMAIL_APP_PASSWORD secret is not set");
+  const apiKey = process.env["BREVO_API_KEY"];
+  if (!apiKey) {
+    throw new Error("BREVO_API_KEY secret is not set");
   }
-  await gmailTransporter.sendMail({
-    from: `"Infinity Fitness Gym" <${GYM_EMAIL}>`,
-    to: options.to,
-    subject: options.subject,
-    html: options.html,
+  const response = await fetch(BREVO_API_URL, {
+    method: "POST",
+    headers: {
+      "api-key": apiKey,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      sender: { name: BREVO_SENDER_NAME, email: BREVO_SENDER_EMAIL },
+      to: [{ email: options.to }],
+      subject: options.subject,
+      htmlContent: options.html,
+    }),
   });
+  const text = await response.text();
+  if (!response.ok) {
+    throw new Error(`Brevo API error ${response.status}: ${text}`);
+  }
 };
 
 const resendSender = async (options: {
@@ -79,23 +86,23 @@ const resendSender = async (options: {
   }
 };
 
-// Ek unified sender: Gmail pehle, fail hone par Resend. Return transport naam.
+// Ek unified sender: Brevo pehle, fail hone par Resend. Return provider naam.
 const sendEmail = async (options: {
   to: string;
   subject: string;
   html: string;
 }): Promise<string> => {
   try {
-    await gmailSender(options);
-    return "gmail";
-  } catch (gmailErr) {
-    logger.warn({ err: gmailErr }, "Gmail SMTP failed — trying Resend fallback");
+    await brevoSender(options);
+    return "brevo";
+  } catch (brevoErr) {
+    logger.warn({ err: brevoErr }, "Brevo failed — trying Resend fallback");
     try {
       await resendSender(options);
       return "resend";
     } catch (resendErr) {
       throw new Error(
-        `Both email providers failed. Gmail: ${(gmailErr as Error).message} | Resend: ${(resendErr as Error).message}`,
+        `Both email providers failed. Brevo: ${(brevoErr as Error).message} | Resend: ${(resendErr as Error).message}`,
       );
     }
   }
