@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import nodemailer from "nodemailer";
 import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
@@ -15,7 +16,39 @@ const FREE_TRIAL_DAYS = 7;
 
 const RESEND_API_URL = "https://api.resend.com/emails";
 
-const resendSend = async (options: {
+// ── Email delivery — try Gmail SMTP pehle, phir Resend fallback ──
+// Gmail SMTP kisi bhi recipient ko bhej sakta hai (Resend ke free plan par
+// onboarding@resend.dev se sirf owner email jaata hai). Isliye hum Gmail ko
+// primary rakhte hain taaki customer ko auto-reply pakka pahunche. Agar
+// Gmail unavailable ho (jaise Render par IPv6 wala issue) to Resend try hota hai.
+
+const gmailTransporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: GYM_EMAIL,
+    pass: process.env["GMAIL_APP_PASSWORD"] || "",
+  },
+});
+
+const gmailSender = async (options: {
+  to: string;
+  subject: string;
+  html: string;
+}): Promise<void> => {
+  if (!process.env["GMAIL_APP_PASSWORD"]) {
+    throw new Error("GMAIL_APP_PASSWORD secret is not set");
+  }
+  await gmailTransporter.sendMail({
+    from: `"Infinity Fitness Gym" <${GYM_EMAIL}>`,
+    to: options.to,
+    subject: options.subject,
+    html: options.html,
+  });
+};
+
+const resendSender = async (options: {
   to: string;
   subject: string;
   html: string;
@@ -40,6 +73,28 @@ const resendSend = async (options: {
   const text = await response.text();
   if (!response.ok) {
     throw new Error(`Resend API error ${response.status}: ${text}`);
+  }
+};
+
+// Ek unified sender: Gmail pehle, fail hone par Resend. Return transport naam.
+const sendEmail = async (options: {
+  to: string;
+  subject: string;
+  html: string;
+}): Promise<string> => {
+  try {
+    await gmailSender(options);
+    return "gmail";
+  } catch (gmailErr) {
+    logger.warn({ err: gmailErr }, "Gmail SMTP failed — trying Resend fallback");
+    try {
+      await resendSender(options);
+      return "resend";
+    } catch (resendErr) {
+      throw new Error(
+        `Both email providers failed. Gmail: ${(gmailErr as Error).message} | Resend: ${(resendErr as Error).message}`,
+      );
+    }
   }
 };
 
@@ -266,8 +321,8 @@ router.post("/inquiry", async (req, res) => {
     return;
   }
 
-  if (!process.env["RESEND_API_KEY"]) {
-    logger.error("RESEND_API_KEY secret is not set");
+  if (!process.env["RESEND_API_KEY"] && !process.env["GMAIL_APP_PASSWORD"]) {
+    logger.error("No email provider configured (need RESEND_API_KEY or GMAIL_APP_PASSWORD)");
     res.status(500).json({ error: "Email service not configured." });
     return;
   }
@@ -287,9 +342,9 @@ router.post("/inquiry", async (req, res) => {
   // SPEED FIX: client ko TURANT response bhejo — emails background me jaate hain.
   res.json({ success: true });
 
-  resendSend(ownerMailOptions)
-    .then(() => {
-      logger.info({ name, phone, email: customerEmail || null, plan }, "Inquiry email sent");
+  sendEmail(ownerMailOptions)
+    .then((via) => {
+      logger.info({ name, phone, email: customerEmail || null, plan, via }, "Inquiry email sent");
     })
     .catch((err: unknown) => {
       logger.error({ err }, "Failed to send inquiry email (background)");
@@ -307,10 +362,10 @@ router.post("/inquiry", async (req, res) => {
     html: buildAutoReplyHtml(name, topics),
   };
 
-  resendSend(autoReplyOptions)
-    .then(() => {
+  sendEmail(autoReplyOptions)
+    .then((via) => {
       logger.info(
-        { to: customerEmail, topics: topics.map((t) => t.title) },
+        { to: customerEmail, topics: topics.map((t) => t.title), via },
         "Customer auto-reply email sent",
       );
     })

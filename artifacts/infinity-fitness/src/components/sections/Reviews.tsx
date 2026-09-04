@@ -66,9 +66,8 @@ export const Reviews = () => {
               style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}>
 
               {/* Scroll track */}
-              <div ref={trackRef} className="flex gap-6 w-max"
+              <div ref={trackRef} className="flex gap-6 w-max animate-marquee"
                 style={{
-                  animation: 'reviewScroll 25s linear infinite',
                   animationPlayState: inView ? 'running' : 'paused',
                 }}>
                 {doubledReviews.map((review, index) => (
@@ -103,13 +102,6 @@ export const Reviews = () => {
                 ))}
               </div>
             </div>
-
-            <style>{`
-              @keyframes reviewScroll {
-                0% { transform: translateX(0); }
-                100% { transform: translateX(calc(-340px * ${homeReviews.length} - 24px * ${homeReviews.length})); }
-              }
-            `}</style>
           </div>
 
         </div>

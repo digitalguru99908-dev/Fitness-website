@@ -338,7 +338,7 @@ export function ChatBot() {
   return (
     <>
       {/* FAB */}
-      <motion.div ref={fabRef} className="fixed bottom-24 md:bottom-32 right-6 z-50"
+      <motion.div ref={fabRef} className="fixed bottom-32 md:bottom-32 right-6 z-50"
         animate={open ? {} : { y: [0, -8, 0] }}
         transition={open ? {} : { duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}>
         <motion.button
@@ -395,7 +395,7 @@ export function ChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
             exit={{ opacity: 0, y: 60, scale: 0.8, rotateX: 20 }}
             transition={{ type: 'spring', damping: 24, stiffness: 300, mass: 0.8 }}
-            className="fixed bottom-40 md:bottom-52 right-6 z-50 w-[400px] max-w-[calc(100vw-2rem)] rounded-3xl overflow-hidden flex flex-col"
+            className="fixed bottom-44 md:bottom-52 right-6 z-50 w-[400px] max-w-[calc(100vw-2rem)] rounded-3xl overflow-hidden flex flex-col"
             style={{
               height: minimized ? '72px' : '600px',
               maxHeight: 'calc(100vh - 140px)',

@@ -896,3 +896,13 @@ hai â€” kaam karta hai, par clean URL switch better.
 - Frontend (users): `https://infinity-fitness-gym-woad.vercel.app`
 - Backend (API): `https://infinity-fitness-api-oregon-test.onrender.com`
 - Health check: `.../api/healthz` â†’ `{"status":"ok"}`
+
+### 2026-09-04 (mobile overlap + reviews loop + email auto-reply fix)
+
+- [src/components/ui/WhatsAppButton.tsx] — MOBILE OVERLAP FIX (user report: WhatsApp + ChatBot icons ek dusre ke upar dikh rahe the). WhatsApp mobile FAB `bottom-20` ? `bottom-16` (neeche shift).
+- [src/components/ChatBot.tsx] — ChatBot FAB mobile `bottom-24` ? `bottom-32`, chat panel mobile `bottom-40` ? `bottom-44`. Ab mobile par WhatsApp (bottom-16) aur ChatBot (bottom-32) ke beech ~96px gap hai — overlap khatam. Desktop unchanged.
+- [src/components/sections/Reviews.tsx] — HOME REVIEWS LOOP FIX (user report: "reviews wale section me reviews add kiye the, vo loop me hone chahiye"). Pehle custom inline `@keyframes reviewScroll` use hota tha jo 340px cards + 24px gap ka translation nahi match kar pata tha (loop me cards jump/odd ho rahe the). Ab proper global `.animate-marquee` (marquee-scroll 28s linear infinite, -50% translate) use karta hai — doubled array ke saath perfect seamless loop. Animation abhi bhi IntersectionObserver (useInView) se offscreen pause hota hai.
+- [artifacts/api-server/src/routes/inquiry.ts] — EMAIL AUTO-REPLY FIX (user report: hosted site par auto-reply work nahi kar raha). Root cause: Resend free plan ka `onboarding@resend.dev` from-address sirf owner email (digitalguru99908@gmail.com) ko bhej sakta hai — customer ko bhejne par Resend error+milta hai. Fix: naya `sendEmail()` hybrid — **Gmail SMTP (nodemailer) primary** (kisi bhi recipient ko bhej sakta hai) + **Resend fallback**. Configure guard ab dono me se koi ek (GMAIL_APP_PASSWORD ya RESEND_API_KEY) kaafi hai. Owner + customer auto-reply dono sendEmail se jaate hain (via = gmail/resend log me).
+- [artifacts/api-server/package.json] — `nodemailer@^6.9.15` dependency + `@types/nodemailer@^6.4.16` devDependency add.
+- [.env] — `RESEND_API_KEY=re_Gah...P228mr` add kiya (user ki nayi key). GMAIL_APP_PASSWORD pehle se tha. (.env gitignored hai — secrets repo me nahi jayenge.)
+- [VERIFY] — frontend tsc 0 errors, vite build pass (25.7s); api-server tsc 0 errors, build pass; Gmail SMTP local test pass (real email bheja: messageId OK). Render deploy + production email test pending push ke baad.
