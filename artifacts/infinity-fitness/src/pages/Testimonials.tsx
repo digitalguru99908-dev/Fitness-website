@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useMotionValue, useSpring } from 'framer-motion';
 import { useForceReducedMotion } from '@/lib/motion';
 import { useVideoPauseOnHidden } from '@/lib/useVideoPauseOnHidden';
-import { Star, MessageSquare, Volume2, VolumeX } from 'lucide-react';
+import { Star, MessageSquare, Volume2, VolumeX, Quote } from 'lucide-react';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 import {
   allReviews,
@@ -46,6 +46,127 @@ function CubeFace({ item, position }: { item: Review; position: (typeof facePosi
         </span>
       </div>
     </div>
+  );
+}
+
+// Naam ke initials nikalta hai (e.g. "Mohit Bansal" -> "MB")
+function initialsOf(name: string): string {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join('');
+}
+
+// Circular gradient avatar — initials + animated gradient ring
+function InitialsAvatar({ item, size = 'md' }: { item: Review; size?: 'md' | 'lg' }) {
+  const dim = size === 'lg' ? 'w-14 h-14' : 'w-11 h-11';
+  const ring = size === 'lg' ? '-inset-1.5' : '-inset-1';
+  const text = size === 'lg' ? 'text-base' : 'text-sm';
+  return (
+    <div className="relative shrink-0">
+      <div className={`absolute ${ring} rounded-full blur-md opacity-45 animate-gradient-flow pointer-events-none`}
+        style={{
+          background: 'linear-gradient(135deg, #ff6a00, #ff3d00, #ff8c33, #ff6a00)',
+          backgroundSize: '300% 300%',
+        }} />
+      <div className={`relative ${dim} rounded-full flex items-center justify-center overflow-hidden`}
+        style={{
+          background: 'linear-gradient(160deg, #1a1a1a, #0d0d0d)',
+          border: '1.5px solid rgba(255,106,0,0.35)',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.5), 0 0 16px rgba(255,106,0,0.12)',
+        }}>
+        <span className={`${text} font-display font-black text-transparent animate-gradient-flow`}
+          style={{
+            backgroundImage: 'linear-gradient(135deg, #ff8c33, #ff6a00, #ff3d00)',
+            backgroundSize: '300% 300%',
+            WebkitBackgroundClip: 'text',
+            backgroundClip: 'text',
+          }}>
+          {initialsOf(item.name)}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// 3D tilt review card — cursor-follow rotate + glow
+function TiltReviewCard({ item, delay }: { item: Review; delay: number }) {
+  const rx = useMotionValue(0);
+  const ry = useMotionValue(0);
+  const srx = useSpring(rx, { stiffness: 200, damping: 20 });
+  const sry = useSpring(ry, { stiffness: 200, damping: 20 });
+  const ref = useRef<HTMLDivElement>(null);
+
+  const onMove = (e: React.MouseEvent) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    ry.set(px * 10);
+    rx.set(-py * 10);
+  };
+  const onLeave = () => { rx.set(0); ry.set(0); };
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 24, scale: 0.94 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.5, delay, type: 'spring', damping: 20, stiffness: 180 }}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      style={{ rotateX: srx, rotateY: sry, transformStyle: 'preserve-3d' }}
+      whileHover={{ y: -6, transition: { duration: 0.2 } }}
+      className="group relative"
+    >
+      {/* Hover glow */}
+      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        style={{ background: 'radial-gradient(circle at 50% 0%, rgba(255,106,0,0.16) 0%, transparent 65%)' }} />
+      {/* Gradient border on hover */}
+      <div className="absolute -inset-[1px] rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        style={{ background: 'linear-gradient(135deg, rgba(255,106,0,0.5), rgba(255,61,0,0.2), rgba(255,140,51,0.4))' }} />
+
+      <div className="relative h-full flex flex-col p-6 sm:p-7 rounded-2xl overflow-hidden bg-[#080808] border border-white/5 group-hover:border-transparent transition-colors duration-500"
+        style={{ transform: 'translateZ(20px)', backgroundImage: 'linear-gradient(180deg, rgba(20,20,26,0.6), rgba(8,8,8,0.9))' }}>
+        {/* Top row — avatar + quote */}
+        <div className="flex items-start gap-4" style={{ transform: 'translateZ(30px)' }}>
+          <InitialsAvatar item={item} />
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-display font-bold uppercase tracking-wider text-white text-sm">
+                {item.name}
+              </span>
+              <Quote className="w-5 h-5 text-primary/40 shrink-0" />
+            </div>
+            <span className="text-xs text-muted-foreground mt-0.5 inline-block">
+              {item.tag === 'Google Review' ? `Google · ${item.date}` : item.date}
+            </span>
+            <div className="mt-2">
+              <Stars count={item.rating} />
+            </div>
+          </div>
+        </div>
+
+        {/* Review text */}
+        <p className="text-gray-300 mt-4 flex-grow leading-relaxed text-[15px]">
+          "{item.review}"
+        </p>
+
+        {/* Google badge */}
+        {item.tag === 'Google Review' && (
+          <div className="mt-4 pt-4 border-t border-white/5 flex items-center gap-2" style={{ transform: 'translateZ(20px)' }}>
+            <span className="w-1.5 h-1.5 rounded-full bg-primary/50 animate-pulse" />
+            <span className="text-[10px] font-bold uppercase tracking-wider text-primary/60">
+              Verified Google Review
+            </span>
+          </div>
+        )}
+      </div>
+    </motion.div>
   );
 }
 
@@ -286,30 +407,9 @@ export function Testimonials() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 mb-20">
             {allReviews.map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.4, delay: (i % 3) * 0.08 }}
-                className="bg-[#080808] border border-white/5 p-6 sm:p-7 relative flex flex-col hover:border-primary/40 transition-colors group"
-              >
-                <MessageSquare className="absolute top-6 right-6 w-7 h-7 text-primary/10 group-hover:text-primary/20 transition-colors" />
-                <Stars count={item.rating} />
-                <p className="text-gray-300 italic mt-4 mb-6 flex-grow leading-relaxed text-[15px]">
-                  "{item.review}"
-                </p>
-                <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
-                  <span className="font-display font-bold uppercase tracking-wider text-white text-sm">
-                    {item.name}
-                  </span>
-                  <span className="text-xs text-muted-foreground whitespace-nowrap ml-3">
-                    {item.tag === 'Google Review' ? `Google · ${item.date}` : item.date}
-                  </span>
-                </div>
-              </motion.div>
+              <TiltReviewCard key={i} item={item} delay={(i % 3) * 0.08} />
             ))}
           </div>
 

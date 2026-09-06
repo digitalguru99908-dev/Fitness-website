@@ -954,3 +954,9 @@ hai — kaam karta hai, par clean URL switch better.
   - **Naye helpers**: `MagneticButton` (useMotionValue+useSpring strength), `TiltCard` (3D tilt, maxTilt prop) — reusable components.
 - [src/index.css] — Naye animation keyframes/classes add kiye (ChatBot + site-wide reusable): `gradient-flow`, `aurora-drift`, `orb-float`, `particle-rise`, `border-pulse`, `conic-spin`, `shimmer-sweep`, `glass-in`, `ring-pulse`, `ripple`.
 - [VERIFY] — `tsc --noEmit` 0 errors; `vite build` pass (33.1s, 2134 modules). Changes local — push user approval par.
+- [src/pages/Testimonials.tsx] — **"Every Review Counts" GRID REDESIGN (premium cards + circle avatars)** (user request: reviews wale page ke grid ko circle shape / badiya effect me lo): purana static grid hataya, ab sab reviews **premium 3D tilt cards** me hain:
+  - **`TiltReviewCard`** component: cursor-follow 3D rotate (rotateX/rotateY spring, `translateZ(20px)` depth layers), hover par lift + radial top glow + gradient border reveal.
+  - **`InitialsAvatar`**: circular avatar jisme reviewer ke **initials** (e.g. MB for Mohit Bansal) ginati hai — animated gradient ring (`animate-gradient-flow` blur halo) + gradient clip-text initials + border glow.
+  - Layout: circular avatar + name + quote icon upar, stars + date, review text, aur neeche **"Verified Google Review"** badge (pulsing dot) for Google reviews.
+  - Entrance: staggered spring scale/fade-in (viewport-gated). `MessageSquare` icon ka ab use nahi (Quote se replace) — lucide import update.
+- [VERIFY round 2] — `tsc --noEmit` 0 errors; `vite build` pass (13.7s, 2134 modules). Changes local — push user approval par.
