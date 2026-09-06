@@ -1,6 +1,106 @@
+/* ===== ChatBot + premium MotionSites-style animations ===== */
 @keyframes marquee-scroll {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+}
+
+/* Flowing animated gradient (ChatBot panel / buttons) */
+@keyframes gradient-flow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-gradient-flow {
+  background-size: 300% 300%;
+  animation: gradient-flow 8s ease infinite;
+}
+
+/* Aurora / conic conic that drifts across the glass panel */
+@keyframes aurora-drift {
+  0%   { transform: translate(-15%, -15%) rotate(0deg) scale(1); }
+  50%  { transform: translate(15%, 10%) rotate(60deg) scale(1.25); }
+  100% { transform: translate(-15%, -15%) rotate(0deg) scale(1); }
+}
+.animate-aurora {
+  animation: aurora-drift 14s ease-in-out infinite;
+}
+
+/* Floating particle orbs */
+@keyframes orb-float {
+  0%   { transform: translateY(0px) translateX(0px) scale(1); opacity: 0.35; }
+  50%  { transform: translateY(-28px) translateX(10px) scale(1.15); opacity: 0.7; }
+  100% { transform: translateY(0px) translateX(0px) scale(1); opacity: 0.35; }
+}
+.animate-orb {
+  animation: orb-float var(--orb-dur, 9s) ease-in-out infinite;
+  animation-delay: var(--orb-delay, 0s);
+}
+
+/* Fine dust particles rising through the panel */
+@keyframes particle-rise {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  10%  { opacity: 0.8; }
+  90%  { opacity: 0.5; }
+  100% { transform: translateY(-120px) translateX(var(--drift, 12px)); opacity: 0; }
+}
+.animate-particle {
+  animation: particle-rise var(--rise-dur, 8s) linear infinite;
+  animation-delay: var(--rise-delay, 0s);
+}
+
+/* Sweeping light sheen across input / quick actions */
+@keyframes border-pulse {
+  0%, 100% { border-color: rgba(255,106,0,0.12); }
+  50%      { border-color: rgba(255,106,0,0.4); }
+}
+.animate-border-pulse {
+  animation: border-pulse 3s ease-in-out infinite;
+}
+
+/* Rotating conic border halo (panel glow ring) */
+@keyframes conic-spin {
+  to { transform: rotate(360deg); }
+}
+.animate-conic-spin {
+  animation: conic-spin 8s linear infinite;
+}
+
+/* Shimmer sweep for gradient headline */
+@keyframes shimmer-sweep {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.animate-shimmer {
+  background-size: 200% auto;
+  animation: shimmer-sweep 3.5s linear infinite;
+}
+
+/* Soft entrance for glass elements */
+@keyframes glass-in {
+  from { opacity: 0; filter: blur(8px); transform: translateY(8px); }
+  to   { opacity: 1; filter: blur(0); transform: translateY(0); }
+}
+.animate-glass-in {
+  animation: glass-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Pulsing status glow ring */
+@keyframes ring-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+  70%  { box-shadow: 0 0 0 10px rgba(34,197,94,0); }
+  100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+}
+.animate-ring-pulse {
+  animation: ring-pulse 2.5s ease-out infinite;
+}
+
+/* Ripple on send button click */
+@keyframes ripple {
+  0%   { transform: scale(0); opacity: 0.5; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+.animate-ripple {
+  animation: ripple 0.7s ease-out forwards;
 }
 
 .animate-marquee {

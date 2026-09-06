@@ -942,3 +942,15 @@ hai — kaam karta hai, par clean URL switch better.
   execute hote hi browser ko home par bhejta hai. Owner page excepted. App.tsx se
   redundant `ForceHomeOnRefresh` component remove kar diya. tsc 0 errors, vite build
   pass.
+
+### 2026-09-06
+
+- [src/components/ChatBot.tsx] — **CHATBOT UI FULL REDESIGN (Glassmorphism + MotionSites-style animations)** (user request: chatbot ka interface redesign + badiya animations). Core functionality (voice via MSE streaming, mute, minimize, language detection, quick actions, `/api/chat` + `/api/tts`) bilkul unchanged — sirf UI/UX overhaul + animations:
+  - **Glassmorphism panel**: stronger `blur(60px) saturate(160%)` glass base, rotating **conic gradient border** (`.animate-conic-spin` halo ring), aurora drift orbs, floating blurred orbs aur 8 rising dust particles — dynamic sports energy.
+  - **3D tilt cards**: Quick Actions ab `TiltCard` component se cursor-follow 3D rotate (rotateX/rotateY spring, `translateZ(20px)` depth) karti hain.
+  - **Magnetic buttons**: Header controls (mute/minimize/close) + FAB ab `MagneticButton` — hover zone me cursor ko follow karti hain, leave par spring-back.
+  - **Animated gradient**: FAB ring, header glow, IRON MIKE headline (shimmer clip-text), bottom accent line sab `gradient-flow` (300% bg, infinite) — flowing orange gradient.
+  - **Micro-interactions**: send button `ripple` burst, message entrance `filter: blur(6px)` + spring, typing dots scale/bounce `Thinking` label, speaking waveform gradient bars + `border-pulse` glow, online status `ring-pulse`.
+  - **Naye helpers**: `MagneticButton` (useMotionValue+useSpring strength), `TiltCard` (3D tilt, maxTilt prop) — reusable components.
+- [src/index.css] — Naye animation keyframes/classes add kiye (ChatBot + site-wide reusable): `gradient-flow`, `aurora-drift`, `orb-float`, `particle-rise`, `border-pulse`, `conic-spin`, `shimmer-sweep`, `glass-in`, `ring-pulse`, `ripple`.
+- [VERIFY] — `tsc --noEmit` 0 errors; `vite build` pass (33.1s, 2134 modules). Changes local — push user approval par.
