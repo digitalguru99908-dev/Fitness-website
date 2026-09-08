@@ -6,6 +6,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
+import { usePageTitle } from '@/lib/usePageTitle';
 
 /** Used for single-item entrance animations where custom delay is still appropriate */
 const fadeUp: Variants = {
@@ -44,6 +45,7 @@ const ownerValues = [
 ];
 
 export function About() {
+  usePageTitle('/about');
   const prefersReduced = useForceReducedMotion();
 
   return (

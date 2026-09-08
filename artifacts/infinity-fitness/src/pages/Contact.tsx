@@ -3,8 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Phone, Clock, Instagram, Mail, Send, CheckCircle2, Loader2 } from 'lucide-react';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
 import { API_BASE } from '@/lib/apiBase';
+import { usePageTitle } from '@/lib/usePageTitle';
 
 export function Contact() {
+  usePageTitle('/contact');
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'submitted' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
   const [sentName, setSentName] = useState('');

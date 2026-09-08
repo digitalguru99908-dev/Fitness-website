@@ -10,6 +10,7 @@ import { Reviews } from '@/components/sections/Reviews';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
 import { FREE_TRIAL_DAYS } from '@/lib/siteConfig';
 import { useFreeTrialModal } from '@/components/free-trial/FreeTrialProvider';
+import { usePageTitle } from '@/lib/usePageTitle';
 
 const homeServices = [
   { icon: Dumbbell, title: "Strength Training", desc: "Free weights, machines & powerlifting section — everything for heavy lifting." },
@@ -48,6 +49,7 @@ const faqs = [
 ];
 
 export function Home() {
+  usePageTitle('/');
   const prefersReduced = useForceReducedMotion();
   const { openFreeTrial } = useFreeTrialModal();
 

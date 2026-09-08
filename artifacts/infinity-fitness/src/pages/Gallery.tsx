@@ -10,6 +10,7 @@ import img4 from '@assets/4_1785140862774.webp';
 import img5 from '@assets/5_1785140862773.webp';
 import img6 from '@assets/6_1785140862772.webp';
 import img7 from '@assets/1a4c7a90-e805-426f-a6ee-c310dc609be2_1785141254714.webp';
+import { usePageTitle } from '@/lib/usePageTitle';
 
 const videos = [
   { src: '/gallery-video-1.mp4', caption: 'Infinity Fitness Gym Reel' },
@@ -30,6 +31,7 @@ const images = [
 ];
 
 export function Gallery() {
+  usePageTitle('/gallery');
   const [videoLightbox, setVideoLightbox] = useState<number | null>(null);
   const [imageLightbox, setImageLightbox] = useState<number | null>(null);
   const [lbPlaying, setLbPlaying] = useState(false);

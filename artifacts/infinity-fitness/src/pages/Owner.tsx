@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, type Variants } from 'framer-motion';
 import { Phone, Instagram, Award, Users, Dumbbell, Heart } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
+import { usePageTitle } from '@/lib/usePageTitle';
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 40 },
@@ -39,6 +40,7 @@ const values = [
 ];
 
 export function Owner() {
+  usePageTitle('/owner');
   return (
     <div className="flex flex-col pt-20">
 

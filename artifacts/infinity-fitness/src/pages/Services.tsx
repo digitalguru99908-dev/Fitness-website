@@ -4,6 +4,7 @@ import { useForceReducedMotion } from '@/lib/motion';
 import { Dumbbell, HeartPulse, TrendingUp, Flame, Leaf, Zap, CheckCircle2 } from 'lucide-react';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
+import { usePageTitle } from '@/lib/usePageTitle';
 
 const programs = [
   {
@@ -51,6 +52,7 @@ const programs = [
 ];
 
 export function Services() {
+  usePageTitle('/services');
   const prefersReduced = useForceReducedMotion();
 
   return (

@@ -12,6 +12,7 @@ import {
   REVIEW_COUNT,
   type Review,
 } from '@/lib/reviews';
+import { usePageTitle } from '@/lib/usePageTitle';
 
 // 3D cube ke 4 faces par dikhne wale top featured reviews
 const facePositions = ['front', 'right', 'back', 'left'] as const;
@@ -171,6 +172,7 @@ function TiltReviewCard({ item, delay }: { item: Review; delay: number }) {
 }
 
 export function Testimonials() {
+  usePageTitle('/testimonials');
   const prefersReduced = useForceReducedMotion();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);

@@ -6,6 +6,7 @@ import { ArrowRight, ChevronDown, ClipboardCheck, Dumbbell, Zap } from 'lucide-r
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
 import { FREE_TRIAL_DAYS } from '@/lib/siteConfig';
+import { usePageTitle } from '@/lib/usePageTitle';
 
 const faqs = [
   {
@@ -49,6 +50,7 @@ const joinSteps = [
 ];
 
 export function Membership() {
+  usePageTitle('/membership');
   const prefersReduced = useForceReducedMotion();
 
   // Shared hover/tap for plan cards
