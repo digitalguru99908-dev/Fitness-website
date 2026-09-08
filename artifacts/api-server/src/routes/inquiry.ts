@@ -331,7 +331,7 @@ router.post("/inquiry", async (req, res) => {
     return;
   }
 
-  if (!process.env["BREVO_API_KEY"] && !process.env["RESEND_API_KEY"]) {
+    if (!process.env["BREVO_API_KEY"] && !process.env["RESEND_API_KEY"]) {
     logger.error("No email provider configured (need BREVO_API_KEY or RESEND_API_KEY)");
     res.status(500).json({ error: "Email service not configured." });
     return;
@@ -352,6 +352,7 @@ router.post("/inquiry", async (req, res) => {
   // SPEED FIX: client ko TURANT response bhejo — emails background me jaate hain.
   res.json({ success: true });
 
+  // Owner notification: Brevo (preferred) → Resend (fallback).
   sendEmail(ownerMailOptions)
     .then((via) => {
       logger.info({ name, phone, email: customerEmail || null, plan, via }, "Inquiry email sent");
@@ -365,6 +366,10 @@ router.post("/inquiry", async (req, res) => {
     return;
   }
 
+  // ── Customer AUTO-REPLY ──
+  // IMPORTANT: Sirf Brevo hi CUSTOMER ke arbitrary email par bhej sakta hai.
+  // Resend ke free plan par onboarding@resend.dev se SIRF owner email reach hota
+  // hai — customer ko nahi. Isliye auto-reply ke liye BREVO hi use karo.
   const topics = detectTopics(message || "");
   const autoReplyOptions = {
     to: customerEmail,
@@ -372,16 +377,25 @@ router.post("/inquiry", async (req, res) => {
     html: buildAutoReplyHtml(name, topics),
   };
 
-  sendEmail(autoReplyOptions)
-    .then((via) => {
+  if (!process.env["BREVO_API_KEY"]) {
+    logger.error(
+      { to: customerEmail },
+      "Customer auto-reply NOT sent — BREVO_API_KEY is not set. Resend cannot reach the customer (free plan only reaches the owner). Configure BREVO_API_KEY (+ BREVO_SENDER_EMAIL) in the Render dashboard to enable auto-reply.",
+    );
+    return;
+  }
+
+  brevoSender(autoReplyOptions)
+    .then(() => {
       logger.info(
-        { to: customerEmail, topics: topics.map((t) => t.title), via },
+        { to: customerEmail, topics: topics.map((t) => t.title), via: "brevo" },
         "Customer auto-reply email sent",
       );
     })
     .catch((err: unknown) => {
-      logger.error({ err }, "Failed to send customer auto-reply");
+      logger.error({ err, to: customerEmail }, "Failed to send customer auto-reply (Brevo)");
     });
 });
+
 
 export default router;

@@ -56,25 +56,25 @@ export function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-[100svh] flex items-center overflow-hidden pt-20">
+      <section className="relative min-h-[100svh] flex items-center overflow-hidden pt-20 lg:pt-24">
         {/* Video background */}
         <HeroVideoCarousel />
 
         {/* Hero content — 2-column on desktop, stacked on mobile */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-0">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-0">
           <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
 
             {/* ── LEFT: SEO heading + CTAs ── */}
-            <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
+            <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left mt-8 lg:mt-0">
               {/* SEO: primary keyword (gym name + city) h1 me, secondary keywords subtitle me */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
               >
-                <h1 className="text-4xl sm:text-6xl md:text-7xl font-display font-bold uppercase tracking-tight text-white mb-5 leading-tight">
+                <h1 className="text-3xl sm:text-6xl md:text-7xl font-display font-bold uppercase tracking-tight text-white mb-5 leading-tight">
                   Infinity Fitness Gym Kaithal
-                  <span className="block mt-2 text-2xl sm:text-3xl md:text-4xl text-gold text-glow normal-case tracking-[0.15em]">
+                  <span className="block mt-2 text-xl sm:text-3xl md:text-4xl text-gold text-glow normal-case tracking-[0.15em]">
                     Transform Your Body
                   </span>
                 </h1>
