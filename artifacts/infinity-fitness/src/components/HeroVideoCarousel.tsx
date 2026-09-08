@@ -10,16 +10,36 @@ export function HeroVideoCarousel() {
     const vid = videoRef.current;
     if (!vid) return;
 
+    // Autoplay ke liye video ko muted rakhna zaroori hai nhi to browser block
+    // kar deta hai. Force karke bhi muted + loop set karo.
     vid.muted = true;
+    vid.defaultMuted = true;
     vid.volume = 0;
+    vid.loop = true;
+    vid.playsInline = true;
+    vid.setAttribute('autoplay', '');
+    vid.setAttribute('muted', '');
+    vid.setAttribute('playsinline', '');
+
+    // Autoplay block hone par user ke pehle interaction par retry karo
+    const retry = () => {
+      vid.play().catch(() => {});
+    };
 
     const tryPlay = () => {
-      vid.play().catch(() => {});
+      const p = vid.play();
+      if (p !== undefined) {
+        p.catch(() => {
+          document.addEventListener('pointerdown', retry, { once: true });
+          document.addEventListener('keydown', retry, { once: true });
+        });
+      }
     };
 
     if (vid.readyState >= 2) {
       tryPlay();
     } else {
+      vid.addEventListener('loadeddata', tryPlay, { once: true });
       vid.addEventListener('canplay', tryPlay, { once: true });
     }
 
@@ -28,7 +48,9 @@ export function HeroVideoCarousel() {
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          vid.play().catch(() => {});
+          vid.muted = true;
+          const p = vid.play();
+          if (p !== undefined) p.catch(() => {});
         } else {
           vid.pause();
         }
@@ -38,6 +60,8 @@ export function HeroVideoCarousel() {
     io.observe(vid);
     return () => {
       io.disconnect();
+      document.removeEventListener('pointerdown', retry);
+      document.removeEventListener('keydown', retry);
       vid.pause();
     };
   }, []);
@@ -52,9 +76,12 @@ export function HeroVideoCarousel() {
         loop
         muted
         playsInline
+        preload="auto"
+        disablePictureInPicture
+        controlsList="nodownload noplaybackrate"
       />
-      <div className="absolute inset-0 bg-black/20" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+      <div className="absolute inset-0 bg-black/20 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20 pointer-events-none" />
     </div>
   );
 }
