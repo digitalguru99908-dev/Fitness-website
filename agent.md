@@ -984,6 +984,15 @@ h3 subsections properly nested. 3 issues mile, user approval se teeno fix kiye:
 - [VERIFY] — `tsc --noEmit` 0 errors (workspace root). Changes local — push user
   approval par.
 
+### 2026-09-09 (ChatBot panel position fix)
+
+- [src/components/ChatBot.tsx] — **CHATBOT PANEL SHIFTED DOWN** (user report: chatbot
+  open hone ke baad pura interface nahi dikh raha — panel ka upar ka hissa screen se
+  cut ho raha tha). Fix: chat panel ka bottom positioning mobile `bottom-44` →
+  `bottom-48` (192px), desktop `bottom-52` → `bottom-56` (224px) — panel ab thoda
+  neeche hai jisse poora interface screen par visible hota hai. FAB position
+  (`bottom-32`) unchanged. Typecheck 0 errors.
+
 ### 2026-09-09 (Meta Description refinement)
 
 - [src/lib/usePageTitle.ts] — **META DESCRIPTION REFINEMENT** (user approved teen edits,
