@@ -175,6 +175,55 @@
 .cube-face-right { transform: rotateY(90deg) translateZ(calc(var(--cube-size) / 2)); }
 .cube-face-left  { transform: rotateY(-90deg) translateZ(calc(var(--cube-size) / 2)); }
 
+/* ===== Rotating 3D circular review carousel (Testimonials "Every Review Counts") ===== */
+.review-carousel {
+  --car-r: 230px;
+  --car-w: 170px;
+  --car-h: 250px;
+  perspective: 1500px;
+  transform-style: preserve-3d;
+}
+
+@media (min-width: 768px) {
+  .review-carousel {
+    --car-r: 430px;
+    --car-w: 240px;
+    --car-h: 280px;
+    perspective: 2400px;
+  }
+}
+
+.review-carousel-stage {
+  transform-style: preserve-3d;
+  animation: carousel-spin 60s linear infinite;
+}
+
+.review-carousel:hover .review-carousel-stage {
+  animation-play-state: paused;
+}
+
+.review-carousel-offscreen .review-carousel-stage {
+  animation-play-state: paused;
+}
+
+@keyframes carousel-spin {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
+}
+
+.review-carousel-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--car-w);
+  height: var(--car-h);
+  margin-top: calc(var(--car-h) / -2);
+  margin-left: calc(var(--car-w) / -2);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @plugin "@tailwindcss/typography";

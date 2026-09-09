@@ -984,14 +984,42 @@ h3 subsections properly nested. 3 issues mile, user approval se teeno fix kiye:
 - [VERIFY] — `tsc --noEmit` 0 errors (workspace root). Changes local — push user
   approval par.
 
-### 2026-09-09 (ChatBot FAB parallel to WhatsApp)
+### 2026-09-09 (ChatBot FAB parallel to WhatsApp + full interface fit)
 
 - [src/components/ChatBot.tsx] — **CHATBOT FAB MOVED DOWN, PARALLEL TO WHATSAPP ICON**
   (user request: chatbot icon ko niche karke WhatsApp ke parallel rakho). FAB ab
   WhatsApp ke SAME bottom level par hai — mobile `bottom-16` / desktop `md:bottom-6`
-  (right side, WhatsApp left side par). Pehle `bottom-32` (bahut upar) tha. Chat panel
-  bhi thoda neeche shift — `bottom-48 md:bottom-56` → `bottom-40 md:bottom-44` (FAB ke
-  theek upar, overlap nahi). Typecheck 0 errors.
+  (right side, WhatsApp left side par). Pehle `bottom-32` (bahut upar) tha. Typecheck 0 errors.
+- [src/components/ChatBot.tsx] — **CHATBOT PANEL FULL-INTERFACE FIX** (user report:
+  FAB parallel karne ke baad panel ka pura interface nahi dikh raha — upar cut ho
+  raha tha). Fix: panel ko FAB ke theek upar sankuchit kiya — `bottom-40 md:bottom-44`
+  → `bottom-28 md:bottom-24` (overlap nahi), aur `maxHeight: calc(100vh - 140px)` →
+  `calc(100vh - 110px)`. Ab chhoti laptop/mobile screen par bhi poora chat interface
+  (header + messages + quick actions + input) screen ke andar visible rehta hai.
+
+### 2026-09-09 (Every Review Counts — rotating 3D circular carousel)
+
+- [src/pages/Testimonials.tsx] — **REVIEWS GRID → ROTATING 3D CIRCULAR CAROUSEL**
+  (user request: "Every Review Counts" ke static reviews ko animation me loop me chalao —
+  cube ya circle me ghumne wali 3D animation). Static 3-column grid hata diya, uski jagah
+  **3D circular ring carousel**:
+  - Saare {allReviews.length} reviews ek 3D ring/cylinder me arranged hote hain jo
+    `rotateY(angle) translateZ(radius) rotateY(-angle)` se front-facing rakhe jaate hain
+    (counter-rotation — text hamesha khada/padha ja sakta hai, backface hidden).
+  - Pura ring continuously ghoomta hai (`carousel-spin 60s linear infinite`) — saare
+    reviews loop me rotating circle me sarak-te dikhte hain. Hover par spin pause (padhne
+    ke liye), viewport se bahar ho to offscreen-pause (weak GPU perf).
+  - Responsive: mobile radius 230px / card 170px × 250px, desktop radius 430px / card
+    240px × 280px; `perspective` device ke hisaab se. Peeche glow ring + neeche hint
+    "Hover to pause and read".
+  - Purana `TiltReviewCard`/`InitialsAvatar`/`initialsOf` (ab unused) hata kar compact
+    `CarouselCard` banaya (name + stars + line-clamp review + Google/Member date tag).
+    Unused `useMotionValue`/`useSpring` imports remove kiye.
+  - [src/index.css] — `.review-carousel`, `.review-carousel-stage`, `.review-carousel-card`
+    + `carousel-spin` keyframes + responsive `--car-r/--car-w/--car-h` vars add kiye.
+  - [VERIFY] — tsc 0 errors, vite build pass (28.3s, 2135 modules).
+
+
 
 ### 2026-09-09 (WhatsApp button moved to left side)
 
@@ -1001,15 +1029,6 @@ h3 subsections properly nested. 3 issues mile, user approval se teeno fix kiye:
   (`bottom-16` mobile / `md:bottom-6` desktop same). Hover label padding `pr-5` → `pl-5`
   (label ab icon ke right side expand hota hai kyunki icon left side par hai). ChatBot
   FAB right side par unchanged — ab dono icons alag-alag corners par hain. Typecheck 0 errors.
-
-### 2026-09-09 (ChatBot panel position fix)
-
-- [src/components/ChatBot.tsx] — **CHATBOT PANEL SHIFTED DOWN** (user report: chatbot
-  open hone ke baad pura interface nahi dikh raha — panel ka upar ka hissa screen se
-  cut ho raha tha). Fix: chat panel ka bottom positioning mobile `bottom-44` →
-  `bottom-48` (192px), desktop `bottom-52` → `bottom-56` (224px) — panel ab thoda
-  neeche hai jisse poora interface screen par visible hota hai. FAB position
-  (`bottom-32`) unchanged. Typecheck 0 errors.
 
 ### 2026-09-09 (Meta Description refinement)
 

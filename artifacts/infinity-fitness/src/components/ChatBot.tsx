@@ -488,10 +488,10 @@ export function ChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0, filter: 'blur(0)' }}
             exit={{ opacity: 0, y: 60, scale: 0.8, rotateX: 20, filter: 'blur(12px)' }}
             transition={{ type: 'spring', damping: 26, stiffness: 280, mass: 0.9 }}
-            className="fixed bottom-40 md:bottom-44 right-4 md:right-6 z-50 w-[400px] max-w-[calc(100vw-2rem)] rounded-3xl overflow-hidden flex flex-col"
+            className="fixed bottom-28 md:bottom-24 right-4 md:right-6 z-50 w-[400px] max-w-[calc(100vw-2rem)] rounded-3xl overflow-hidden flex flex-col"
             style={{
               height: minimized ? '72px' : '610px',
-              maxHeight: 'calc(100vh - 140px)',
+              maxHeight: 'calc(100vh - 110px)',
               perspective: '1400px',
             }}
           >

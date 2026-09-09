@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, useInView, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { useForceReducedMotion } from '@/lib/motion';
 import { useVideoPauseOnHidden } from '@/lib/useVideoPauseOnHidden';
 import { Star, MessageSquare, Volume2, VolumeX, Quote } from 'lucide-react';
@@ -50,124 +50,32 @@ function CubeFace({ item, position }: { item: Review; position: (typeof facePosi
   );
 }
 
-// Naam ke initials nikalta hai (e.g. "Mohit Bansal" -> "MB")
-function initialsOf(name: string): string {
-  return name
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0].toUpperCase())
-    .join('');
-}
-
-// Circular gradient avatar — initials + animated gradient ring
-function InitialsAvatar({ item, size = 'md' }: { item: Review; size?: 'md' | 'lg' }) {
-  const dim = size === 'lg' ? 'w-14 h-14' : 'w-11 h-11';
-  const ring = size === 'lg' ? '-inset-1.5' : '-inset-1';
-  const text = size === 'lg' ? 'text-base' : 'text-sm';
+// Compact review card — 3D circular carousel ke liye (fixed height, readable)
+function CarouselCard({ item }: { item: Review }) {
   return (
-    <div className="relative shrink-0">
-      <div className={`absolute ${ring} rounded-full blur-md opacity-45 animate-gradient-flow pointer-events-none`}
-        style={{
-          background: 'linear-gradient(135deg, #ff6a00, #ff3d00, #ff8c33, #ff6a00)',
-          backgroundSize: '300% 300%',
-        }} />
-      <div className={`relative ${dim} rounded-full flex items-center justify-center overflow-hidden`}
-        style={{
-          background: 'linear-gradient(160deg, #1a1a1a, #0d0d0d)',
-          border: '1.5px solid rgba(255,106,0,0.35)',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.5), 0 0 16px rgba(255,106,0,0.12)',
-        }}>
-        <span className={`${text} font-display font-black text-transparent animate-gradient-flow`}
-          style={{
-            backgroundImage: 'linear-gradient(135deg, #ff8c33, #ff6a00, #ff3d00)',
-            backgroundSize: '300% 300%',
-            WebkitBackgroundClip: 'text',
-            backgroundClip: 'text',
-          }}>
-          {initialsOf(item.name)}
+    <div className="relative w-full h-full flex flex-col rounded-2xl overflow-hidden bg-[#080808] border border-white/10 p-4 sm:p-5"
+      style={{ backgroundImage: 'linear-gradient(180deg, rgba(20,20,26,0.6), rgba(8,8,8,0.95))' }}>
+      <Quote className="absolute top-4 right-4 w-6 h-6 text-primary/20" />
+      <div className="flex items-center gap-2 mb-2 pr-8">
+        <span className="font-display font-bold uppercase tracking-wide text-white text-[13px] leading-tight">
+          {item.name}
+        </span>
+      </div>
+      <div className="mb-2">
+        <Stars count={item.rating} />
+      </div>
+      <p className="text-gray-300 text-[12px] leading-snug overflow-hidden line-clamp-6">
+        "{item.review}"
+      </p>
+      <div className="mt-auto pt-2 flex items-center gap-1.5">
+        {item.tag === 'Google Review' && (
+          <span className="w-1.5 h-1.5 rounded-full bg-primary/50 animate-pulse" />
+        )}
+        <span className="text-[9px] font-bold uppercase tracking-wider text-primary/60">
+          {item.tag === 'Google Review' ? 'Google Review · ' : 'Member · '}{item.date}
         </span>
       </div>
     </div>
-  );
-}
-
-// 3D tilt review card — cursor-follow rotate + glow
-function TiltReviewCard({ item, delay }: { item: Review; delay: number }) {
-  const rx = useMotionValue(0);
-  const ry = useMotionValue(0);
-  const srx = useSpring(rx, { stiffness: 200, damping: 20 });
-  const sry = useSpring(ry, { stiffness: 200, damping: 20 });
-  const ref = useRef<HTMLDivElement>(null);
-
-  const onMove = (e: React.MouseEvent) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const px = (e.clientX - rect.left) / rect.width - 0.5;
-    const py = (e.clientY - rect.top) / rect.height - 0.5;
-    ry.set(px * 10);
-    rx.set(-py * 10);
-  };
-  const onLeave = () => { rx.set(0); ry.set(0); };
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 24, scale: 0.94 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, delay, type: 'spring', damping: 20, stiffness: 180 }}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      style={{ rotateX: srx, rotateY: sry, transformStyle: 'preserve-3d' }}
-      whileHover={{ y: -6, transition: { duration: 0.2 } }}
-      className="group relative"
-    >
-      {/* Hover glow */}
-      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-        style={{ background: 'radial-gradient(circle at 50% 0%, rgba(255,106,0,0.16) 0%, transparent 65%)' }} />
-      {/* Gradient border on hover */}
-      <div className="absolute -inset-[1px] rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-        style={{ background: 'linear-gradient(135deg, rgba(255,106,0,0.5), rgba(255,61,0,0.2), rgba(255,140,51,0.4))' }} />
-
-      <div className="relative h-full flex flex-col p-6 sm:p-7 rounded-2xl overflow-hidden bg-[#080808] border border-white/5 group-hover:border-transparent transition-colors duration-500"
-        style={{ transform: 'translateZ(20px)', backgroundImage: 'linear-gradient(180deg, rgba(20,20,26,0.6), rgba(8,8,8,0.9))' }}>
-        {/* Top row — avatar + quote */}
-        <div className="flex items-start gap-4" style={{ transform: 'translateZ(30px)' }}>
-          <InitialsAvatar item={item} />
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between gap-2">
-              <span className="font-display font-bold uppercase tracking-wider text-white text-sm">
-                {item.name}
-              </span>
-              <Quote className="w-5 h-5 text-primary/40 shrink-0" />
-            </div>
-            <span className="text-xs text-muted-foreground mt-0.5 inline-block">
-              {item.tag === 'Google Review' ? `Google · ${item.date}` : item.date}
-            </span>
-            <div className="mt-2">
-              <Stars count={item.rating} />
-            </div>
-          </div>
-        </div>
-
-        {/* Review text */}
-        <p className="text-gray-300 mt-4 flex-grow leading-relaxed text-[15px]">
-          "{item.review}"
-        </p>
-
-        {/* Google badge */}
-        {item.tag === 'Google Review' && (
-          <div className="mt-4 pt-4 border-t border-white/5 flex items-center gap-2" style={{ transform: 'translateZ(20px)' }}>
-            <span className="w-1.5 h-1.5 rounded-full bg-primary/50 animate-pulse" />
-            <span className="text-[10px] font-bold uppercase tracking-wider text-primary/60">
-              Verified Google Review
-            </span>
-          </div>
-        )}
-      </div>
-    </motion.div>
   );
 }
 
@@ -181,8 +89,10 @@ export function Testimonials() {
   // par har frame ka GPU kaam tabhi chalega jab user section dekh raha ho).
   const cubeRef = useRef<HTMLDivElement>(null);
   const marqueeRef = useRef<HTMLDivElement>(null);
+  const carRef = useRef<HTMLDivElement>(null);
   const cubeInView = useInView(cubeRef, { margin: '100px 0px' });
   const marqueeInView = useInView(marqueeRef, { margin: '100px 0px' });
+  const carInView = useInView(carRef, { margin: '100px 0px' });
 
   useVideoPauseOnHidden(videoRef);
 
@@ -390,7 +300,7 @@ export function Testimonials() {
             <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-28 bg-gradient-to-l from-background to-transparent"></div>
           </div>
 
-          {/* All Reviews — static grid (saare reviews readable + SEO indexable) */}
+          {/* All Reviews — rotating 3D circular carousel (loop me ghoomta hai) */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -409,11 +319,40 @@ export function Testimonials() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 mb-20">
-            {allReviews.map((item, i) => (
-              <TiltReviewCard key={i} item={item} delay={(i % 3) * 0.08} />
-            ))}
-          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
+            className="relative flex justify-center overflow-hidden mb-20"
+          >
+            {/* Ambient glow behind ring */}
+            <div aria-hidden="true" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] sm:w-[760px] sm:h-[760px] rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
+
+            <div
+              ref={carRef}
+              className={`review-carousel relative h-[300px] w-full max-w-[420px] sm:h-[360px] sm:max-w-none sm:w-[720px] ${carInView ? '' : 'review-carousel-offscreen'}`}
+            >
+              <div className="review-carousel-stage absolute inset-0">
+                {allReviews.map((item, i) => {
+                  const angle = (360 / allReviews.length) * i;
+                  return (
+                    <div
+                      key={i}
+                      className="review-carousel-card"
+                      style={{ transform: `rotateY(${angle}deg) translateZ(var(--car-r)) rotateY(${-angle}deg)` }}
+                    >
+                      <CarouselCard item={item} />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <p className="absolute bottom-0 left-0 right-0 text-center text-xs text-muted-foreground/70 font-medium">
+              Hover over the ring to pause and read — it rotates automatically.
+            </p>
+          </motion.div>
 
           {/* CTA */}
           <div className="text-center">
