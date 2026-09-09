@@ -984,6 +984,15 @@ h3 subsections properly nested. 3 issues mile, user approval se teeno fix kiye:
 - [VERIFY] — `tsc --noEmit` 0 errors (workspace root). Changes local — push user
   approval par.
 
+### 2026-09-09 (WhatsApp button moved to left side)
+
+- [src/components/ui/WhatsAppButton.tsx] — **WHATSAPP FLOATING BUTTON MOVED TO LEFT**
+  (user request: WhatsApp icon left side par kar do). Floating button ab right side se
+  hata kar **left side** `left-4` (mobile) / `md:left-6` (desktop) par shift kiya
+  (`bottom-16` mobile / `md:bottom-6` desktop same). Hover label padding `pr-5` → `pl-5`
+  (label ab icon ke right side expand hota hai kyunki icon left side par hai). ChatBot
+  FAB right side par unchanged — ab dono icons alag-alag corners par hain. Typecheck 0 errors.
+
 ### 2026-09-09 (ChatBot panel position fix)
 
 - [src/components/ChatBot.tsx] — **CHATBOT PANEL SHIFTED DOWN** (user report: chatbot
