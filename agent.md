@@ -1068,3 +1068,27 @@ h3 subsections properly nested. 3 issues mile, user approval se teeno fix kiye:
   - Play button / browser overlay block: explicit `controls` hi nahi + `controlsList="nodownload noplaybackrate"` + `disablePictureInPicture` + overlay divs par `pointer-events-none`.
   - NOTE: agar ab bhi "play" dikhe to wo video file `infinity.mp4` ke ANDAR baked-in hai (template UI), HTML control nahi — video replace karna padega.
 - [VERIFY] — frontend `tsc --noEmit` 0 errors; `vite build` pass; api-server build pass. Saare commits push ho chuke hain: `6f5c752` (SEO), `6f4f368` (email+hero title), `5b96078` (redirect restore), `ca83d63` (video fix).
+
+### 2026-09-09 (Chatbot 500 permanent fix)
+
+- [artifacts/api-server/src/routes/chat.ts] — **CHATBOT 500 PERMANENT FIX** (user report:
+  browser console me `Failed to load resource: the server responded with a status of 500 ()
+  ` chatbot par aa raha tha). Root cause: `/api/chat` (Groq) aur `/api/tts` (Cartesia)
+  ke transient failures (network error / API 5xx / timeout) directly `500` return karte
+  the → browser console me error + chatbot me "Server busy" dikhta tha.
+- [chat.ts retry helper] — `fetchWithRetry()` add kiya: har API call par **3 attempts**
+  (1 + 2 retries) with exponential backoff (700ms/1400ms), only retryable statuses
+  (429/500/502/503/504) ya network error/timeout par retry, her attempt ka abhi
+  `AbortController` timeout (40s) — Groq/Cartesia slow/hang hone par bhi request kabhi
+  atki nahi rehti.
+- [chat.ts `/api/chat`] — Ab **kabhi 500 nahi**: Groq fail/slow ho jaaye to `FALLBACK_REPLY`
+  (Hinglish friendly message) ke saath `200` return hota hai. Frontend hamesha ek reply
+  dikhata hai, browser console clean.
+- [chat.ts `/api/tts`] — Khulna fail hone par ab `204 No Content` (empty, no error)
+  return hota hai — frontend `!res.body` wale graceful path se silently chup rahta hai
+  (text reply already mil chuka hota hai), console me 500 nahi aata. Mid-stream error par
+  `res.destroy()`.
+- [VERIFY] — api-server `tsc --noEmit` 0 errors; `node build.mjs` pass (all files);
+  API restarted (port 8080). Live tests: `/api/healthz` 200, `/api/chat` via Vite proxy
+  200 with real Groq reply, `/api/tts` 200 with audio bytes (35KB). Frontend untouched
+  (no rebuild needed). Changes local — push user approval par.

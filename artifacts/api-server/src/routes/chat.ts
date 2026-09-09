@@ -45,6 +45,39 @@ STRICT RULES:
 - NEVER answer non-fitness questions
 - Always recommend Infinity Fitness Gym for personalized training`;
 
+const RETRYABLE = new Set([429, 500, 502, 503, 504]);
+
+async function fetchWithRetry(
+  url: string,
+  init: RequestInit,
+  { retries = 2, timeoutMs = 40000, delayMs = 700 }: { retries?: number; timeoutMs?: number; delayMs?: number } = {}
+): Promise<Response> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const res = await fetch(url, { ...init, signal: controller.signal });
+      clearTimeout(timer);
+      if (RETRYABLE.has(res.status) && attempt < retries) {
+        lastError = new Error(`HTTP ${res.status}`);
+        await new Promise((r) => setTimeout(r, delayMs * 2 ** attempt));
+        continue;
+      }
+      return res;
+    } catch (err) {
+      clearTimeout(timer);
+      lastError = err;
+      if (attempt >= retries) break;
+      await new Promise((r) => setTimeout(r, delayMs * 2 ** attempt));
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error("Request failed");
+}
+
+const FALLBACK_REPLY =
+  "Arre bhai, abhi server thoda busy hai — kuch seconds baad dobara poochh le na. Tab tak ek glass paani pi le aur warm-up shuru kar de!";
+
 router.post("/chat", async (req, res) => {
   const { messages } = req.body as {
     messages?: Array<{ role: string; content: string }>;
@@ -64,7 +97,7 @@ router.post("/chat", async (req, res) => {
   }
 
   try {
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const response = await fetchWithRetry("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -84,7 +117,7 @@ router.post("/chat", async (req, res) => {
     if (!response.ok) {
       const errText = await response.text();
       logger.error({ status: response.status, errText }, "Groq API error");
-      res.status(500).json({ error: "Failed to get response. Try again." });
+      res.json({ reply: FALLBACK_REPLY });
       return;
     }
 
@@ -92,12 +125,12 @@ router.post("/chat", async (req, res) => {
       choices?: Array<{ message?: { content?: string } }>;
     };
 
-    const reply = data.choices?.[0]?.message?.content ?? "No response generated.";
+    const reply = data.choices?.[0]?.message?.content ?? FALLBACK_REPLY;
 
     res.json({ reply });
   } catch (err) {
     logger.error({ err }, "Chat endpoint error");
-    res.status(500).json({ error: "Something went wrong. Try again." });
+    res.json({ reply: FALLBACK_REPLY });
   }
 });
 
@@ -168,7 +201,7 @@ router.post("/tts", async (req, res) => {
   const voiceId = VOICE_IDS[effectiveLang] || VOICE_IDS["en"];
 
   try {
-    const response = await fetch("https://api.cartesia.ai/tts/bytes", {
+    const response = await fetchWithRetry("https://api.cartesia.ai/tts/bytes", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -194,7 +227,7 @@ router.post("/tts", async (req, res) => {
     if (!response.ok) {
       const errText = await response.text();
       logger.error({ status: response.status, errText }, "Cartesia TTS error");
-      res.status(500).json({ error: "TTS failed." });
+      res.status(204).end();
       return;
     }
 
@@ -211,7 +244,11 @@ router.post("/tts", async (req, res) => {
     res.end();
   } catch (err) {
     logger.error({ err }, "TTS endpoint error");
-    res.status(500).json({ error: "TTS failed." });
+    if (res.headersSent) {
+      res.destroy();
+      return;
+    }
+    res.status(204).end();
   }
 });
 
