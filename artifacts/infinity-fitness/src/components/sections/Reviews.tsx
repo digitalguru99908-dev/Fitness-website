@@ -22,7 +22,7 @@ export const Reviews = () => {
           {/* Sidebar */}
           <div className="lg:col-span-4">
             <Reveal direction="right">
-              <h3 className="text-primary font-display tracking-widest uppercase text-sm mb-2">Real Results</h3>
+              <p className="text-primary font-display tracking-widest uppercase text-sm mb-2">Real Results</p>
               <h2 className="text-4xl md:text-5xl font-display font-bold uppercase text-foreground mb-6">
                 Word On The <span className="text-primary">Street</span>
               </h2>

@@ -961,6 +961,52 @@ hai — kaam karta hai, par clean URL switch better.
   - Entrance: staggered spring scale/fade-in (viewport-gated). `MessageSquare` icon ka ab use nahi (Quote se replace) — lucide import update.
 - [VERIFY round 2] — `tsc --noEmit` 0 errors; `vite build` pass (13.7s, 2134 modules). Changes local — push user approval par.
 
+### 2026-09-09 (Heading Hierarchy audit + fixes)
+
+Audit kiya (saare 8 pages + components). 1 h1/page confirm, sab pages me h2 sections +
+h3 subsections properly nested. 3 issues mile, user approval se teeno fix kiye:
+- [src/pages/Membership.tsx] — **PRICING SECTION HEADING ADD** (hierarchy gap: h1 se
+  seedha h3 plan cards ja raha tha, h2 skip). Ab pricing section me h2 section heading:
+  eyebrow "Flexible Plans" + `Gym Membership Plans & Pricing` + subtext (site ke baaki
+  sections jaisa centered pattern). Cards ab h3 under h2 — no level skip. SEO bonus:
+  meta description wala "Gym Membership Plans & Pricing" long-tail ab heading me bhi.
+- [src/components/sections/Reviews.tsx] — kicker label `h3 "Real Results"` → `<p>`
+  (pehle h3 h2 ke PEHLE aata tha = inverted outline). Ab `p → h2 → h4` clean.
+- [src/pages/Services.tsx] — **CARDS h2 → h3 + SECTION HEADER**: 6 program cards
+  `h2` the (Home ke "Our Programs" me wahi cards h3 the — inconsistent). Ab section
+  header add: eyebrow "What We Offer" + h2 `Training Programs For Every Goal` +
+  subtext, cards ab **h3**. Home/Services ab consistent.
+- [NOTE] — `components/sections/{Hero,About,Services,Plans,Gallery,LocationContact}.tsx`
+  legacy/unused hain (grep se confirm: sirf `sections/Reviews` import hota hai) —
+  unme h3-before-h2 kicker pattern abhi bhi hai par wo render hi nahi hote, isliye
+  chhua nahi. `pages/not-found.tsx` bhi legacy hai (App.tsx apna inline 404 h1 use
+  karta hai).
+- [VERIFY] — `tsc --noEmit` 0 errors (workspace root). Changes local — push user
+  approval par.
+
+### 2026-09-09 (Meta Description refinement)
+
+- [src/lib/usePageTitle.ts] — **META DESCRIPTION REFINEMENT** (user approved teen edits,
+  baaki 5 pages untouched — already strong):
+  - **Home** `/` — keyword front-load kiya: `Best gym in Kaithal — Strength Training,
+    Cardio, Weight Loss, Weight Gain, Yoga & Personal Training. Try a 7-day free trial,
+    open till 11 PM daily.` (pehle "Kaithal's premier community gym…" — ab "best gym in
+    Kaithal" keyword + 7-day free trial CTA).
+  - **Services** `/services` — `Gym programs in Kaithal — Strength Training, Cardio,
+    Weight Loss, Weight Gain, Yoga & Personal Training with modern equipment. Book your
+    free trial today.` (lamba tha ~164 chars + weak CTA → ab ~150 chars, "Gym programs
+    in Kaithal" keyword + booking CTA).
+  - **Contact** `/contact` — trim (165→~156 chars taaki Google me truncate na ho):
+    `Contact Infinity Fitness Gym, Kaithal — Rishi Nagar, Dhand Rd, 136027. Call +91
+    81688 28832 for membership, timings & free trial. Open 5 AM–11 PM daily.`
+    ("Haryana" hata, dash tighten).
+- [artifacts/infinity-fitness/index.html] — Static home meta `description` +
+  `og:description` + `twitter:description` ko nayi home description ke saath sync
+  kiya (crawler/OG-share fallback — SPA me meta JS se set hoti hai, par static
+  fallback bhi updated rehni chahiye).
+- [VERIFY] — `tsc --noEmit` 0 errors (workspace root se run kiya, TS hoisted hai).
+  Change local hai — push user approval par.
+
 ### 2026-09-08 (SEO title tags + email auto-reply fix + hero title/video fixes)
 
 - [src/lib/usePageTitle.ts] — **NAYA SEO hook file** (`PAGE_META`): har route ka unique SEO `<title>` + `<meta name="description">` define karta hai, aur `usePageTitle(path)` mount par `document.title` + meta description set karta hai.

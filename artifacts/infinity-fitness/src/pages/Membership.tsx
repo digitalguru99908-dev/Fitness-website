@@ -88,6 +88,16 @@ export function Membership() {
         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-primary/5 rounded-full blur-2xl pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <p className="text-primary font-semibold uppercase tracking-[0.3em] text-sm mb-4">Flexible Plans</p>
+            <h2 className="text-3xl md:text-5xl font-display font-bold uppercase tracking-wider mb-4">
+              Gym Membership Plans & <span className="text-primary">Pricing</span>
+            </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto text-lg">
+              No joining fee, no hidden charges — pay only for what you use.
+            </p>
+          </div>
+
           <motion.div
             className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center max-w-5xl mx-auto"
             variants={staggerContainer(0.12)}

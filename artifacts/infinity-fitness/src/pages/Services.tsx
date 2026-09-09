@@ -80,6 +80,16 @@ export function Services() {
       {/* Services Grid */}
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <p className="text-primary font-semibold uppercase tracking-[0.3em] text-sm mb-3">What We Offer</p>
+            <h2 className="text-3xl md:text-5xl font-display font-bold uppercase tracking-wider mb-4">
+              Training Programs For <span className="text-primary">Every Goal</span>
+            </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto text-lg">
+              From building muscle to losing fat, we have the equipment and the expertise to get you there.
+            </p>
+          </div>
+
           {/* staggerContainer replaces per-item delay: i * 0.1 */}
           <motion.div
             className="grid grid-cols-1 md:grid-cols-2 gap-8"
@@ -107,9 +117,9 @@ export function Services() {
                   <div className="w-16 h-16 bg-white/5 rounded flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors box-glow">
                     <program.icon className="w-8 h-8 text-primary group-hover:text-white transition-colors" />
                   </div>
-                  <h2 className="text-2xl md:text-3xl font-display font-bold uppercase tracking-wider text-white">
+                  <h3 className="text-2xl md:text-3xl font-display font-bold uppercase tracking-wider text-white">
                     {program.title}
-                  </h2>
+                  </h3>
                 </div>
 
                 <p className="text-muted-foreground text-lg mb-8 leading-relaxed relative z-10 flex-grow">

@@ -11,7 +11,7 @@ interface PageMeta {
 export const PAGE_META: Record<string, PageMeta> = {
   '/': {
     title: `Best Gym in ${LOCATION} | ${SITE_NAME} | Fitness & Training`,
-    description: `Kaithal's premier community gym — Strength Training, Cardio, Weight Loss, Weight Gain, Yoga & Personal Training. Open all 7 days till 11 PM.`,
+    description: `Best gym in ${LOCATION} — Strength Training, Cardio, Weight Loss, Weight Gain, Yoga & Personal Training. Try a 7-day free trial, open till 11 PM daily.`,
   },
   '/about': {
     title: `About ${SITE_NAME} | Best Fitness Center in ${LOCATION}`,
@@ -19,7 +19,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   },
   '/services': {
     title: `Gym Services & Training Programs | ${SITE_NAME} ${LOCATION}`,
-    description: `Explore gym programs at ${SITE_NAME} ${LOCATION} — Strength Training, Cardio, Weight Loss, Weight Gain, Yoga & Modern Equipment. Join the best gym in Kaithal today.`,
+    description: `Gym programs in ${LOCATION} — Strength Training, Cardio, Weight Loss, Weight Gain, Yoga & Personal Training with modern equipment. Book your free trial today.`,
   },
   '/membership': {
     title: `Gym Membership Plans & Pricing | ${SITE_NAME} ${LOCATION}`,
@@ -35,7 +35,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   },
   '/contact': {
     title: `Contact ${SITE_NAME} | Best Gym in ${LOCATION}`,
-    description: `Contact ${SITE_NAME} Gym ${LOCATION} — Rishi Nagar, Kaithal–Dhand Rd, Haryana 136027. Call +91 81688 28832 for membership, timings & free trial. Open 5 AM – 11 PM daily.`,
+    description: `Contact ${SITE_NAME}, ${LOCATION} — Rishi Nagar, Dhand Rd, 136027. Call +91 81688 28832 for membership, timings & free trial. Open 5 AM–11 PM daily.`,
   },
   '/owner': {
     title: `Our Story | ${SITE_NAME} ${LOCATION}`,
