@@ -984,6 +984,15 @@ h3 subsections properly nested. 3 issues mile, user approval se teeno fix kiye:
 - [VERIFY] — `tsc --noEmit` 0 errors (workspace root). Changes local — push user
   approval par.
 
+### 2026-09-09 (ChatBot FAB parallel to WhatsApp)
+
+- [src/components/ChatBot.tsx] — **CHATBOT FAB MOVED DOWN, PARALLEL TO WHATSAPP ICON**
+  (user request: chatbot icon ko niche karke WhatsApp ke parallel rakho). FAB ab
+  WhatsApp ke SAME bottom level par hai — mobile `bottom-16` / desktop `md:bottom-6`
+  (right side, WhatsApp left side par). Pehle `bottom-32` (bahut upar) tha. Chat panel
+  bhi thoda neeche shift — `bottom-48 md:bottom-56` → `bottom-40 md:bottom-44` (FAB ke
+  theek upar, overlap nahi). Typecheck 0 errors.
+
 ### 2026-09-09 (WhatsApp button moved to left side)
 
 - [src/components/ui/WhatsAppButton.tsx] — **WHATSAPP FLOATING BUTTON MOVED TO LEFT**
