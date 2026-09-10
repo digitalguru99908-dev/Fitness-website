@@ -1461,5 +1461,13 @@ SI 13.9s). Report: `C:\Users\LENOVO\AppData\Local\Temp\opencode\lh-before.json`.
 - [A11Y FIX 5 — labels] — ChatBot input par `aria-label="Ask the fitness coach"`,
   send button par `aria-label="Send message"`.
 - [VERIFY] — `pnpm run build` pass (31.77s). Main 384KB/123KB gzip.
-- [PENDING] — commit + push, Vercel deploy, Lighthouse re-run → after scores,
-  report before/after.
+- [COMMIT + PUSH] — `660184b` (perf round 11) pushed, Vercel deploy LIVE (hero-poster
+  + 32KB favicon + webp assets verify kiye), `8bce199` (link-text fix) pushed.
+- [SEO/A11Y FINAL FIX] — Home "Learn More" → "More About Our Gym" (link-text audit);
+  free-trial card button ka aria-label hata (content se name) — label-content-name-
+  mismatch clear.
+- [FINAL LIGHTHOUSE (live, mobile)] — `lh-after2.json`:
+  **PERF 32 → 79 | A11Y 83 → 100 | BEST 100 → 100 | SEO 92 → 100**.
+  FCP 4.7→3.5s, LCP 5.3→3.8s, **TBT 4570→120ms**, CLS 0.04→0.038, **SI 13.9→4.4s**,
+  total bytes ~2,638KB. Sab audits green.
+- [DONE] — round 11 complete: before/after scores reported, source committed + pushed.
