@@ -1471,3 +1471,43 @@ SI 13.9s). Report: `C:\Users\LENOVO\AppData\Local\Temp\opencode\lh-before.json`.
   FCP 4.7→3.5s, LCP 5.3→3.8s, **TBT 4570→120ms**, CLS 0.04→0.038, **SI 13.9→4.4s**,
   total bytes ~2,638KB. Sab audits green.
 - [DONE] — round 11 complete: before/after scores reported, source committed + pushed.
+
+### 2026-09-10 (round 12 — PERF: bundle slimming + preload hints + responsive verify)
+
+**User confirm:** round 11 ka speed + responsive kaam achha laga. Ab PERF 79→90+ aur
+LCP 3.8s→2.5s target + actual browser responsive testing karna tha.
+
+- [QA: Vercel build error fix confirmed] — `070004d` transaction ka missing
+  `useForceReducedMotion` import fix (commit `da24cb1`) ke baad se har build PASS;
+  latest live deploy verified (sab SEO features live).
+- [RESPONSIVE TESTING — AUTOMATED SCREENSHOTS] — Chrome headless + CDP (no deps,
+  raw WebSocket) se har 8 pages ka 3 viewports par screenshot liya:
+  mobile 375×812 (3x DPR) / tablet 768×1024 (2x) / desktop 1440×900 (1x) = **24
+  screenshots**. User ne manually check kiye — **sab theek**. Screenshots folder +
+  script delete kar diye (repo me large PNGs nahi).
+- [PERF: react-icons removed] — sirf `FaWhatsapp` use ho raha tha 7 files me (Home,
+  About, Owner, MobileCtaBar, Footer, Navbar, WhatsAppButton) — heavy import for 1
+  icon. Naya `components/ui/WhatsAppIcon.tsx` (inline SVG, `className` prop) banakar
+  sab jagah replace. `react-icons` dep package.json se remove.
+- [PERF: date-fns removed] — completely unused (audit confirmed). Remove kiya.
+- [PERF: manual chunks] — `vite.config.ts` me `rollupOptions.output.manualChunks`:
+  `framer` (framer-motion) + `vendor` (react/react-dom/wouter) alag cached chunks.
+  Main bundle **384KB/123KB gzip → 236KB/74KB gzip (-40%)**, build time 34s → 8s.
+  Lazy page chunks unchanged (5.7-14KB). TBT par direct asar (main-thread JS parse/
+  execute kam).
+- [PERF: resource hints] — `index.html` me: `preconnect` to Render backend
+  (infinity-fitness-api-oregon-test.onrender.com), `preload` hero-poster.jpg
+  (`fetchpriority=high` — LCP element) + `preload` infinity.mp4 (type=video/mp4).
+- [VERIFY] — `pnpm run build` pass (7.89s, 2132 modules). Grep confirm: koi
+  react-icons/date-fns/FaWhatsapp reference nahi bacha.
+- [git] — responsive-screenshots + script deleted; commit `bfa7b5e`
+  "perf(round12): remove react-icons+date-fns (~40KB), manual chunks (framer/vendor
+  split), preload hints for LCP - main bundle 123KB->74KB gzip" pushed to origin/main.
+- [VERCEL DEPLOY - CONFIRMED SUCCESS] — `bfa7b5e` push ke baad ~60s me live site
+  updated: naye preload/preconnect hints present, chunk structure new
+  (`index-87kzMEFB.js` 230KB + `framer-Co-L4mUu.js` 127.8KB + `vendor-CW_N5906.js`
+  16.3KB). Saare assets HEAD 200. **Build error nahi aaya.**
+- [PENDING] — Lighthouse CLI rerun (before/after scores) jab user bole. Hero video
+  (infinity.mp4 2.2MB) ab `preload` hints se request hota hai — LCP/bytes par asar
+  check karna hoga. `hero-bg.mp4` (3.2MB) abhi bhi public me dead file (legacy rule
+  se delete nahi) — deploy size me waste.
