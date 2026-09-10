@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Phone, Clock, Instagram, Mail, Send, CheckCircle2, Loader2 } from 'lucide-react';
+import { MapPin, Phone, Clock, Instagram, Mail, Send, CheckCircle2, Loader2, ArrowRight } from 'lucide-react';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
 import { API_BASE } from '@/lib/apiBase';
 import { usePageTitle } from '@/lib/usePageTitle';
@@ -175,7 +176,7 @@ export function Contact() {
               className="bg-card border border-border p-8 md:p-10"
             >
               <h2 className="text-3xl font-display font-bold uppercase tracking-wider mb-2">Send an Inquiry</h2>
-              <p className="text-muted-foreground mb-8">Want to join the best gym in Kaithal? Fill out the form below and we'll get back to you within 24 hours about membership, free trial, or any questions. We welcome members from Titram, Keorak, Geong, Chandana, Shergarh, Deod Kheri, Khurana, Sanghan, Patti Afghan, Siwan, Khanpur, Polar, Sotha, Kawartan, Harnola, Kheri, Gulam Kheri, Rasulpur, Farshmajra, Kangthali, Firojpur, Dohar, Ateli, Balu and all nearby villages.</p>
+              <p className="text-muted-foreground mb-8">Want to join the best gym in Kaithal? Fill out the form below and we'll get back to you within 24 hours about membership, free trial, or any questions. We welcome members from Kurukshetra, Karnal, Hisar, Cheeka, Titram, Keorak, Geong, Chandana, Shergarh, Deod Kheri, Khurana, Sanghan, Patti Afghan, Siwan, Khanpur, Polar, Sotha, Kawartan, Harnola, Kheri, Gulam Kheri, Rasulpur, Farshmajra, Kangthali, Firojpur, Dohar, Ateli, Balu and all nearby areas.</p>
 
               <AnimatePresence mode="wait" initial={false}>
               {formStatus === 'submitted' ? (
@@ -333,6 +334,26 @@ export function Contact() {
               </AnimatePresence>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* Internal CTA */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-6"
+          >
+            <Link href="/membership" className="inline-flex items-center gap-2 text-primary font-bold uppercase tracking-wider hover:text-white transition-colors group">
+              View Membership Plans <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+            </Link>
+            <Link href="/services" className="inline-flex items-center gap-2 text-primary font-bold uppercase tracking-wider hover:text-white transition-colors group">
+              Explore Our Programs <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+            </Link>
+          </motion.div>
         </div>
       </section>
     </div>

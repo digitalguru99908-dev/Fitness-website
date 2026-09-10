@@ -168,7 +168,7 @@ export function HeroPhotoStrip() {
               >
                 <img
                   src={src}
-                  alt={`Infinity Fitness gym photo ${i + 1}`}
+                  alt={`Infinity Fitness Gym Kaithal member workout photo ${i + 1}`}
                   className="w-full h-full object-cover"
                   loading="eager"
                   draggable={false}

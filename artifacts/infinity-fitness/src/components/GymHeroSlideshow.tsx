@@ -63,7 +63,7 @@ export function GymHeroSlideshow({ startIndex = 0 }: GymHeroSlideshowProps) {
           <img
             key={i}
             src={landscapeSlides[i].src}
-            alt={`Infinity Fitness Gym ${i + 1}`}
+            alt={`Infinity Fitness Gym Kaithal workout area ${i + 1}`}
             className="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000"
             style={{ opacity: i === dCurrent ? 1 : 0 }}
             fetchPriority={i === dCurrent ? 'high' : 'auto'}
@@ -76,7 +76,7 @@ export function GymHeroSlideshow({ startIndex = 0 }: GymHeroSlideshowProps) {
           <img
             key={i}
             src={gymSlides[i].src}
-            alt={`Infinity Fitness Gym ${i + 1}`}
+            alt={`Infinity Fitness Gym Kaithal workout area ${i + 1}`}
             className="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000"
             style={{ opacity: i === mCurrent ? 1 : 0 }}
             fetchPriority={i === mCurrent ? 'high' : 'auto'}

@@ -3,6 +3,14 @@ import { Link } from 'wouter';
 import { MapPin, Phone, Clock, Instagram } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 
+const AREAS_WE_SERVE = [
+  'Kurukshetra', 'Karnal', 'Hisar', 'Cheeka',
+  'Titram', 'Keorak', 'Geong', 'Chandana', 'Shergarh', 'Deod Kheri',
+  'Khurana', 'Sanghan', 'Patti Afghan', 'Siwan', 'Khanpur', 'Polar',
+  'Sotha', 'Kawartan', 'Harnola', 'Kheri', 'Gulam Kheri', 'Rasulpur',
+  'Farshmajra', 'Kangthali', 'Firojpur', 'Dohar', 'Ateli', 'Balu',
+];
+
 export function Footer() {
   return (
     <footer className="bg-[#050505] border-t border-white/5 pt-16 pb-8">
@@ -90,6 +98,32 @@ export function Footer() {
               </li>
             </ul>
           </div>
+        </div>
+
+        {/* Areas We Serve — SEO: every location name is crawlable text */}
+        <div className="border-t border-white/5 pt-10 pb-8">
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <MapPin className="w-5 h-5 text-primary" />
+              <h4 className="font-display font-bold text-xl uppercase tracking-wider text-white">Areas We Serve</h4>
+            </div>
+            <p className="text-muted-foreground text-sm max-w-3xl mx-auto">
+              Infinity Fitness Gym — best gym in Kaithal — is easily accessible from Kurukshetra, Karnal, Hisar, Cheeka and all nearby villages in Kaithal district. Looking for a gym near you? We're just a short drive away.
+            </p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-2">
+            {AREAS_WE_SERVE.map((area) => (
+              <span
+                key={area}
+                className="bg-white/5 border border-white/10 text-gray-400 text-xs font-medium px-3 py-1.5 hover:border-primary/50 hover:text-primary transition-colors"
+              >
+                {area}
+              </span>
+            ))}
+          </div>
+          <p className="text-center text-muted-foreground text-xs mt-6">
+            Gym in Kaithal · Gym near Kurukshetra · Gym in Karnal · Gym in Hisar · Gym in Cheeka · Best fitness center in Kaithal district
+          </p>
         </div>
 
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">

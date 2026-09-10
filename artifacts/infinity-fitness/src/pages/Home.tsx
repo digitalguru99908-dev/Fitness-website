@@ -36,7 +36,7 @@ const faqs = [
   },
   {
     q: "Where is the gym located — address?",
-    a: "Infinity Fitness Gym — Kaithal–Dhand Rd, Opp. Maharaja Palace, Rishi Nagar, Kaithal, Haryana 136027. We are easily accessible from Titram, Keorak, Geong, Chandana, Shergarh, Deod Kheri, Khurana, Sanghan, Patti Afghan, Siwan, Khanpur, Polar, Sotha, Kawartan, Harnola, Kheri, Gulam Kheri, Rasulpur, Farshmajra, Kangthali, Firojpur, Dohar, Ateli, Balu and all nearby villages in Kaithal district. Search 'Infinity Fitness Gym Kaithal' on Google Maps."
+    a: "Infinity Fitness Gym — Kaithal–Dhand Rd, Opp. Maharaja Palace, Rishi Nagar, Kaithal, Haryana 136027. We are easily accessible from Kurukshetra, Karnal, Hisar, Cheeka, Titram, Keorak, Geong, Chandana, Shergarh, Deod Kheri, Khurana, Sanghan, Patti Afghan, Siwan, Khanpur, Polar, Sotha, Kawartan, Harnola, Kheri, Gulam Kheri, Rasulpur, Farshmajra, Kangthali, Firojpur, Dohar, Ateli, Balu and all nearby areas in Kaithal district. Search 'Infinity Fitness Gym Kaithal' on Google Maps."
   },
   {
     q: "What are the timings?",
@@ -282,48 +282,6 @@ export function Home() {
 
       {/* Member Reviews */}
       <Reviews />
-
-      {/* Service Area — SEO: nearby villages + Kaithal district */}
-      <section className="py-20 bg-background border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <p className="text-primary font-semibold uppercase tracking-[0.3em] text-sm mb-4">
-              Serving Kaithal District
-            </p>
-            <h2 className="text-3xl md:text-5xl font-display font-bold uppercase tracking-wider mb-4">
-              Gym For <span className="text-primary">Nearby Villages</span> &amp; Kaithal
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-              Infinity Fitness Gym is conveniently located in Rishi Nagar, Kaithal — easily accessible
-              from Titram, Keorak, Geong, Chandana, Shergarh, Deod Kheri, Khurana, Sanghan,
-              Patti Afghan, Siwan, Khanpur, Polar, Sotha, Kawartan, Harnola, Kheri, Gulam Kheri,
-              Rasulpur, Farshmajra, Kangthali, Firojpur, Dohar, Ateli, Balu and all nearby areas
-              in Kaithal district.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-            {[
-              'Titram', 'Keorak', 'Geong', 'Chandana', 'Shergarh', 'Deod Kheri',
-              'Khurana', 'Sanghan', 'Patti Afghan', 'Siwan', 'Khanpur', 'Polar',
-              'Sotha', 'Kawartan', 'Harnola', 'Kheri', 'Gulam Kheri', 'Rasulpur',
-              'Farshmajra', 'Kangthali', 'Firojpur', 'Dohar', 'Ateli', 'Balu',
-            ].map((village) => (
-              <div
-                key={village}
-                className="bg-card border border-white/5 px-4 py-3 text-center text-sm font-medium text-gray-300 hover:border-primary/40 hover:text-primary transition-colors"
-              >
-                {village}
-              </div>
-            ))}
-          </div>
-
-          <p className="text-center text-muted-foreground mt-8 text-sm">
-            Looking for a gym near you in Kaithal district? We're just a short drive from all these locations.
-            Call <a href="tel:8168828832" className="text-primary font-bold hover:text-white transition-colors">81688 28832</a> or visit us today.
-          </p>
-        </div>
-      </section>
 
       {/* FAQ — SEO long-tail keywords */}
       <section className="py-24 bg-[#080808] border-t border-white/5">

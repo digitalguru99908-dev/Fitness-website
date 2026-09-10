@@ -1248,3 +1248,91 @@ ho gaya tha. Ye root-cause agent.md me record kiya gaya.
   * Dono keys missing ho to `/api/inquiry` 500 deta hai — ek key to honi hi chahiye.
 - [PENDING] — User se pucha: EMAIL_SETUP.md guide file banau? (abhi na banayi — wait
   kiya ja raha hai user response ka).
+
+### 2026-09-10 (round 6 — SEO: locations to footer + 4 new cities + areaServed expansion)
+
+**User request:** Saari nearby locations (24 villages + 4 naye cities) ko Home page ke
+Service Area section se hatakar **Footer** me add karna — taaki har page par crawlable
+ho. Plus Kurukshetra, Karnal, Hisar, Cheeka bhi add karna. Goal: organic search me
+"best gym in Kaithal" + har listed location se gym search karne par top rank aaye.
+
+- [src/components/layout/Footer.tsx] — **AREAS WE SERVE section add kiya** (4-column
+  grid ke neeche, copyright ke upar). 28 locations as crawlable text tags: Kurukshetra,
+  Karnal, Hisar, Cheeka (naye) + 24 existing villages. `AREAS_WE_SERVE` array se
+  render hota hai (single source). Heading "Areas We Serve" + MapPin icon, SEO subtitle
+  ("best gym in Kaithal...easily accessible from Kurukshetra, Karnal, Hisar, Cheeka..."),
+  neeche keyword-rich line ("Gym in Kaithal · Gym near Kurukshetra · Gym in Karnal...").
+  Har tag hover par primary color. Footer ab har page par 28 location names dikhata hai
+  = Google ko har page me clearly dikhega ki gym in sab jagahon ko serve karta hai.
+- [src/pages/Home.tsx] — **Service Area section REMOVE** (lines 286-326 purana section
+  hata diya — villages grid ab footer me hai, duplicate nahi chahiye). Reviews ke baad
+  seedha FAQ aata hai. Page layout same, section count 1 kam.
+- [index.html — JSON-LD] — **areaServed expanded**: purana single GeoCircle (30km) →
+  ab array: (1) GeoCircle **60km radius** (Kurukshetra/Karnal/Hisar cover ho jaye,
+  ~45-55km door hain Kaithal se) with description listing all 28 locations, (2) 4
+  alag `City` objects (Kurukshetra, Karnal, Hisar, Cheeka) with Wikipedia `sameAs`
+  links — Google ko clearly signal milta hai ki gym in cities ko bhi serve karta hai.
+- [index.html — meta descriptions] — description/og:description/twitter:description
+  updated: "Best gym in Kaithal...Serving Kurukshetra, Karnal, Hisar, Cheeka, Titram,
+  Keorak & nearby villages." (pehle 9 gaon the, ab key cities + short list).
+- [src/lib/usePageTitle.ts] — `/`, `/about`, `/contact` meta descriptions updated:
+  naye 4 cities naturally weave kiye. Pehle sirf 9 villages the, ab "Kurukshetra,
+  Karnal, Hisar, Cheeka" front par.
+- [src/pages/About.tsx] — Story paragraph me 4 naye cities add kiye: "People from
+  Kurukshetra, Karnal, Hisar, Cheeka, Titram..." (pehle sirf 24 gaon the).
+- [src/pages/Contact.tsx] — Inquiry form description me 4 naye cities add kiye:
+  "We welcome members from Kurukshetra, Karnal, Hisar, Cheeka, Titram...".
+- [src/pages/Home.tsx — FAQ] — Location wale FAQ answer me 4 naye cities add kiye:
+  "easily accessible from Kurukshetra, Karnal, Hisar, Cheeka, Titram...".
+- [VERIFY] — `tsc --noEmit` 0 errors; `vite build` pass (14.99s, 2135 modules).
+  Changes local — push user approval par.
+
+### 2026-09-10 (round 7 — On-Page SEO: canonical tags, JSON-LD upgrade, alt text, internal links)
+
+**User request:** CSR rendering change skip karna hai (Option C), sirf on-page SEO
+improve karna hai — canonical tags, schema, alt text, internal linking.
+
+- [src/lib/usePageTitle.ts] — **CANONICAL TAG HOOK add kiya**: `setCanonical(path)`
+  function jo mount par `<link rel="canonical">` set karta hai (`CANONICAL_BASE` =
+  `https://infinity-fitness-gym-woad.vercel.app`). Har page ke unique canonical URL
+  hota hai (e.g., `/about` → `...vercel.app/about`). Duplicate content issues prevent
+  hota hai. Saath me meta descriptions bhi refine kiye — 8/8 pages strong location
+  keywords ke saath.
+- [index.html — static canonical] — `<link rel="canonical" href=".../">` add kiya
+  (fallback for crawlers jo JS execute nahi karte — SPA me JS-based canonical ka
+  backup).
+- [index.html — JSON-LD UPGRADED] — HealthClub schema me naye properties add kiye:
+  `url`, `email`, `paymentAccepted` (Cash/UPI/Bank Transfer), `currenciesAccepted`
+  (INR), `geo` (coordinates), `availableService` (6 services: Strength Training,
+  Cardio, Weight Loss, Weight Gain, Yoga, Personal Training — har ek ka description),
+  `amenityFeature` (Modern Equipment, AC, Parking, Free Trial, Personal Trainer).
+  `priceRange` ab `"₹2,000 - ₹11,000"` (pehle sirf `"₹₹"`). Ye sab Google local
+  search / Maps ke liye rich data hai — gym ke baare me zyada info milegi bina
+  click kiye.
+- [src/components/GymHeroSlideshow.tsx] — **ALT TEXT IMPROVED**: `"Infinity Fitness
+  Gym 1"` → `"Infinity Fitness Gym Kaithal workout area 1"` (13 images, desktop +
+  mobile both stacks).
+- [src/components/HeroPhotoStrip.tsx] — **ALT TEXT IMPROVED**: `"Infinity Fitness
+  gym photo 1"` → `"Infinity Fitness Gym Kaithal member workout photo 1"` (8 images).
+- [src/components/HeroVideoCarousel.tsx] — **VIDEO aria-label ADD**: hero background
+  video me `aria-label="Infinity Fitness Gym training montage background video"`.
+- [src/pages/Gallery.tsx] — **VIDEO aria-label ADD**: dono video elements (grid
+  thumbnail + lightbox) me `aria-label` with caption + gym name.
+- [src/pages/Testimonials.tsx] — **VIDEO aria-label ADD**: client review reel video
+  me `aria-label="Infinity Fitness Gym Kaithal client review video"`.
+- [INTERNAL LINKING — 6 pages updated]:
+  - [About.tsx] — "View Our Programs" → `/services` + "See Membership Plans" →
+    `/membership` (Core Values ke baad).
+  - [Services.tsx] — "Join Now — View Plans" → `/membership` (programs grid ke
+    baad). Pehle ZERO links the is page par.
+  - [Gallery.tsx] — "Contact Us for Details" → `/contact` (photos section ke baad).
+  - [Contact.tsx] — "View Membership Plans" → `/membership` + "Explore Our Programs"
+    → `/services` (form ke baad).
+  - [Testimonials.tsx] — "Join Our Community" → `/membership` (reviews ke baad).
+  - [Owner.tsx] — "Learn More About Us" → `/about` + "Get In Touch" → `/contact`
+    (Core Values ke baad). Sab links existing design pattern follow karte hain
+    (text-primary, uppercase, ArrowRight animation).
+- [HEADING AUDIT RESULT] — All 8 pages verified: sirf 1 h1 per page, h1→h2→h3
+  hierarchy proper hai, koi level skip nahi. CLEAN.
+- [VERIFY] — `tsc --noEmit` 0 errors; `vite build` pass (17.09s, 2135 modules).
+  Changes local — push user approval par.

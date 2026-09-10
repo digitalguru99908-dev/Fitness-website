@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'wouter';
 import { motion, type Variants } from 'framer-motion';
-import { Phone, Instagram, Award, Users, Dumbbell, Heart } from 'lucide-react';
+import { Phone, Instagram, Award, Users, Dumbbell, Heart, ArrowRight } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { usePageTitle } from '@/lib/usePageTitle';
 
@@ -208,6 +209,23 @@ export function Owner() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Internal CTA */}
+      <section className="py-16 px-4 bg-[#050505]">
+        <div className="max-w-6xl mx-auto text-center">
+          <motion.div
+            variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-6"
+          >
+            <Link href="/about" className="inline-flex items-center gap-2 text-primary font-bold uppercase tracking-wider hover:text-white transition-colors group">
+              Learn More About Us <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+            </Link>
+            <Link href="/contact" className="inline-flex items-center gap-2 text-primary font-bold uppercase tracking-wider hover:text-white transition-colors group">
+              Get In Touch <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+            </Link>
+          </motion.div>
         </div>
       </section>
 

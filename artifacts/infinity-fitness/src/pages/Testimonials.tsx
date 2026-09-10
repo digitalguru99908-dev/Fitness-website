@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'wouter';
 import { motion, useInView } from 'framer-motion';
 import { useForceReducedMotion } from '@/lib/motion';
 import { useVideoPauseOnHidden } from '@/lib/useVideoPauseOnHidden';
-import { Star, MessageSquare, Volume2, VolumeX, Quote } from 'lucide-react';
+import { Star, MessageSquare, Volume2, VolumeX, Quote, ArrowRight } from 'lucide-react';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 import {
   allReviews,
@@ -182,6 +183,7 @@ export function Testimonials() {
                   ref={videoRef}
                   src="/client-review.mp4"
                   className="absolute inset-0 w-full h-full object-cover"
+                  aria-label="Infinity Fitness Gym Kaithal client review video"
                   autoPlay
                   loop
                   muted
@@ -367,6 +369,19 @@ export function Testimonials() {
               <span className="skew-x-[10deg]">Share Your Story on Google</span>
             </motion.a>
           </div>
+
+          {/* Internal CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mt-12"
+          >
+            <Link href="/membership" className="inline-flex items-center gap-2 text-primary font-bold uppercase tracking-wider hover:text-white transition-colors group">
+              Join Our Community <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+            </Link>
+          </motion.div>
 
         </div>
       </section>

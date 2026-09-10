@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { Link } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useForceReducedMotion } from '@/lib/motion';
-import { X, ChevronLeft, ChevronRight, Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Play, Pause, Volume2, VolumeX, ArrowRight } from 'lucide-react';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
 import img1 from '@assets/1_1785140838620.webp';
 import img2 from '@assets/2_1785140851182.webp';
@@ -170,6 +170,7 @@ export function Gallery() {
                   src={video.src}
                   poster={video.poster}
                   className="w-full h-full object-cover"
+                  aria-label={`${video.caption} — Infinity Fitness Gym Kaithal`}
                   muted
                   loop
                   playsInline
@@ -235,6 +236,22 @@ export function Gallery() {
         </div>
       </section>
 
+      {/* Internal CTA */}
+      <section className="py-16">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <Link href="/contact" className="inline-flex items-center gap-2 text-primary font-bold uppercase tracking-wider hover:text-white transition-colors group">
+              Contact Us for Details <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Video Lightbox */}
       <AnimatePresence>
         {videoLightbox !== null && (
@@ -259,6 +276,7 @@ export function Gallery() {
                 src={videos[videoLightbox].src}
                 poster={videos[videoLightbox].poster}
                 className="max-h-[85vh] max-w-[90vw] rounded-sm shadow-2xl"
+                aria-label={`${videos[videoLightbox].caption} — Infinity Fitness Gym Kaithal video`}
                 playsInline
                 muted={lbMuted}
                 onClick={toggleLbPlay}

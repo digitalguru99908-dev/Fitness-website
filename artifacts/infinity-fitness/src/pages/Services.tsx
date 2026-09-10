@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useForceReducedMotion } from '@/lib/motion';
-import { Dumbbell, HeartPulse, TrendingUp, Flame, Leaf, Zap, CheckCircle2 } from 'lucide-react';
+import { Link } from 'wouter';
+import { Dumbbell, HeartPulse, TrendingUp, Flame, Leaf, Zap, CheckCircle2, ArrowRight } from 'lucide-react';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
 import { usePageTitle } from '@/lib/usePageTitle';
@@ -136,6 +137,22 @@ export function Services() {
                 </div>
               </motion.div>
             ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Internal CTA */}
+      <section className="pb-24 pt-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <Link href="/membership" className="inline-flex items-center gap-2 text-primary font-bold uppercase tracking-wider hover:text-white transition-colors group">
+              Join Now — View Plans <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+            </Link>
           </motion.div>
         </div>
       </section>

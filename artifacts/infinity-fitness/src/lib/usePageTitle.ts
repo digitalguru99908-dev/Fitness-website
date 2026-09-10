@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 const SITE_NAME = 'Infinity Fitness Gym';
 const LOCATION = 'Kaithal';
+const CANONICAL_BASE = 'https://infinity-fitness-gym-woad.vercel.app';
 
 interface PageMeta {
   title: string;
@@ -11,23 +12,23 @@ interface PageMeta {
 export const PAGE_META: Record<string, PageMeta> = {
   '/': {
     title: `Best Gym in ${LOCATION} | ${SITE_NAME} | Fitness & Training`,
-    description: `${SITE_NAME} is the best gym in ${LOCATION} — Strength Training, Cardio, Weight Loss, Weight Gain, Yoga & Personal Training in Rishi Nagar. Open till 11 PM daily. Serving Titram, Keorak, Geong, Chandana, Shergarh, Deod Kheri, Khurana, Sanghan, Patti Afghan & all nearby villages in ${LOCATION} district.`,
+    description: `${SITE_NAME} is the best gym in ${LOCATION} — Strength Training, Cardio, Weight Loss, Weight Gain, Yoga & Personal Training in Rishi Nagar. Open till 11 PM daily. Serving Kurukshetra, Karnal, Hisar, Cheeka, Titram, Keorak & all nearby areas.`,
   },
   '/about': {
     title: `About ${SITE_NAME} | Best Fitness Center in ${LOCATION}`,
-    description: `About ${SITE_NAME} ${LOCATION} — Kaithal's trusted fitness center in Rishi Nagar. Our story, mission, and commitment to helping every member achieve their fitness goals with affordable plans and hands-on personal training.`,
+    description: `About ${SITE_NAME} — ${LOCATION}'s trusted fitness center in Rishi Nagar. Our story, mission, and commitment to helping members from Kaithal, Kurukshetra, Karnal, Hisar, Cheeka and nearby villages achieve their fitness goals with affordable plans.`,
   },
   '/services': {
     title: `Gym Services & Training Programs | ${SITE_NAME} ${LOCATION}`,
-    description: `Gym programs in ${LOCATION} — Strength Training, Cardio, Weight Loss, Weight Gain, Yoga & Personal Training with modern equipment at Rishi Nagar. Book your free trial today.`,
+    description: `Gym programs in ${LOCATION} — Strength Training, Cardio, Weight Loss, Weight Gain, Yoga & Personal Training with modern equipment at Rishi Nagar. Serving Kurukshetra, Karnal, Hisar & nearby areas. Book your free trial today.`,
   },
   '/membership': {
     title: `Gym Membership Plans & Pricing | ${SITE_NAME} ${LOCATION}`,
-    description: `Affordable gym membership in ${LOCATION} — ₹2,000/month, ₹6,000 for 6 months, ₹11,000/year. No joining fee. ${SITE_NAME} offers transparent pricing and a free trial.`,
+    description: `Affordable gym membership in ${LOCATION} — ₹2,000/month, ₹6,000 for 6 months, ₹11,000/year. No joining fee, no hidden charges. ${SITE_NAME} offers transparent pricing and a 7-day free trial.`,
   },
   '/gallery': {
     title: `Gym Gallery & Photos | ${SITE_NAME} ${LOCATION}`,
-    description: `Take a look inside ${SITE_NAME} — Kaithal's best gym in Rishi Nagar with modern equipment, spacious workout floors, cardio zone, powerlifting area and more. See why members love us.`,
+    description: `Take a look inside ${SITE_NAME} — ${LOCATION}'s best gym in Rishi Nagar with modern equipment, spacious workout floors, cardio zone, powerlifting area and more. See why members love us.`,
   },
   '/testimonials': {
     title: `Member Reviews & Testimonials | ${SITE_NAME} ${LOCATION}`,
@@ -35,7 +36,7 @@ export const PAGE_META: Record<string, PageMeta> = {
   },
   '/contact': {
     title: `Contact ${SITE_NAME} | Best Gym in ${LOCATION}`,
-    description: `Contact ${SITE_NAME}, ${LOCATION} — Rishi Nagar, Dhand Rd, 136027. Call +91 81688 28832 for membership, timings & free trial. Open 5 AM–11 PM daily. Serving Titram, Keorak, Geong, Chandana, Shergarh, Deod Kheri, Khurana, Sanghan, Patti Afghan & all nearby villages.`,
+    description: `Contact ${SITE_NAME}, ${LOCATION} — Rishi Nagar, Dhand Rd, 136027. Call +91 81688 28832 for membership, timings & free trial. Open 5 AM–11 PM daily. Serving Kurukshetra, Karnal, Hisar, Cheeka & nearby areas.`,
   },
   '/owner': {
     title: `Our Story | ${SITE_NAME} ${LOCATION}`,
@@ -53,12 +54,24 @@ function setMetaDescription(description: string): void {
   meta.content = description;
 }
 
+function setCanonical(path: string): void {
+  const href = path === '/' ? CANONICAL_BASE : `${CANONICAL_BASE}${path}`;
+  let link = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+  if (!link) {
+    link = document.createElement('link');
+    link.rel = 'canonical';
+    document.head.appendChild(link);
+  }
+  link.href = href;
+}
+
 export function usePageTitle(path: string): void {
   useEffect(() => {
     const meta = PAGE_META[path];
     if (meta) {
       document.title = meta.title;
       setMetaDescription(meta.description);
+      setCanonical(path);
     }
   }, [path]);
 }

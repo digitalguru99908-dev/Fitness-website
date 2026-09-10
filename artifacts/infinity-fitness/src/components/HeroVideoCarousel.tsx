@@ -72,6 +72,7 @@ export function HeroVideoCarousel() {
         ref={videoRef}
         src="/infinity.mp4"
         className="absolute inset-0 w-full h-full object-cover"
+        aria-label="Infinity Fitness Gym training montage background video"
         autoPlay
         loop
         muted
