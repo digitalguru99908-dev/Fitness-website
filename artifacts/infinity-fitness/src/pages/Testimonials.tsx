@@ -139,7 +139,7 @@ export function Testimonials() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section — client review reel card + ambient blurred backdrop */}
-      <section className="relative pt-32 pb-16 flex items-center justify-center overflow-hidden bg-[#050505]">
+      <header className="relative pt-32 pb-16 flex items-center justify-center overflow-hidden bg-[#050505]">
         {/* Ambient backdrop — full-screen blur-3xl video + blur-xl glow ne GPU
             ko har frame par bhaari recomposite karta tha (perf fix). Ab static
             subtle radial glow + gradient — dikhne me same vibe, near-zero cost. */}
@@ -204,7 +204,7 @@ export function Testimonials() {
 
           </div>
         </div>
-      </section>
+      </header>
 
       {/* Reviews Content */}
       <section className="pb-24 pt-8">

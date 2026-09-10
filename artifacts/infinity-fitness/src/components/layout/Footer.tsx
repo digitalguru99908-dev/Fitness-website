@@ -41,7 +41,7 @@ export function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <nav aria-label="Footer navigation">
             <h4 className="font-display font-bold text-xl uppercase tracking-wider mb-6 text-white">Quick Links</h4>
             <ul className="space-y-3">
               {[
@@ -61,7 +61,7 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Contact Info */}
           <div>

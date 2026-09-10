@@ -56,7 +56,7 @@ export function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-[100svh] flex items-center overflow-hidden pt-20 lg:pt-24">
+      <header className="relative min-h-[100svh] flex items-center overflow-hidden pt-20 lg:pt-24">
         {/* Video background */}
         <HeroVideoCarousel />
 
@@ -141,7 +141,7 @@ export function Home() {
 
           </div>
         </div>
-      </section>
+      </header>
 
       {/* About Snippet */}
       <section className="py-24 bg-background relative overflow-hidden">

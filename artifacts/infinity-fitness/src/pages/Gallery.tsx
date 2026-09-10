@@ -129,7 +129,7 @@ export function Gallery() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative h-[50svh] min-h-[400px] flex items-center justify-center pt-20 overflow-hidden">
+      <header className="relative h-[50svh] min-h-[400px] flex items-center justify-center pt-20 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img src={img1} alt="Infinity Fitness Gym" className="w-full h-full object-cover opacity-60" />
           <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
@@ -145,7 +145,7 @@ export function Gallery() {
             </p>
           </motion.div>
         </div>
-      </section>
+      </header>
 
       {/* Videos first - click to open in lightbox */}
       <section className="py-6 md:py-12">

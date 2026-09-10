@@ -46,7 +46,7 @@ export function Owner() {
     <div className="flex flex-col pt-20">
 
       {/* Hero Section */}
-      <section className="relative min-h-[60svh] flex items-center justify-center overflow-hidden bg-[#0a0a0a]">
+      <header className="relative min-h-[60svh] flex items-center justify-center overflow-hidden bg-[#0a0a0a]">
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-black via-[#0a0a0a] to-[#1a0800]" />
         <div className="absolute inset-0 opacity-10"
@@ -79,7 +79,7 @@ export function Owner() {
             Passion, discipline, and a mission to transform Kaithal — one member at a time.
           </motion.p>
         </div>
-      </section>
+      </header>
 
       {/* Owner Profile Section */}
       <section className="py-20 px-4 bg-[#050505]">

@@ -1386,3 +1386,37 @@ private disallow, sitemap ref) public/ me, deploy, verify, Google Search Console
   static files /sitemap.xml, /robots.txt se serve hongi, index.html rewrite nahi hoga.
 - [COMMIT + PUSH] — commit `sitemap.xml + robots.txt` push, Vercel deploy trigger.
 - [VERIFY LIVE] — /robots.txt aur /sitemap.xml fetch karke content confirm kiya.
+
+### 2026-09-10 (round 10 — semantic HTML tags + clean URLs audit)
+
+**User request:** har page par semantic tags audit (div→header/nav/main/section/
+article/footer, ek main, nav-wrapped menu) + clean URLs audit (query params,
+trailing slash, lowercase, hyphens).
+
+- [AUDIT — SEMANTIC] — Structure pehle se kaafi saaf tha:
+  - ✅ `<main>` — App.tsx:71 me exactly ek main hai jo saare pages wrap karta hai
+    (har page usi ke andar render hota hai — page files me koi extra main nahi).
+  - ✅ `<nav>` — Navbar desktop links pehle se `motion.nav` me the.
+  - ✅ `<footer>` — Footer.tsx pehle se `<footer>` use karta.
+  - Hatya `<section>` pages me pehle se sahi use ho rahe the (1 h1 + h2/h3 hierarchy).
+- [FIX 1 — Navbar.tsx] — Primary nav me `aria-label="Primary navigation"` add;
+  **mobile drawer** ke links (jo `<div>` me the) ko `<nav aria-label="Mobile
+  navigation">` me convert.
+- [FIX 2 — Footer.tsx] — Quick Links block (`<div>`) → `<nav aria-label="Footer
+  navigation">` convert (footer nav semantic).
+- [FIX 3 — ALL 8 PAGES] — Har page ka **Hero section** (intro content w/ h1) ko
+  `<section>` → `<header>` convert kiya: Home, About, Services, Membership,
+  Gallery, Contact, Testimonials, Owner. Ab har page ka structure =
+  `<header>` (hero) + `<section>`s (content) inside `<main>`. Open/close balanced
+  verify kiya (1:1 header, sections balanced).
+- [AUDIT — CLEAN URLS] —
+  - ✅ Query params: koi internal route query param use nahi karta. Sirf external
+    deep-links me hain (wa.me/918168828832?text=..., Google Review write URL
+    ?placeid=..., maps ?q=...&output=embed) — wo required hain, avoid nahi hote.
+  - ✅ Trailing slash: saare internal URLs bina slash (`/about`, `/services` ...
+    `/owner`), home root `/`. Coverant nahi — sitemap.xml bhi isi pattern par.
+  - ✅ Lowercase: saare routes lowercase. ✅ Hyphens: routes single-word hain,
+    koi underscore wala URL nahi (sirf asset filenames me underscores hain jo
+    hash ho jate hain).
+- [VERIFY] — `pnpm run build` pass (28.36s, typecheck:production + vite build).
+- [COMMIT + PUSH] — changes commit + push, Vercel deploy trigger.

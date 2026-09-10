@@ -40,6 +40,7 @@ export function Navbar() {
   return (
     <>
       <motion.nav
+        aria-label="Primary navigation"
         className={`fixed top-0 left-0 right-0 z-50 bg-background/95 border-b border-border transition-all duration-300 ${
           scrolled ? 'h-16 shadow-[0_4px_30px_rgba(0,0,0,0.45)]' : 'h-20'
         }`}
@@ -116,7 +117,7 @@ export function Navbar() {
             transition={{ type: 'tween', duration: 0.3 }}
             className="fixed inset-0 z-40 bg-background/95 md:hidden pt-20 flex flex-col"
           >
-            <div className="flex-1 overflow-y-auto px-6 py-8 flex flex-col gap-6">
+            <nav aria-label="Mobile navigation" className="flex-1 overflow-y-auto px-6 py-8 flex flex-col gap-6">
               {navLinks.map((link, i) => (
                 <motion.div
                   key={link.name}
@@ -169,7 +170,7 @@ export function Navbar() {
                   WhatsApp Us
                 </a>
               </motion.div>
-            </div>
+            </nav>
           </motion.div>
         )}
       </AnimatePresence>
