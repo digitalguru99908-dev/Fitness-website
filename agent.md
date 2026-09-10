@@ -1511,3 +1511,22 @@ LCP 3.8s→2.5s target + actual browser responsive testing karna tha.
   (infinity.mp4 2.2MB) ab `preload` hints se request hota hai — LCP/bytes par asar
   check karna hoga. `hero-bg.mp4` (3.2MB) abhi bhi public me dead file (legacy rule
   se delete nahi) — deploy size me waste.
+
+### 2026-09-10 (REFRESH REDIRECT REMOVED → SCROLL-TO-TOP ON REFRESH)
+
+User request: "refresh par home page redirect" system poora hata do + uski jagah —
+refresh par page hamesha top se start ho (URL/route change NAHI hona chahiye).
+
+- [CONFIRMED] — Refresh-redirect ka code pehle hi missing tha: `grep
+  ForceHomeOnRefresh|location.replace|redirect` me 0 matches; `main.tsx` (7 lines,
+  bina redirect) + `App.tsx` (koi ForceHomeOnRefresh component nahi) clean the.
+  Working tree clean. Ye round 3 (2026-09-10 "REFRESH REDIRECT HATAYA") me pehle hi
+  remove ho chuka tha — kuch delete karne ko bacha nahi.
+- [src/main.tsx] — **SCROLL-TO-TOP ON REFRESH** implement kiya: React render se pehle
+  `window.history.scrollRestoration = 'manual'` set karta hoon. Browser ab refresh/
+  reload par purana scroll position restore NAHI karega (same page pe refresh →
+  scroll 0 se start, URL/route exactly same rehta hai). `ScrollToTop.tsx` (mount +
+  location change par `window.scrollTo(0,0)`) pehle se hai — dono milke garanty
+  dete hain ki har refresh/top-in navigation top se shuru hoti hai.
+- [VERIFY] — `pnpm run build` pass (typecheck:production + vite build, 2132 modules,
+  14.45s). Changes local — push user approval par.
