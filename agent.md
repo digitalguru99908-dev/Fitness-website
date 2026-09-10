@@ -1529,4 +1529,9 @@ refresh par page hamesha top se start ho (URL/route change NAHI hona chahiye).
   location change par `window.scrollTo(0,0)`) pehle se hai — dono milke garanty
   dete hain ki har refresh/top-in navigation top se shuru hoti hai.
 - [VERIFY] — `pnpm run build` pass (typecheck:production + vite build, 2132 modules,
-  14.45s). Changes local — push user approval par.
+  14.45s).
+- [PUSH] — User ne push ki permission di (coz live site par fix nahi dikh raha tha —
+  changes local the). Commit `be5f2e8` "feat: scroll-to-top on refresh (history.
+  scrollRestoration manual, no URL change)" push origin/main. Vercel auto-deploy:
+  live bundle ab `index-ftht_9Aw.js` — grep confirm `scrollRestoration` PRESENT in
+  deployed JS. URL/route change nahi — sirf scroll top reset refresh par.
