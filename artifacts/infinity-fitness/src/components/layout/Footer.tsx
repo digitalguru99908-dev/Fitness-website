@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'wouter';
 import { MapPin, Phone, Clock, Instagram } from 'lucide-react';
-import { FaWhatsapp } from 'react-icons/fa';
+import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
 
 const AREAS_WE_SERVE = [
   'Kurukshetra', 'Karnal', 'Hisar', 'Cheeka',
@@ -32,7 +32,7 @@ export function Footer() {
             </p>
             <div className="flex gap-4">
               <a href="https://wa.me/918168828832" target="_blank" rel="noreferrer" aria-label="Chat with Infinity Fitness Gym on WhatsApp" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[#25D366] hover:text-white transition-colors">
-                <FaWhatsapp size={20} />
+                <WhatsAppIcon className="w-5 h-5" />
               </a>
               <a href="https://instagram.com/infinityfitnessgyms" target="_blank" rel="noreferrer" aria-label="Follow Infinity Fitness Gym on Instagram" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-pink-500 hover:to-purple-500 hover:text-white transition-all">
                 <Instagram size={20} />

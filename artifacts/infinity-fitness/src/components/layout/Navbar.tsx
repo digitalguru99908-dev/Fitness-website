@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Menu, X, Phone, CalendarCheck } from 'lucide-react';
-import { FaWhatsapp } from 'react-icons/fa';
+import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
 import { motion, AnimatePresence } from 'framer-motion';
 import gymLogo from '@assets/7_1785143551141.webp';
 import { useFreeTrialModal } from '@/components/free-trial/FreeTrialProvider';
@@ -166,7 +166,7 @@ export function Navbar() {
                   rel="noreferrer"
                   className="flex items-center justify-center gap-2 bg-[#25D366]/10 border border-[#25D366]/40 text-[#25D366] py-4 w-full font-display font-bold text-xl uppercase tracking-wider hover:bg-[#25D366]/20 transition-colors"
                 >
-                  <FaWhatsapp className="w-5 h-5" />
+                  <WhatsAppIcon className="w-5 h-5" />
                   WhatsApp Us
                 </a>
               </motion.div>

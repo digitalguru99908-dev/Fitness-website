@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaWhatsapp } from 'react-icons/fa';
+import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
 
 const WA_URL =
   'https://wa.me/918168828832?text=' +
@@ -15,8 +15,8 @@ export function WhatsAppButton() {
       aria-label="Chat with us on WhatsApp"
     >
       <span className="relative w-12 h-12 md:w-14 md:h-14 shrink-0 flex items-center justify-center">
-        <FaWhatsapp size={26} className="md:hidden" />
-        <FaWhatsapp size={30} className="hidden md:block" />
+        <WhatsAppIcon className="w-[26px] h-[26px] md:hidden" />
+        <WhatsAppIcon className="w-[30px] h-[30px] hidden md:block" />
         {/* Ping effect */}
         <span className="absolute w-full h-full rounded-full bg-[#25D366] opacity-50 animate-ping -z-10" style={{ animationDuration: '2s' }}></span>
       </span>

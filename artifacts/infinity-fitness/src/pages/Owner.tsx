@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'wouter';
 import { motion, type Variants } from 'framer-motion';
 import { Phone, Instagram, Award, Users, Dumbbell, Heart, ArrowRight } from 'lucide-react';
-import { FaWhatsapp } from 'react-icons/fa';
+import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
 import { usePageTitle } from '@/lib/usePageTitle';
 
 const fadeUp: Variants = {
@@ -149,7 +149,7 @@ export function Owner() {
                 rel="noreferrer"
                 className="flex items-center gap-2 border border-[#25D366] text-[#25D366] font-display font-bold uppercase tracking-wider px-6 py-3 hover:bg-[#25D366]/10 transition-colors"
               >
-                <FaWhatsapp size={18} />
+                <WhatsAppIcon className="w-[18px] h-[18px]" />
                 WhatsApp
               </a>
               <a
@@ -256,7 +256,7 @@ export function Owner() {
               rel="noreferrer"
               className="flex items-center justify-center gap-2 border-2 border-primary/40 text-white font-display font-bold uppercase tracking-wider px-8 py-4 hover:border-primary hover:text-primary transition-colors text-lg"
             >
-              <FaWhatsapp size={20} />
+              <WhatsAppIcon className="w-5 h-5" />
               WhatsApp Us
             </a>
           </div>

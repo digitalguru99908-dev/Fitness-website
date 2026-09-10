@@ -3,7 +3,7 @@ import { motion, type Variants } from 'framer-motion';
 import { useForceReducedMotion } from '@/lib/motion';
 import { Link } from 'wouter';
 import { ArrowRight, ShieldCheck, Dumbbell, Sparkles, Users, Phone, Instagram, Award, Heart } from 'lucide-react';
-import { FaWhatsapp } from 'react-icons/fa';
+import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
@@ -235,7 +235,7 @@ export function About() {
                   whileTap={prefersReduced ? {} : { scale: 0.97, transition: { duration: 0.1 } }}
                   className="flex items-center gap-2 border border-[#25D366] text-[#25D366] font-display font-bold uppercase tracking-wider px-6 py-3 hover:bg-[#25D366]/10 transition-colors"
                 >
-                  <FaWhatsapp size={18} />
+                  <WhatsAppIcon className="w-[18px] h-[18px]" />
                   WhatsApp
                 </motion.a>
                 <motion.a

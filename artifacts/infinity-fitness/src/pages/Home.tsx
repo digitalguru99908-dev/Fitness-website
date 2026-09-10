@@ -3,7 +3,7 @@ import { Link } from 'wouter';
 import { motion } from 'framer-motion';
 import { useForceReducedMotion } from '@/lib/motion';
 import { ArrowRight, Phone, Dumbbell, HeartPulse, TrendingUp, Flame, Leaf, Zap, Clock, BadgeCheck, GraduationCap, MapPin, ChevronDown } from 'lucide-react';
-import { FaWhatsapp } from 'react-icons/fa';
+import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon';
 import { HeroVideoCarousel } from '@/components/HeroVideoCarousel';
 import { HeroPhotoStrip } from '@/components/HeroPhotoStrip';
 import { Reviews } from '@/components/sections/Reviews';
@@ -356,7 +356,7 @@ export function Home() {
                 className="inline-flex items-center justify-center bg-black/85 text-white px-8 py-4 font-display font-bold text-xl uppercase tracking-wider skew-x-[-10deg] hover:bg-black transition-colors group shadow-xl"
               >
                 <span className="skew-x-[10deg] flex items-center gap-2">
-                  <FaWhatsapp className="w-5 h-5 text-[#25D366]" /> WhatsApp Us
+                  <WhatsAppIcon className="w-5 h-5 text-[#25D366]" /> WhatsApp Us
                 </span>
               </a>
             </motion.div>
