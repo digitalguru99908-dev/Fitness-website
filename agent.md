@@ -1336,3 +1336,31 @@ improve karna hai — canonical tags, schema, alt text, internal linking.
   hierarchy proper hai, koi level skip nahi. CLEAN.
 - [VERIFY] — `tsc --noEmit` 0 errors; `vite build` pass (17.09s, 2135 modules).
   Changes local — push user approval par.
+
+### 2026-09-10 (round 8 — Vercel deploy FAIL root cause + fix)
+
+**User report:** "changes dikh nahi rahe" — live site purana version dikha rahi thi
+(GitHub par naya commit tha, Vercel deploy nahi ho raha tha).
+
+- [DIAGNOSIS] — Live site fetch karke compare kiya: purana meta description + purana
+  JSON-LD (30km, ₹₹) + koi canonical nahi. Git log clear tha (070004d pushed).
+- [ROOT CAUSE MILA] — `pnpm run build` (Vercel ka exact build command) **fail** hota
+  tha: `Gallery.tsx(40,26): error TS2304: Cannot find name 'useForceReducedMotion'`.
+  `npx tsc --noEmit` (root) pass ho raha tha kyunki root tsconfig frontend ke strict
+  typecheck se alag chekta hai — asli Vercel build use karta hai
+  `pnpm run typecheck:production` jo package-level `tsc -p tsconfig.json --noEmit`
+  chalta hai. Isliye Vercel deploy hamesha fail ho raha tha (silently — dashboard me
+  error, site purani rehti).
+- [FIX] — `src/pages/Gallery.tsx` me missing `import { useForceReducedMotion } from
+  '@/lib/motion';` add kiya (line 14 ke baad). Root build `pnpm run build` ab PASS —
+  `typecheck:production` + `vite build` dono clean (18.16s).
+- [COMMIT + PUSH] — `da24cb1` "fix(seo): add missing useForceReducedMotion import in
+  Gallery - fixes Vercel build typecheck" pushed.
+- [VERIFY LIVE] — Vercel auto-deploy trigger hua (GitHub integration). ~45s baad
+  live site fetch kiya: **nayi meta description** (Kurukshetra/Karnal/Hisar/Cheeka),
+  **canonical tag present**, **JSON-LD upgraded** (60km, ₹2,000-₹11,000,
+  availableService, amenityFeature, geo, email, paymentAccepted), yaya JS bundle
+  `index-CzhclaUA.js` render horaha. **SITE LIVE & UPDATED.**
+- [NOTE] — Is session ke baad se: changes verify karne ke liye hamesha
+  `pnpm run build` chalana (Vercel wala hi command), sirf `npx tsc --noEmit` par
+  bharosa mat karna.
