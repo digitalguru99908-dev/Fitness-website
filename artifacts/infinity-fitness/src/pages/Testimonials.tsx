@@ -362,7 +362,7 @@ export function Testimonials() {
               href="https://www.google.com/maps/search/Infinity+Fitness+Gym,+Rishi+Nagar,+Kaithal"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center bg-primary text-white px-8 py-4 font-display font-bold text-xl uppercase tracking-wider skew-x-[-10deg] box-glow"
+              className="inline-flex items-center justify-center bg-primary text-black px-8 py-4 font-display font-bold text-xl uppercase tracking-wider skew-x-[-10deg] box-glow"
               whileHover={prefersReduced ? {} : { scale: 1.05, transition: { duration: 0.2 } }}
               whileTap={prefersReduced ? {} : { scale: 0.96, transition: { duration: 0.1 } }}
             >

@@ -1420,3 +1420,46 @@ trailing slash, lowercase, hyphens).
     hash ho jate hain).
 - [VERIFY] — `pnpm run build` pass (28.36s, typecheck:production + vite build).
 - [COMMIT + PUSH] — changes commit + push, Vercel deploy trigger.
+
+### 2026-09-10 (round 11 — page speed + responsive audit & optimization)
+
+**User request:** responsive design + page speed audit, optimization karo, real
+before/after scores do. Baseline Lighthouse CLI (mobile, live URL) run kiya:
+**PERF 32 | A11Y 83 | BEST 100 | SEO 92** (FCP 4.7s, LCP 5.3s, TBT 4570ms, CLS 0.04,
+SI 13.9s). Report: `C:\Users\LENOVO\AppData\Local\Temp\opencode\lh-before.json`.
+
+- [RESPONSIVE AUDIT — static] — App root `overflow-x-hidden` hai; marquees
+  (Reviews/Testimonials `w-max`) sab `overflow-hidden` parents me hain; ChatBot
+  `max-w-[calc(100vw-2rem)]`; kaunsi bhi fixed width 320px overflow nahi karti.
+  No horizontal-scroll risk found. (Browser-render testing tool nahi hai, static
+  code review kiya.)
+- [SPEED FIX 1 — hero photos → WebP] — `attached_assets/file_00000*.jpg` (8 photos,
+  1448-1881px originals, ~2.5MB total) ko ffmpeg se 480px WebP me convert kiya →
+  **~237KB total (90% chhota)**. `HeroPhotoStrip.tsx` imports `.jpg` → `.webp`.
+- [SPEED FIX 2 — videos recompressed] — ffmpeg h264 CRF 26-31 +faststart:
+  `infinity.mp4` 4062→**2202KB** (bg video, audio removed, crf 31), `client-review.mp4`
+  5244→4643KB, `gallery-video-1.mp4` 7503→7167KB, `gallery-video-2.mp4`
+  34648→**2695KB** (1080p→720p, -92%). Total videos ~52.5MB → ~17.8MB saved.
+  `hero-bg.mp4` (3221KB) koi code use nahi karta — public me pada hai, load nahi hota.
+- [SPEED FIX 3 — favicon] — `favicon.png` 256px 152KB → 128px **32KB**.
+- [SPEED FIX 4 — code splitting] — `App.tsx`: About/Services/Membership/Gallery/
+  Contact/Testimonials/Owner + ChatBot ab `React.lazy` chunks hain (Home eager).
+  Main bundle 485KB → **384KB raw / 123KB gzip**. Har page chunk 5.7-14KB,
+  ChatBot 24.9KB. TBT (4570ms) par direct effect.
+- [SPEED FIX 5 — hero video poster] — `hero-poster.jpg` (38KB, infinity.mp4 ka frame)
+  + `poster` attribute; `preload="auto"` → `"metadata"` so LCP pehle paint hota hai.
+- [A11Y FIX 1 — color contrast] — `--primary-foreground` token white→black ek jagah
+  (index.css): footer "I/" logo, Reviews avatar, Navbar CTA, Services icon hover, etc.
+  — saare `text-primary-foreground` (white-on-orange) fix. `text-white` on primary
+  spots bhi `text-black` (Membership badge, Plans badge, Testimonials CTA,
+  FreeTrialModal button).
+- [A11Y FIX 2 — heading order] — Footer 4x h4 → h3; Reviews member name h4 → p
+  (skip fix).
+- [A11Y FIX 3 — links without name] — Footer WhatsApp/Instagram links par
+  `aria-label` add (link-name + descriptive-text audit fix).
+- [A11Y FIX 4 — viewport] — index.html `maximum-scale=1` hataya (zoom lock).
+- [A11Y FIX 5 — labels] — ChatBot input par `aria-label="Ask the fitness coach"`,
+  send button par `aria-label="Send message"`.
+- [VERIFY] — `pnpm run build` pass (31.77s). Main 384KB/123KB gzip.
+- [PENDING] — commit + push, Vercel deploy, Lighthouse re-run → after scores,
+  report before/after.

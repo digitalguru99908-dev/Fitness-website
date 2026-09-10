@@ -31,10 +31,10 @@ export function Footer() {
               Real equipment, real results, real people. Built for the community of Kaithal to grind it out and transform their lives.
             </p>
             <div className="flex gap-4">
-              <a href="https://wa.me/918168828832" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[#25D366] hover:text-white transition-colors">
+              <a href="https://wa.me/918168828832" target="_blank" rel="noreferrer" aria-label="Chat with Infinity Fitness Gym on WhatsApp" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[#25D366] hover:text-white transition-colors">
                 <FaWhatsapp size={20} />
               </a>
-              <a href="https://instagram.com/infinityfitnessgyms" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-pink-500 hover:to-purple-500 hover:text-white transition-all">
+              <a href="https://instagram.com/infinityfitnessgyms" target="_blank" rel="noreferrer" aria-label="Follow Infinity Fitness Gym on Instagram" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-pink-500 hover:to-purple-500 hover:text-white transition-all">
                 <Instagram size={20} />
               </a>
             </div>
@@ -42,7 +42,7 @@ export function Footer() {
 
           {/* Quick Links */}
           <nav aria-label="Footer navigation">
-            <h4 className="font-display font-bold text-xl uppercase tracking-wider mb-6 text-white">Quick Links</h4>
+            <h3 className="font-display font-bold text-xl uppercase tracking-wider mb-6 text-white">Quick Links</h3>
             <ul className="space-y-3">
               {[
                 { name: 'Home', href: '/' },
@@ -65,7 +65,7 @@ export function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h4 className="font-display font-bold text-xl uppercase tracking-wider mb-6 text-white">Contact Us</h4>
+            <h3 className="font-display font-bold text-xl uppercase tracking-wider mb-6 text-white">Contact Us</h3>
             <ul className="space-y-4">
               <li className="flex gap-3">
                 <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
@@ -80,7 +80,7 @@ export function Footer() {
 
           {/* Opening Hours */}
           <div>
-            <h4 className="font-display font-bold text-xl uppercase tracking-wider mb-6 text-white">Opening Hours</h4>
+            <h3 className="font-display font-bold text-xl uppercase tracking-wider mb-6 text-white">Opening Hours</h3>
             <ul className="space-y-3">
               <li className="flex justify-between border-b border-white/5 pb-2">
                 <span className="text-muted-foreground">Monday - Saturday</span>
@@ -105,7 +105,7 @@ export function Footer() {
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-3">
               <MapPin className="w-5 h-5 text-primary" />
-              <h4 className="font-display font-bold text-xl uppercase tracking-wider text-white">Areas We Serve</h4>
+              <h3 className="font-display font-bold text-xl uppercase tracking-wider text-white">Areas We Serve</h3>
             </div>
             <p className="text-muted-foreground text-sm max-w-3xl mx-auto">
               Infinity Fitness Gym — best gym in Kaithal — is easily accessible from Kurukshetra, Karnal, Hisar, Cheeka and all nearby villages in Kaithal district. Looking for a gym near you? We're just a short drive away.

@@ -146,7 +146,7 @@ export function Membership() {
               whileTap={cardTap}
               className="bg-card border-2 border-primary p-10 flex flex-col h-[105%] relative shadow-[0_0_50px_rgba(139,92,246,0.25)] rounded-sm z-10"
             >
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary text-white text-sm font-bold uppercase tracking-widest py-1.5 px-6 whitespace-nowrap shadow-lg">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary text-black text-sm font-bold uppercase tracking-widest py-1.5 px-6 whitespace-nowrap shadow-lg">
                 Best Value · Most Popular
               </div>
               <h3 className="font-display text-3xl font-bold uppercase text-white mb-2 mt-2">1-Year Package</h3>

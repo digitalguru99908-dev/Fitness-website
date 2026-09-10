@@ -296,7 +296,7 @@
 
   /* Orange-red — matches the logo (#FF3C00) */
   --primary: 14 100% 50%;
-  --primary-foreground: 0 0% 100%;
+  --primary-foreground: 0 0% 0%;
   --primary-border: 14 100% 40%;
 
   /* Amber/gold — warm CTA accent */
