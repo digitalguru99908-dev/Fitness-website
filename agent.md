@@ -16,6 +16,12 @@
    bina poochhe restructure/migrate mat karo.
 6. **User Preference:** Changes karne se PEHLE user se poocho. Agar user ne suggestion
    maanga ho toh sirf woh implement karo, baaki changes mat karo bina permission ke.
+7. **STRICT RULE (user ka hukm, 2026-09-10):** Har ek conversation, har ek task/kaam —
+   chahe woh koi bhi chota sa change ho, koi explanation ho, koi question ho, koi setup
+   ho, koi bhi chat-session — usko **CHANGE LOG** me record karna BILKUL ZAROORI hai.
+   Kuch bhi skip/selective log mat karo. Har baat ka entry aaj ki date (ya usi chat ke
+   din) ke section me add karo. Ye rule 2 se bhi strict hai — sirf code changes nahi,
+   HAR cheez (decisions, explained setups, transferred files, questions, todo) log karo.
 
 ---
 
@@ -1092,3 +1098,73 @@ h3 subsections properly nested. 3 issues mile, user approval se teeno fix kiye:
   API restarted (port 8080). Live tests: `/api/healthz` 200, `/api/chat` via Vite proxy
   200 with real Groq reply, `/api/tts` 200 with audio bytes (35KB). Frontend untouched
   (no rebuild needed). Changes local — push user approval par.
+
+### 2026-09-10 (FULL PROJECT RESTORE + LIVE VERIFICATION)
+
+User ko `ERR_CONNECTION_REFUSED (-102)` on `http://localhost:5173/` + Vercel/Render
+deployment errors dikh rahe the. Sab fix kiya:
+
+- [LOCAL DISASTER: saara source code delete ho gaya tha] — `artifacts/api-server/` aur
+  `artifacts/infinity-fitness/` dono EMPTY the (sirf logs bache the). Koi AGENTS.md/
+  agent.md local me nahi thi. Source GitHub se restore kiya
+  (`https://github.com/digitalguru99908-dev/Fitness-website.git` → main @ `3f3872f`).
+- [git restore] — Repo clone karke saari files main project dir me wapas daali
+  (repo-check temp cleanup ke baad). Root cause of deletion unknown (accident/cleanup)
+  — GitHub ab single source of truth hai.
+- [pnpm install] — `pnpm install` (pnpm 11.22.0) success — saare 9 workspace projects.
+- [.env] — Naya `.env` repo root par banaya (placeholders for secrets — real values
+  dashboard me hain / user ko Render me daalne hain). `.env` gitignored hai.
+- [VERIFY build] — `pnpm run typecheck` 0 errors; `vite build` pass (2135 modules,
+  38s); api-server build pass (dist/index.mjs).
+- [LOCAL SERVERS FIXED] — `start-servers.ps1` se dono servers detached-hidden start:
+  frontend (5173) + API (8080). Sab routes 200: `/`, `/about`, `/services`,
+  `/membership`, `/gallery`, `/contact`, `/testimonials`, `/owner`, `/api/healthz`
+  (direct + via Vite proxy). Windows Scheduled Task "Infinity Fitness Servers"
+  ready hai (login par auto-start) — path sahi hai.
+- [VERCEL (frontend) VERIFIED — NO PROBLEM] — Live `https://infinity-fitness-gym-woad.vercel.app`
+  200. Deployed JS bundle me oregon Render URL baked hai. Deployed CSS hash
+  (`index-DiPuIJAk.css`) == local production build → Vercel GitHub main ke saath
+  up-to-date hai. (JS hash alag sirf VITE_API_URL baking ki wajah se.)
+- [RENDER (backend) VERIFIED — NO PROBLEM] — Live oregon service
+  `https://infinity-fitness-api-oregon-test.onrender.com` sab working:
+  `GET /api/healthz` 200 `{"status":"ok"}`; `POST /api/chat` 200 (real Groq reply) +
+  CORS `Access-Control-Allow-Origin: https://infinity-fitness-gym-woad.vercel.app`;
+  `POST /api/tts` 200 `audio/mpeg`; `POST /api/inquiry` bad-body → 400 (validation ok).
+  Render CLI (`%LOCALAPPDATA%\render-cli\render.exe`) authenticated
+  (digitalguru99908@gmail.com); services: `infinity-fitness-api` (old sg)
+  + `infinity-fitness-api-oregon-test` (current, used by frontend). NOTE:
+  env-var list via API par `Unauthorized` mila — CLI token broswser-device session hai,
+  API read token nahi. BREVO_API_KEY check dashboard me manually karna hai (auto-reply
+  ke liye).
+- [git] — Repo root me frsh `git init` + clean remote
+  `https://github.com/digitalguru99908-dev/Fitness-website.git` (bina PAT).
+  Local `main` == `origin/main` @ `3f3872f`, working tree clean (env/.env gitignored).
+  Ab aage ke changes `git add -A && git commit -m "..." && git push origin main` se
+  jaate hain.
+- [REMAINING (user action needed for FULL email auto-reply)] — Render dashboard →
+  service `infinity-fitness-api-oregon-test` → Environment me `BREVO_API_KEY` +
+  verified `BREVO_SENDER_EMAIL` set karni hai (customer auto-reply ke liye). Resend
+  sirf owner email tak reach karta hai. Render free plan sleep (cron-job.org keep-alive
+  pending user) — restart ke baad pehla call 20-30s slow hoga, error nahi.
+
+### 2026-09-10 (round 2 — ROOT CAUSE of file deletion + STRICT LOGGING RULE)
+
+User ne bataya ki files isliye gayab hui thin kyunki **opencode wale agent (dusre session)**
+se project files **D drive par transfer** karvayi thi — isliye C drive wala folder khali
+ho gaya tha. Ye root-cause agent.md me record kiya gaya.
+
+- [agent.md] — **STRICT LOGGING RULE add** (rule #7): ab har conversation/task/explan-
+  ation/setup ko CHANGE LOG me record karna mandatory hai — chahe woh code change ho ya
+  nahi. User ne strict order diya: har cheez log karo.
+- [EXPLAINED to user] — Email system ka complete explanation diya (Brevo + Resend):
+  * `POST /api/inquiry` → turant `{success:true}`; owner mail (Brevo pirmary → Resend
+    fallback) + customer auto-reply (sirf Brevo) background mein jaate hain.
+  * Brevo kisi bhi recipient ko bhejta hai (main, free 300/day); Resend free plan sirf
+    owner tak (fallback). Render free par SMTP outbound block hai isliye HTTP API.
+  * Smart FAQ auto-answers deterministic hain (bina AI).
+  * Client device par setup: Brevo account → sender verify → API key → `.env` me
+    `BREVO_API_KEY` + `BREVO_SENDER_EMAIL` → `pnpm --filter @workspace/api-server dev`.
+  * Production (Render): Environment me same keys + `ALLOWED_ORIGIN`, phir redeploy.
+  * Dono keys missing ho to `/api/inquiry` 500 deta hai — ek key to honi hi chahiye.
+- [PENDING] — User se pucha: EMAIL_SETUP.md guide file banau? (abhi na banayi — wait
+  kiya ja raha hai user response ka).
