@@ -1364,3 +1364,25 @@ improve karna hai — canonical tags, schema, alt text, internal linking.
 - [NOTE] — Is session ke baad se: changes verify karne ke liye hamesha
   `pnpm run build` chalana (Vercel wala hi command), sirf `npx tsc --noEmit` par
   bharosa mat karna.
+
+### 2026-09-10 (round 9 — sitemap.xml + robots.txt)
+
+**User request:** sitemap.xml (8 pages, lastmod + priority) + robots.txt (crawl allow,
+private disallow, sitemap ref) public/ me, deploy, verify, Google Search Console guide.
+
+- [ROUTES CONFIRMED] — `App.tsx:38-45` — 8 pages hain: `/`, `/about`, `/services`,
+  `/membership`, `/gallery`, `/contact`, `/testimonials`, `/owner`. Koi admin/test/
+  private page nahi.
+- [API] — frontend API calls external `VITE_API_URL` par jate hain (src/lib/apiBase.ts),
+  `/api/*` is domain par serve nahi hota — best-practice ke liye robots me Disallow.
+- [public/sitemap.xml] — bana diya: 8 URLs, base
+  `https://infinity-fitness-gym-woad.vercel.app/`. lastmod 2026-09-10 sabka.
+  Priority: `/`=1.0, `/services`+`/membership`=0.9, `/about`+`/contact`=0.8,
+  `/testimonials`=0.7, `/gallery`+`/owner`=0.6. changefreq home=weekly, baaki monthly.
+- [public/robots.txt] — update kiya (purana sirf `Allow: /` tha): `Allow: /`,
+  `Disallow: /api/`, + `Sitemap: https://infinity-fitness-gym-woad.vercel.app/sitemap.xml`.
+- [VERIFY] — `pnpm run build` pass (19.75s); `dist/public/sitemap.xml` + `robots.txt`
+  dono build output me confirmed. Vercel filesystem precedence rewrites se pehle —
+  static files /sitemap.xml, /robots.txt se serve hongi, index.html rewrite nahi hoga.
+- [COMMIT + PUSH] — commit `sitemap.xml + robots.txt` push, Vercel deploy trigger.
+- [VERIFY LIVE] — /robots.txt aur /sitemap.xml fetch karke content confirm kiya.
