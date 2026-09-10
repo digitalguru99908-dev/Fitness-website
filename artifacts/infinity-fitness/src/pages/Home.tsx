@@ -164,7 +164,7 @@ export function Home() {
             </p>
             <div>
               <Link href="/about" className="inline-flex items-center gap-2 text-primary font-bold uppercase tracking-wider hover:text-white transition-colors group">
-                Learn More <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+                More About Our Gym <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
               </Link>
             </div>
           </motion.div>
@@ -209,8 +209,7 @@ export function Home() {
               );
               if (item.modal) {
                 return (
-                  <button key={i} onClick={openFreeTrial} className="block w-full h-full text-left cursor-pointer"
-                    aria-label={`${item.title} — click to book a free trial`}>
+                  <button key={i} onClick={openFreeTrial} className="block w-full h-full text-left cursor-pointer">
                     {card}
                   </button>
                 );
