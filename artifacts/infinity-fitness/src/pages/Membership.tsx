@@ -77,7 +77,7 @@ export function Membership() {
               Membership <span className="text-primary text-glow">Plans</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground font-medium uppercase tracking-widest">
-              Invest in yourself. Start today.
+              Affordable Gym Membership in Kaithal — Start Today
             </p>
           </motion.div>
         </div>
@@ -91,10 +91,10 @@ export function Membership() {
           <div className="text-center mb-16">
             <p className="text-primary font-semibold uppercase tracking-[0.3em] text-sm mb-4">Flexible Plans</p>
             <h2 className="text-3xl md:text-5xl font-display font-bold uppercase tracking-wider mb-4">
-              Gym Membership Plans & <span className="text-primary">Pricing</span>
+              Gym Membership Plans & <span className="text-primary">Pricing in Kaithal</span>
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto text-lg">
-              No joining fee, no hidden charges — pay only for what you use.
+              No joining fee, no hidden charges — transparent gym pricing in Kaithal. Pay only for what you use.
             </p>
           </div>
 
@@ -270,7 +270,7 @@ export function Membership() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-display font-bold uppercase tracking-wider mb-4">
-              Frequently Asked <span className="text-primary">Questions</span>
+              Gym Membership <span className="text-primary">FAQ — Kaithal</span>
             </h2>
           </div>
 

@@ -79,7 +79,7 @@ export function Contact() {
               className="space-y-12"
             >
               <div>
-                <h2 className="text-3xl font-display font-bold uppercase tracking-wider mb-8">Location & Info</h2>
+                <h2 className="text-3xl font-display font-bold uppercase tracking-wider mb-8">Location &amp; Info</h2>
                 <div className="space-y-8">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-white/5 flex items-center justify-center shrink-0">
@@ -175,7 +175,7 @@ export function Contact() {
               className="bg-card border border-border p-8 md:p-10"
             >
               <h2 className="text-3xl font-display font-bold uppercase tracking-wider mb-2">Send an Inquiry</h2>
-              <p className="text-muted-foreground mb-8">Fill out the form below and we'll get back to you within 24 hours.</p>
+              <p className="text-muted-foreground mb-8">Want to join the best gym in Kaithal? Fill out the form below and we'll get back to you within 24 hours about membership, free trial, or any questions. We welcome members from Titram, Keorak, Geong, Chandana, Shergarh, Deod Kheri, Khurana, Sanghan, Patti Afghan, Siwan, Khanpur, Polar, Sotha, Kawartan, Harnola, Kheri, Gulam Kheri, Rasulpur, Farshmajra, Kangthali, Firojpur, Dohar, Ateli, Balu and all nearby villages.</p>
 
               <AnimatePresence mode="wait" initial={false}>
               {formStatus === 'submitted' ? (

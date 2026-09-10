@@ -64,7 +64,7 @@ export function About() {
               Our <span className="text-primary text-glow">Story</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground font-medium uppercase tracking-widest">
-              Built for the people of Kaithal
+              Kaithal's Fitness Center — Built For The People
             </p>
           </motion.div>
         </div>
@@ -81,13 +81,13 @@ export function About() {
             className="space-y-6 text-lg md:text-xl text-gray-300 leading-relaxed"
           >
             <p>
-              Infinity Fitness Gym wasn't built to be just another place with some treadmills and weights. We set out to create a sanctuary for those who are serious about changing themselves. A place where the iron speaks louder than excuses.
+              Infinity Fitness Gym in Kaithal wasn't built to be just another place with some treadmills and weights. We set out to create a sanctuary for those who are serious about changing themselves — a fitness center in Rishi Nagar where the iron speaks louder than excuses.
             </p>
             <p>
-              Located in the heart of Kaithal on Dhand Road, we've poured our passion into curating a gym environment that fosters raw power and community warmth. Whether you're here to lose weight, build massive strength, or just find your daily peace, our doors are open to everyone willing to put in the work.
+              Located in the heart of Kaithal on Dhand Road, Rishi Nagar, we've poured our passion into curating a gym environment that fosters raw power and community warmth. Whether you're here for weight loss, muscle gain, personal training, or just find your daily peace through yoga — our doors are open to everyone willing to put in the work. People from Titram, Keorak, Geong, Chandana, Shergarh, Deod Kheri, Khurana, Sanghan, Patti Afghan, Siwan, Khanpur, Polar, Sotha, Kawartan, Harnola, Kheri, Gulam Kheri, Rasulpur, Farshmajra, Kangthali, Firojpur, Dohar, Ateli, Balu and all nearby villages in Kaithal district train with us.
             </p>
             <p>
-              We believe fitness isn't a luxury—it's a necessity. That's why we combine top-tier, modern equipment with affordable memberships. When you step into Infinity Fitness, you're not a client; you're family.
+              We believe fitness isn't a luxury — it's a necessity. That's why we combine top-tier, modern equipment with affordable gym memberships in Kaithal. When you step into Infinity Fitness, you're not a client; you're family. That's what makes us one of the best gyms in Kaithal.
             </p>
           </motion.div>
         </div>
@@ -98,7 +98,7 @@ export function About() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-display font-bold uppercase tracking-wider mb-4">
-              Why Choose <span className="text-primary">Us</span>
+              Why Choose <span className="text-primary">Our Gym in Kaithal</span>
             </h2>
           </div>
 
@@ -208,8 +208,8 @@ export function About() {
 
               <div className="w-16 h-1 bg-primary" />
 
-              <p className="text-muted-foreground leading-relaxed text-lg">
-                With over a decade of hands-on experience in fitness and personal training, the founder of Infinity Fitness Gym turned a simple passion for health into Kaithal's most trusted fitness community. Starting from humble beginnings, the vision was always clear — bring world-class training to everyday people at a price that never excludes anyone.
+                <p className="text-muted-foreground leading-relaxed text-lg">
+                With over a decade of hands-on experience in fitness and personal training, the founder of Infinity Fitness Gym turned a simple passion for health into Kaithal's most trusted fitness community. Starting from humble beginnings in Rishi Nagar, the vision was always clear — bring world-class training to everyday people in Kaithal at a price that never excludes anyone.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 Today, Infinity Fitness stands as proof that dedication beats expensive memberships. Every program, every piece of equipment, and every interaction on the gym floor reflects a single belief:{' '}

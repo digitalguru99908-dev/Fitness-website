@@ -1147,6 +1147,86 @@ deployment errors dikh rahe the. Sab fix kiya:
   sirf owner email tak reach karta hai. Render free plan sleep (cron-job.org keep-alive
   pending user) — restart ke baad pehla call 20-30s slow hoga, error nahi.
 
+### 2026-09-10 (round 5 — SEO: nearby villages + service area targeting)
+
+**24 nearby villages/locations** naturally integrate kiye taaki log in jagahon se search
+karein to site dikhe: Titram, Keorak, Geong, Chandana, Shergarh, Deod Kheri, Khurana,
+Sanghan, Patti Afghan, Siwan, Khanpur, Polar, Sotha, Kawartan, Harnola, Kheri,
+Gulam Kheri, Rasulpur, Farshmajra, Kangthali, Firojpur, Dohar, Ateli, Balu.
+
+- [src/pages/Home.tsx] — **NAYA "Service Area" section** (FAQ se pehle): heading
+  "Gym For Nearby Villages & Kaithal", paragraph me sab 24 villages naturally listed
+  (easily accessible from...), responsive grid (2/3/4/6 col) me sab village cards +
+  bottom CTA "Looking for a gym near you in Kaithal district?". Google ko ye page me
+  clearly dikhega ki gym in villages ko serve karta hai.
+- [src/pages/Home.tsx] — **FAQ answer updated:** location wale answer me sab villages
+  naturally added ("easily accessible from Titram, Keorak, Geong...all nearby villages").
+  "Why Choose Us" card: "Rishi Nagar, Kaithal" subtitle → "serving Kaithal & nearby villages".
+- [src/pages/About.tsx] — Story section me villages naturally added: "People from
+  Titram, Keorak, Geong...all nearby villages in Kaithal district train with us."
+- [src/pages/Contact.tsx] — Form intro me villages added: "We welcome members from
+  Titram, Keorak, Geong...all nearby villages."
+- [src/lib/usePageTitle.ts] — Home + Contact meta descriptions updated with village names.
+- [index.html] — Static OG/Twitter/meta descriptions updated with villages.
+- [index.html — JSON-LD] — `areaServed` add kiya: `GeoCircle` (30km radius around
+  Kaithal coordinates 29.8029, 76.3154) with description listing all 24 villages.
+  Google ko structured data me clearly dikhega ki ye gym Kaithal district + nearby
+  areas serve karta hai.
+- [VERIFY] — tsc 0 errors, vite build pass (41.23s).
+
+### 2026-09-10 (round 4 — SEO: indirect keyword integration + heading hierarchy)
+
+**Target keywords:** "best gym in Kaithal", "gym in Kaithal", "fitness center in Kaithal",
+"gym membership Kaithal", "personal training Kaithal", "weight loss gym Kaithal",
+"gym near me Kaithal", "Rishi Nagar Kaithal". Ye sab naturally (indirect) body text +
+headings me weave kiye hain — keyword stuffing nahi, organic readability preserved.
+
+- [src/pages/Home.tsx] — **Body text keywords added:**
+  - Hero subtitle: "Looking for the best gym in Kaithal? Infinity Fitness is Kaithal's top-rated fitness center..." + "Rishi Nagar"
+  - About snippet: "fitness center in Kaithal, Rishi Nagar" + "gym near you in Kaithal"
+  - Services subtitle: "Training programs in Kaithal for every goal"
+  - FAQ kicker: "Kaithal Gym" → "Gym in Kaithal"
+  - FAQ answer 1: "Infinity Fitness Gym is one of the top-rated gyms in Kaithal" (full sentence)
+- [src/pages/Home.tsx] — **Heading hierarchy keywords:**
+  - h2 "More Than Just A Gym" → "More Than Just A **Gym in Kaithal**"
+  - h2 "Why Members Choose Us" subtitle: "Kaithal's best fitness center"
+  - h2 "Frequently Asked Questions" → "... — **Gym in Kaithal**"
+- [src/pages/About.tsx] — **Body + heading keywords:**
+  - Hero subtitle: "Kaithal's Fitness Center — Built For The People"
+  - Story: "Infinity Fitness Gym in Kaithal" + "fitness center in Rishi Nagar"
+  - Story para 2: "Rishi Nagar" location + "weight loss, muscle gain, personal training, yoga"
+  - Story para 3: "affordable gym memberships in Kaithal" + "best gyms in Kaithal"
+  - Founder bio: "Rishi Nagar" + "people in Kaithal"
+  - h2 "Why Choose Us" → "Why Choose **Our Gym in Kaithal**"
+- [src/pages/Services.tsx] — **Heading + body keywords:**
+  - Hero subtitle: "Gym Programs in Kaithal — Training for Every Goal"
+  - h2 "Training Programs For Every Goal" → "... **Every Goal in Kaithal**"
+  - Subtitle: "our gym in Kaithal has the equipment"
+- [src/pages/Membership.tsx] — **Heading + body keywords:**
+  - Hero subtitle: "Affordable Gym Membership in Kaithal — Start Today"
+  - h2 "Gym Membership Plans & Pricing" → "... **Pricing in Kaithal**"
+  - Subtitle: "transparent gym pricing in Kaithal"
+  - FAQ h2: "Frequently Asked Questions" → "Gym Membership **FAQ — Kaithal**"
+- [src/pages/Contact.tsx] — **Body keywords:**
+  - Form intro: "Want to join the best gym in Kaithal?"
+- [src/lib/usePageTitle.ts] — **Meta descriptions updated** — har description me "Rishi Nagar"
+  + location-specific keywords add kiye (e.g., "best gym in Kaithal", "fitness center in
+  Rishi Nagar", "gym near you"). Title tags unchanged (already strong).
+- [index.html] — Static home `description`/`og:description`/`twitter:description` updated:
+  "Infinity Fitness Gym is the best gym in Kaithal — ...in Rishi Nagar."
+- [VERIFY] — tsc 0 errors, vite build pass (16.65s).
+
+### 2026-09-10 (round 3 — SEO FIX: refresh redirect removed)
+
+- [src/main.tsx] — **REFRESH REDIRECT HATAYA** (SEO ke liye critical fix): purana code
+  har sub-page (`/about`, `/services`, `/membership` etc.) par browser refresh/reload par
+  `window.location.replace('/')` se home par redirect karta tha. Isse **Google crawlers
+  individual pages ko index nahi kar paate the** — sab pages ko crawl karke home par
+  redirect milta tha, to unique title tags, meta descriptions, structured data sab
+  waste ho rahe the. Ab redirect hata diya — SPA (wouter) routing sab pages ko
+  properly render karta hai + har page ka apna unique SEO title/meta/indexable content
+  Google ko dikhega. tsc 0 errors, vite build pass (6.96s).
+
 ### 2026-09-10 (round 2 — ROOT CAUSE of file deletion + STRICT LOGGING RULE)
 
 User ne bataya ki files isliye gayab hui thin kyunki **opencode wale agent (dusre session)**

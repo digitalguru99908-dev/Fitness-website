@@ -71,7 +71,7 @@ export function Services() {
               Our <span className="text-primary text-glow">Programs</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground font-medium uppercase tracking-widest">
-              Training for every goal, every level
+              Gym Programs in Kaithal — Training for Every Goal
             </p>
           </motion.div>
         </div>
@@ -83,10 +83,10 @@ export function Services() {
           <div className="text-center mb-16">
             <p className="text-primary font-semibold uppercase tracking-[0.3em] text-sm mb-3">What We Offer</p>
             <h2 className="text-3xl md:text-5xl font-display font-bold uppercase tracking-wider mb-4">
-              Training Programs For <span className="text-primary">Every Goal</span>
+              Training Programs For <span className="text-primary">Every Goal in Kaithal</span>
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto text-lg">
-              From building muscle to losing fat, we have the equipment and the expertise to get you there.
+              From building muscle to losing fat, our gym in Kaithal has the equipment, the trainers, and the expertise to get you there.
             </p>
           </div>
 
