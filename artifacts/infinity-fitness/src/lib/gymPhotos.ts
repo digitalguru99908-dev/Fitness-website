@@ -23,7 +23,9 @@ export const gymPhotos: GymPhoto[] = [
     width: 1182,
     height: 1330,
     portrait: true,
-    objectPosition: '50% 20%',
+    // Building photo portrait hai — wide hero me object-cover sirf ek vertical slice
+    // dikhata hai. 70% = gate/entrance visible (pehle 20% upar se sirf sign dikhta tha).
+    objectPosition: '50% 70%',
     alt: 'Infinity Fitness Gym Kaithal - front entrance and building facade',
     caption: 'Front Entrance',
   },

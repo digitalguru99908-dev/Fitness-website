@@ -51,7 +51,7 @@ export function Contact() {
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section */}
       <header className="relative h-[70svh] min-h-[500px] flex items-center justify-center pt-20 overflow-hidden">
-        <GymHeroSlideshow slides={gymPhotos} />
+        <GymHeroSlideshow slides={gymPhotos} startIndex={2} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div

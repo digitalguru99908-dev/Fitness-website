@@ -1620,3 +1620,35 @@ visible ho).
   About-, Contact-, ChatBot-B?.js (rebuilt).
 - [TODO/OPEN] — Agent ne push nahi kiya (user ne nahi kaha). Staged nahi — changes
   working tree me hain. User ko confirm karna: done + webp confirm.
+
+### 2026-09-11 (round 3 — per-page first photo + entrance crop fix + responsive verify)
+
+User report: "first photo sabhi pages par same hai, har page par first photo alag honi
+chahiye; entrance/building photo bahut zoomed hai — gate tak nahi dikh raha; site ki
+responsiveness check karo (sabhi devices par)". NOTE: agent image dekh nahi sakta
+(model me image input nahi) — crop positions visually verify user karega.
+
+- [src/lib/gymPhotos.ts] — Entrance (building) photo `objectPosition` `'50% 20%'`
+  (sirf sign/upar ka hissa) → `'50% 70%'` (neeche gate/entrance area visible). Wide
+  desktop hero me portrait photo ka sirf ~40% vertical slice dikhta hai (object-cover),
+  isliye 20% upar = gate cut ho jaata tha. Mobile par vertical fully visible thi
+  (sides crop) — fix ka asal asar desktop/tablet par. Gallery hero bg bhi isi se fix.
+- [src/pages/About.tsx, Services.tsx, Membership.tsx, Contact.tsx] — Har page ka
+  **first hero photo ab alag** (loop me sabhi 7 photos phir bhi chalte hain):
+  About=`startIndex 0` (Front Entrance), Services=`startIndex 1` (Strength Training
+  Area), Membership=`startIndex 3` (Main Workout Floor), Contact=`startIndex 2`
+  (Wall Mural & Weight Rack). GymHeroSlideshow ka startIndex prop pehle se tha.
+- [VERIFY] — `pnpm run build` (Vercel command: typecheck:production + vite) pass,
+  18.88s, 0 errors. Dev servers 5173 + 8080 (healthz) dono 200.
+- [RESPONSIVE AUDIT — static] — App root `overflow-x-hidden`, saare fixed-width
+  decorative layers (w-[1200px] glows etc.) `overflow-hidden` parents me. ChatBot
+  `max-w-[calc(100vw-2rem)]`, grids 2→5 col collapse properly. No overflow risk.
+- [RESPONSIVE — LIVE BROWSER CHECK] — Chrome headless (CDP server) se har 7 pages
+  (/, /about, /services, /membership, /contact, /gallery, /testimonials) par
+  3 viewports (375x812 dpr3, 768x1024 dpr2, 1440x900 dpr1) measure kiya:
+  scrollWidth == clientWidth sab jagah (koi horizontal scroll nahi), har page
+  exactly 1 h1, saare img render hue. 15 screenshots `%TEMP%\opencode\resp-shots\`
+  me (repo me nahi). User manually bhi dekh sakta hai.
+- [TODO/OPEN] — Changes working tree me hain (commit/push nahi kiya — user ne nahi
+  kaha). Entrance crop position ek guess hai (`'50% 70%'`) — agar gate phir bhi na
+  dikhe to batao, ±10% adjust kar denge. Screenshots folder temp me hai.
