@@ -13,6 +13,8 @@ export interface GymPhoto {
   width: number;
   height: number;
   portrait?: boolean;
+  /** object-position override — upar wala text/façade visible ho, isliye slight upward */
+  objectPosition?: string;
 }
 
 export const gymPhotos: GymPhoto[] = [
@@ -21,6 +23,7 @@ export const gymPhotos: GymPhoto[] = [
     width: 1182,
     height: 1330,
     portrait: true,
+    objectPosition: '50% 20%',
     alt: 'Infinity Fitness Gym Kaithal - front entrance and building facade',
     caption: 'Front Entrance',
   },
@@ -50,6 +53,7 @@ export const gymPhotos: GymPhoto[] = [
     src: spinStudio,
     width: 1448,
     height: 1086,
+    objectPosition: '50% 25%',
     alt: 'Infinity Fitness Gym Kaithal - spin cycling studio',
     caption: 'Spin Cycling Studio',
   },

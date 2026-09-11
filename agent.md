@@ -1590,3 +1590,33 @@ sakta).
 - [TODO/OPEN] — Agent ne commit/push nahi kiya (user ne nahi kaha). Changes staged
   hain (untracked naye + deleted). User ko confirm karna: purani photos is living
   site par bhi chali jaayein (push karna ho to).
+
+### 2026-09-11 (round 2 — gallery photos push + LOOP REVERT + spin/entrance crop)
+
+User request: (1) changes push GitHub par (done), (2) membership page par "get in
+shape" spin-studio photo thoda niche, (3) gallery background first photo (entrance)
+bhi thoda niche, (4) **revert** — sabhi pages ke hero background me phi sabhi 7
+photos loop me chalni chahiye (per-page split hatao). "Niche" direction user ne
+option se confirm kiya: **TOP hissa zyada dikhe** (building/GET IN SHAPE text
+visible ho).
+
+- [PUSH] — `git commit 7347ed5` "feat: replace gallery with 7 real gym photos
+  (WebP, alt, width/height, CSS hover) + per-page hero slideshow split" → pushed
+  origin/main (89ff966..7347ed5). Vercel auto-deploy.
+- [REVERT - src/pages/About.tsx, Services.tsx, Membership.tsx, Contact.tsx] —
+  Per-page split (`slides={[gymPhotos[0],[1]]}` etc.) hata kar wapas
+  `<GymHeroSlideshow slides={gymPhotos} />` — ab HAR page ke hero background me
+  sabhi 7 photos 4s interval par loop me chalte hain (pehle jaisa).
+- [src/lib/gymPhotos.ts] — `GymPhoto` interface me `objectPosition?: string` add.
+  Entrance photo → `'50% 20%'` (upar ka hissa dikhe), spin-studio →
+  `'50% 25%'` (GET IN SHAPE text visible). Photos .webp hi hain (7 files,
+  153–264 KB — user ko confirm kiya).
+- [src/components/GymHeroSlideshow.tsx] — `HeroSlide` me optional `objectPosition`
+  add; img style me `objectPosition: slides[i].objectPosition ?? 'center'`.
+  `object-center` class hata di (inline style ab handle karta hai).
+- [src/pages/Gallery.tsx] — Hero background first photo (entrance) par inline
+  `objectPosition: gymPhotos[0].objectPosition` — thoda niche / upar kaa hissa.
+- [VERIFY] — `pnpm run build` pass (Vite, 37.55s). New chunks: Membership-,
+  About-, Contact-, ChatBot-B?.js (rebuilt).
+- [TODO/OPEN] — Agent ne push nahi kiya (user ne nahi kaha). Staged nahi — changes
+  working tree me hain. User ko confirm karna: done + webp confirm.

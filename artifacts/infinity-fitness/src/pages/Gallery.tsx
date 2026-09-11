@@ -123,7 +123,7 @@ export function Gallery() {
       {/* Hero Section */}
       <header className="relative h-[50svh] min-h-[400px] flex items-center justify-center pt-20 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img src={images[0].src} alt={images[0].alt} width={images[0].width} height={images[0].height} className="w-full h-full object-cover opacity-60" />
+          <img src={images[0].src} alt={images[0].alt} width={images[0].width} height={images[0].height} className="w-full h-full object-cover opacity-60" style={{ objectPosition: gymPhotos[0].objectPosition ?? 'center' }} />
           <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
           <div className="absolute inset-0 bg-black/40" />
         </div>

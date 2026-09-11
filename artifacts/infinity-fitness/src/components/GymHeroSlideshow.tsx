@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 export interface HeroSlide {
   src: string;
   alt: string;
+  /** Optional object-position override (kuch photos me upar ka hissa dikhana ho) */
+  objectPosition?: string;
 }
 
 interface GymHeroSlideshowProps {
@@ -37,8 +39,11 @@ export function GymHeroSlideshow({ slides, startIndex = 0 }: GymHeroSlideshowPro
           key={i}
           src={slides[i].src}
           alt={slides[i].alt}
-          className="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000"
-          style={{ opacity: i === current ? 1 : 0 }}
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+          style={{
+            opacity: i === current ? 1 : 0,
+            objectPosition: slides[i].objectPosition ?? 'center',
+          }}
           fetchPriority={i === current ? 'high' : 'auto'}
         />
       ))}
