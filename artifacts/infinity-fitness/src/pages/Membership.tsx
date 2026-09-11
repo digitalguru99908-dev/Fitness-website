@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useForceReducedMotion } from '@/lib/motion';
 import { ArrowRight, ChevronDown, ClipboardCheck, Dumbbell, Zap } from 'lucide-react';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
+import { gymPhotos } from '@/lib/gymPhotos';
 import { staggerContainer, fadeUpItem } from '@/lib/animation';
 import { FREE_TRIAL_DAYS } from '@/lib/siteConfig';
 import { usePageTitle } from '@/lib/usePageTitle';
@@ -65,7 +66,7 @@ export function Membership() {
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section */}
       <header className="relative h-[80svh] min-h-[520px] flex items-center justify-center pt-20 overflow-hidden">
-        <GymHeroSlideshow startIndex={4} />
+        <GymHeroSlideshow slides={[gymPhotos[4], gymPhotos[5]]} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div

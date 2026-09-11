@@ -1535,3 +1535,58 @@ refresh par page hamesha top se start ho (URL/route change NAHI hona chahiye).
   scrollRestoration manual, no URL change)" push origin/main. Vercel auto-deploy:
   live bundle ab `index-ftht_9Aw.js` — grep confirm `scrollRestoration` PRESENT in
   deployed JS. URL/route change nahi — sirf scroll top reset refresh par.
+
+### 2026-09-11 (GALLERY PHOTOS — 7 naye real gym photos + hero slideshow per-page split)
+
+User request: "Gallery page par 7 nayi asli photos lagao, purani saari gallery photos
+delete karo (website + repo dono se). WebP format, width/height attributes, hover par
+subtle zoom + dark overlay caption. Slideshow bhi nayi photos se, mobile + desktop
+dono par." Sab photo-content mapping user ne confirm ki thi (agent images dekh nahi
+sakta).
+
+- [attached_assets/gallery-{entrance,legpress,mural-rack,floor,spin-studio,cable,
+  cardio}.webp] — `C:\Users\LENOVO\Documents\Default Project\Fitness-website-main`
+  ke `D:\infinity` folder se 7 naye PNGs (11 Jul 2026, ChatGPT Image) ffmpeg 9.0.1 se
+  native resolution par WebP q80 me convert kiye. Sizes 153–264 KB. Dialog:
+  entrance 1182x1330 (portrait), mural-rack 1086x1448 (portrait), legpress 1281x1227,
+  baaki 4 (floor, spin-studio, cable, cardio) 1448x1086 (landscape).
+- [src/lib/gymPhotos.ts] — NAYA shared data file. `GymPhoto` interface: src, alt,
+  caption, width, height, portrait?. `gymPhotos` array (order 1–7) — Gallery +
+  slideshows ka single source of truth. Alts (SEO): "Infinity Fitness Gym Kaithal -
+  front entrance and building facade", "- strength training area with leg press and
+  bench press machines", "- workout zone with wall mural and weight rack", "- main
+  workout floor with strength training machines", "- spin cycling studio", "- cable
+  machine and functional training area", "- cardio zone with treadmills". Captions
+  (short, hover/lightbox): Front Entrance, Strength Training Area, Wall Mural &
+  Weight Rack, Main Workout Floor, Spin Cycling Studio, Cable & Functional Training,
+  Cardio Zone - Treadmills.
+- [src/components/GymHeroSlideshow.tsx] — Refactor: hardcoded slides + `startIndex`
+  hata kar ab `slides: {src, alt}[]` prop leta hai (per-page split). 4s tick
+  crossfade + 3-slide window + scrim overlay + fetchPriority logic same raha.
+- [src/pages/About.tsx, Services.tsx, Membership.tsx, Contact.tsx] — Naye slides:
+  About=[P1,P2], Services=[P3,P4], Membership=[P5,P6], Contact=[P1,P5,P7]. Saare
+  pages par slideshow nayi photos dikhate hain (mobile + desktop dono par — user ne
+  confirm kiya).
+- [src/pages/Gallery.tsx] — `img1..img7` imports + hardcoded `images` array hatakar
+  `gymPhotos` se map kiya (order 1–7, sahi alt/caption). Hero bg = gymPhotos[0]
+  (front entrance). `<img>` par `width`/`height` attributes add (CLS). Hover
+  animation ab pure CSS (framer whileHover scale hata diya): `group-hover:
+  scale-[1.08]` zoom (500ms ease-out) + `bg-black/40` dark overlay (300ms fade) +
+  caption pill (bg-black/50 backdrop-blur) bottom-center slide-up. Alt text ab
+  descriptive (lightbox + grid dono me).
+- [DELETE] — Purani gallery photos git rm kiye: root `attached_assets/` ke 7 webps
+  (`1_1785140838620` ... `1a4c7a90-...-1785141254714`). Ab kisi code me reference
+  nahi (grep 0 matches).
+- [DELETE] — Unused legacy `src/components/sections/Gallery.tsx` aur uske
+  `artifacts/infinity-fitness/attached_assets/gallery-{1..6}.jpg` git rm kiye
+  (component kisi file se import nahi hota — agent.md me legacy marked tha; uski
+  images hi purani gallery photos thi).
+- [KEEP] — `7_1785143551141.webp` (Navbar gymLogo), `7_1785143150403.webp` +
+  `image_*.png` (unreferenced, gallery nahi), `file_0000*.webp` ×8 (HeroPhotoStrip),
+  gallery video files — sab untouched.
+- [VERIFY] — `pnpm run typecheck:production` 0 errors (api-server + infinity-fitness
+  dono) aur `pnpm run build` pass (Vite, 33.61s). New bundle chunks:
+  `gymPhotos-DbseXvc2.js`, `Gallery-D53nl_kB.js`.
+- [TODO/OPEN] — Agent ne commit/push nahi kiya (user ne nahi kaha). Changes staged
+  hain (untracked naye + deleted). User ko confirm karna: purani photos is living
+  site par bhi chali jaayein (push karna ho to).

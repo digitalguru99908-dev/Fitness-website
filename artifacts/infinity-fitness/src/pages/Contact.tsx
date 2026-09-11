@@ -3,6 +3,7 @@ import { Link } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Phone, Clock, Instagram, Mail, Send, CheckCircle2, Loader2, ArrowRight } from 'lucide-react';
 import { GymHeroSlideshow } from '@/components/GymHeroSlideshow';
+import { gymPhotos } from '@/lib/gymPhotos';
 import { API_BASE } from '@/lib/apiBase';
 import { usePageTitle } from '@/lib/usePageTitle';
 
@@ -50,7 +51,7 @@ export function Contact() {
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section */}
       <header className="relative h-[70svh] min-h-[500px] flex items-center justify-center pt-20 overflow-hidden">
-        <GymHeroSlideshow startIndex={6} />
+        <GymHeroSlideshow slides={[gymPhotos[0], gymPhotos[4], gymPhotos[6]]} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
